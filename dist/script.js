@@ -123,7 +123,7 @@ class Calendar {
   }
 
   createCalendar(date) {
-    this.date = date;
+    this.date = date; // Создаем массив с числами и пустыми строками как матрицу для календаря
 
     function createCalendarMatrix() {
       const amountOfDays = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -146,7 +146,8 @@ class Calendar {
       }
 
       return arr;
-    }
+    } // Создаем верстку календаря и наполняем ее интерактивом
+
 
     const createDOM = () => {
       const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
@@ -170,16 +171,18 @@ class Calendar {
         const tr = document.createElement('tr');
 
         for (let i = 0; i < array.length; i++) {
+          const now = new Date();
           const td = document.createElement('td');
           const item = document.createElement('div');
           const day = document.createElement('div');
           item.classList.add('item');
           day.classList.add('day');
 
-          if (i == array.length - 1 || i == array.length - 2) {
-            day.classList.add('weekend');
+          if (array[i] == now.getDate() && this.date.getFullYear() == now.getUTCFullYear() && this.date.getMonth() == now.getMonth()) {
+            day.classList.add('today');
           }
 
+          i == array.length - 1 || i == array.length - 2 ? day.classList.add('weekend') : null;
           day.innerHTML = array[i];
           item.appendChild(day);
           td.appendChild(item);
@@ -219,17 +222,19 @@ class Calendar {
   }
 
   createListeners() {
-    this.diary.querySelectorAll('td .item').forEach(td => {
-      td.addEventListener('mouseover', () => {
-        td.classList.add('hover');
+    this.diary.querySelectorAll('td .item').forEach(item => {
+      item.addEventListener('mouseover', () => {
+        item.classList.add('hover');
+        this.perspectiveAnimation(item);
       });
-      td.addEventListener('mouseout', () => {
-        td.classList.remove('hover');
+      item.addEventListener('mouseout', () => {
+        item.classList.remove('hover');
       });
-      td.addEventListener('click', () => {
-        console.log(td);
+      item.addEventListener('click', () => {
+        console.log(item);
       });
-    });
+    }); // Листаем месяцы в календаре
+
     this.diary.querySelectorAll('.changeMonth').forEach(arrow => {
       arrow.addEventListener('click', () => {
         let date;
@@ -245,6 +250,40 @@ class Calendar {
         this.createListeners();
       });
     });
+  } // Анимация каждой ячейки календаря при наведениее мышки
+
+
+  perspectiveAnimation(item) {
+    let flag = true;
+    let degX = 0;
+    let degY = 0;
+
+    function animation() {
+      if (flag == true) {
+        degX += 0.1;
+        degY += 0.1;
+      } else {
+        degY -= 0.1;
+      }
+
+      degX >= 20 ? degX = 20 : null;
+
+      if (degY >= 20) {
+        flag = false;
+      } else if (degY <= -20) {
+        flag = true;
+      }
+
+      item.style.transform = `scale(1.5) rotateX(${degX}deg) rotateY(${degY}deg)`;
+
+      if (item.classList.contains('hover')) {
+        requestAnimationFrame(animation);
+      } else {
+        item.style.transform = '';
+      }
+    }
+
+    requestAnimationFrame(animation);
   }
 
   remove() {

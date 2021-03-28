@@ -50,13 +50,15 @@ body {
         position: relative;
         width: 150px;
         height: 125px;
+        padding: 0;
         box-sizing: border-box;
         border: 1px solid black; }
         .diary_content .calendar table tbody tr td .item {
           position: relative;
           width: 100%;
           height: 100%;
-          cursor: pointer; }
+          cursor: pointer;
+          transition: 0.5s all; }
           .diary_content .calendar table tbody tr td .item .day {
             display: flex;
             flex-direction: column;
@@ -69,10 +71,14 @@ body {
             opacity: 0.1; }
           .diary_content .calendar table tbody tr td .item .weekend {
             color: red; }
+          .diary_content .calendar table tbody tr td .item .today {
+            opacity: 0.7; }
         .diary_content .calendar table tbody tr td .hover {
           position: absolute;
           top: 0;
-          transform: scale(1.2);
-          transition: 0.5s transform ease;
+          transform: scale(1.5);
+          transition: 0.3s transform;
+          box-shadow: 3px 3px 10px 0px;
           border: 1px solid black;
-          background: white; }
+          background: white;
+          z-index: 1000; }
