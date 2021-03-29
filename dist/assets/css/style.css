@@ -207,6 +207,7 @@ header {
   position: relative;
   width: 100%;
   height: 53em;
+  overflow: auto;
   background: white; }
   .day .dateDay {
     position: absolute;
@@ -218,3 +219,32 @@ header {
     font-size: 30em;
     text-align: center;
     opacity: 0.1; }
+  .day table {
+    width: 100%;
+    border-collapse: collapse; }
+    .day table tr td {
+      width: 100%;
+      height: 50px;
+      border: 1px solid #dadce0;
+      border-left: none;
+      box-sizing: border-box; }
+      .day table tr td:first-of-type {
+        border-top: none; }
+    .day table tr .time {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 50px;
+      height: 50px;
+      box-sizing: border-box;
+      border-right: 1px solid #dadce0; }
+      .day table tr .time::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        right: 0;
+        width: 25px;
+        height: 1px;
+        background: #dadce0; }
