@@ -1,5 +1,7 @@
-import DOM from "./dom";
 import Matrix from "./matrix";
+import CalendarDOM from "./calendarDOM";
+import Week from "./week";
+import Day from "./day";
 
 export default class Calendar {
 	constructor(selector, date) {
@@ -10,31 +12,26 @@ export default class Calendar {
 	createCalendar(date) {
 		this.date = date;
 
-		// Создаем массив с числами и пустыми строками как матрицу для календаря
 		const matrix = new Matrix(date).init();
 		
-		// Создаем верстку календаря и наполняем ее интерактивом
-		new DOM('.diary', matrix, date).init();
+		new CalendarDOM('.diary', matrix, date).init();
 	}
 
 	createListeners() {
-		this.diary.querySelectorAll('td .item').forEach((item) => {
+		// Реализуем анимацию на ячейках календаря при наведении
+		this.diary.querySelectorAll('.calendar .item').forEach((item) => {
 			item.addEventListener('mouseover', () => {
 				item.classList.add('hover');
-				this.perspectiveAnimation(item);
+				this.createPerspectiveAnimation(item);
 			});
 
 			item.addEventListener('mouseout', () => {
 				item.classList.remove('hover');
 			});
-
-			item.addEventListener('click', () => {
-				console.log(item);
-			});
 		});
 
 		// Листаем месяцы в календаре
-		this.diary.querySelectorAll('.changeMonth').forEach((arrow) => {
+		document.querySelectorAll('header .changeMonth').forEach((arrow) => {
 			arrow.addEventListener('click', () => {
 				let date;
 
@@ -44,15 +41,44 @@ export default class Calendar {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
 				}
 	
-				this.remove();
+				this.clear();
 				this.createCalendar(date);
 				this.createListeners();
+			});
+		});
+
+		// Показываем выбранную неделю
+		// this.diary.querySelectorAll('.weekArrow').forEach((arrow) => {
+		// 	arrow.addEventListener('click', () => {
+		// 		const id = arrow.id.substr(-1, 1);
+
+		// 		this.diary.querySelectorAll('tr').forEach((tr, i) => {
+		// 			if (i == id) {
+		// 				const clone = tr.cloneNode(true);
+
+		// 				this.clear();
+
+		// 				new Week(clone).init();
+		// 			}
+		// 		});
+		// 	});
+		// });
+
+		// Показываем выбранный день
+		this.diary.querySelectorAll('.dateDay').forEach((day) => {
+			day.addEventListener('click', () => {
+				const clone = day.cloneNode(true);
+				
+				this.clear();
+
+				new Day(clone).init();
+				document.querySelector('.diary').style.flexGrow = '1';
 			});
 		});
 	}
 
 	// Анимация каждой ячейки календаря при наведениее мышки
-	perspectiveAnimation(item) {
+	createPerspectiveAnimation(item) {
 		let flag = true;
 		let degX = 0;
 		let degY = 0;
@@ -62,10 +88,11 @@ export default class Calendar {
 				degX += 0.1;
 				degY += 0.1;
 			} else {
+				// degX -= 0.05;
 				degY -= 0.1;
 			}
 
-			degX >= 20 ? degX = 20 : null;
+			degX >= 30 ? degX = 30 : null;
 
 			if (degY >= 20) {
 				flag = false;
@@ -85,12 +112,31 @@ export default class Calendar {
 		requestAnimationFrame(animation);
 	}
 
-	remove() {
+	// createWeekArrows() {
+	// 	const weekArrows = document.createElement('div');
+	// 		  weekArrows.classList.add('weekArrows');
+
+	// 	for (let i = 0; i <= 5; i++) {
+	// 		const arrow = document.createElement('div');
+	// 			  arrow.classList.add('weekArrow');
+	// 			  arrow.id = `week_${i}`;
+			
+	// 	    arrow.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
+
+	// 		weekArrows.appendChild(arrow);
+	// 	}
+
+	// 	this.diary.querySelector('tbody').appendChild(weekArrows);
+	// }
+
+	clear() {
 		this.diary.innerHTML = '';
+		document.querySelector('header .header').remove();
 	}
 
 	init() {
 		this.createCalendar(this.date);
+		// this.createWeekArrows();
 		this.createListeners();
 	}
 }

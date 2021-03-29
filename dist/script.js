@@ -119,7 +119,7 @@ window.addEventListener('DOMContentLoaded', () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CalendarMini; });
-/* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom */ "./src/js/modules/calendar/dom.js");
+/* harmony import */ var _calendarDOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calendarDOM */ "./src/js/modules/calendar/calendarDOM.js");
 /* harmony import */ var _matrix__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./matrix */ "./src/js/modules/calendar/matrix.js");
 
 
@@ -133,11 +133,34 @@ class CalendarMini {
   createCalendar(date) {
     this.date = date;
     const matrix = new _matrix__WEBPACK_IMPORTED_MODULE_1__["default"](this.date).init();
-    new _dom__WEBPACK_IMPORTED_MODULE_0__["default"](this.selector, matrix, date, 'mini').init();
+    new _calendarDOM__WEBPACK_IMPORTED_MODULE_0__["default"](this.selector, matrix, date, 'mini').init();
+  }
+
+  createListeners() {
+    this.aside.querySelectorAll('.changeMonth').forEach(arrow => {
+      arrow.addEventListener('click', () => {
+        let date;
+
+        if (arrow.classList.contains('prevMonth')) {
+          date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
+        } else {
+          date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
+        }
+
+        this.remove();
+        this.createCalendar(date);
+        this.createListeners();
+      });
+    });
+  }
+
+  remove() {
+    this.aside.innerHTML = '';
   }
 
   init() {
     this.createCalendar(this.date);
+    this.createListeners();
   }
 
 }
@@ -154,8 +177,12 @@ class CalendarMini {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Calendar; });
-/* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dom */ "./src/js/modules/calendar/dom.js");
-/* harmony import */ var _matrix__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./matrix */ "./src/js/modules/calendar/matrix.js");
+/* harmony import */ var _matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./matrix */ "./src/js/modules/calendar/matrix.js");
+/* harmony import */ var _calendarDOM__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendarDOM */ "./src/js/modules/calendar/calendarDOM.js");
+/* harmony import */ var _week__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./week */ "./src/js/modules/calendar/week.js");
+/* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
+
+
 
 
 class Calendar {
@@ -165,28 +192,24 @@ class Calendar {
   }
 
   createCalendar(date) {
-    this.date = date; // Создаем массив с числами и пустыми строками как матрицу для календаря
-
-    const matrix = new _matrix__WEBPACK_IMPORTED_MODULE_1__["default"](date).init(); // Создаем верстку календаря и наполняем ее интерактивом
-
-    new _dom__WEBPACK_IMPORTED_MODULE_0__["default"]('.diary', matrix, date).init();
+    this.date = date;
+    const matrix = new _matrix__WEBPACK_IMPORTED_MODULE_0__["default"](date).init();
+    new _calendarDOM__WEBPACK_IMPORTED_MODULE_1__["default"]('.diary', matrix, date).init();
   }
 
   createListeners() {
-    this.diary.querySelectorAll('td .item').forEach(item => {
+    // Реализуем анимацию на ячейках календаря при наведении
+    this.diary.querySelectorAll('.calendar .item').forEach(item => {
       item.addEventListener('mouseover', () => {
         item.classList.add('hover');
-        this.perspectiveAnimation(item);
+        this.createPerspectiveAnimation(item);
       });
       item.addEventListener('mouseout', () => {
         item.classList.remove('hover');
       });
-      item.addEventListener('click', () => {
-        console.log(item);
-      });
     }); // Листаем месяцы в календаре
 
-    this.diary.querySelectorAll('.changeMonth').forEach(arrow => {
+    document.querySelectorAll('header .changeMonth').forEach(arrow => {
       arrow.addEventListener('click', () => {
         let date;
 
@@ -196,15 +219,37 @@ class Calendar {
           date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
         }
 
-        this.remove();
+        this.clear();
         this.createCalendar(date);
         this.createListeners();
+      });
+    }); // Показываем выбранную неделю
+    // this.diary.querySelectorAll('.weekArrow').forEach((arrow) => {
+    // 	arrow.addEventListener('click', () => {
+    // 		const id = arrow.id.substr(-1, 1);
+    // 		this.diary.querySelectorAll('tr').forEach((tr, i) => {
+    // 			if (i == id) {
+    // 				const clone = tr.cloneNode(true);
+    // 				this.clear();
+    // 				new Week(clone).init();
+    // 			}
+    // 		});
+    // 	});
+    // });
+    // Показываем выбранный день
+
+    this.diary.querySelectorAll('.dateDay').forEach(day => {
+      day.addEventListener('click', () => {
+        const clone = day.cloneNode(true);
+        this.clear();
+        new _day__WEBPACK_IMPORTED_MODULE_3__["default"](clone).init();
+        document.querySelector('.diary').style.flexGrow = '1';
       });
     });
   } // Анимация каждой ячейки календаря при наведениее мышки
 
 
-  perspectiveAnimation(item) {
+  createPerspectiveAnimation(item) {
     let flag = true;
     let degX = 0;
     let degY = 0;
@@ -214,10 +259,11 @@ class Calendar {
         degX += 0.1;
         degY += 0.1;
       } else {
+        // degX -= 0.05;
         degY -= 0.1;
       }
 
-      degX >= 20 ? degX = 20 : null;
+      degX >= 30 ? degX = 30 : null;
 
       if (degY >= 20) {
         flag = false;
@@ -235,14 +281,28 @@ class Calendar {
     }
 
     requestAnimationFrame(animation);
-  }
+  } // createWeekArrows() {
+  // 	const weekArrows = document.createElement('div');
+  // 		  weekArrows.classList.add('weekArrows');
+  // 	for (let i = 0; i <= 5; i++) {
+  // 		const arrow = document.createElement('div');
+  // 			  arrow.classList.add('weekArrow');
+  // 			  arrow.id = `week_${i}`;
+  // 	    arrow.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
+  // 		weekArrows.appendChild(arrow);
+  // 	}
+  // 	this.diary.querySelector('tbody').appendChild(weekArrows);
+  // }
 
-  remove() {
+
+  clear() {
     this.diary.innerHTML = '';
+    document.querySelector('header .header').remove();
   }
 
   init() {
-    this.createCalendar(this.date);
+    this.createCalendar(this.date); // this.createWeekArrows();
+
     this.createListeners();
   }
 
@@ -250,37 +310,37 @@ class Calendar {
 
 /***/ }),
 
-/***/ "./src/js/modules/calendar/dom.js":
-/*!****************************************!*\
-  !*** ./src/js/modules/calendar/dom.js ***!
-  \****************************************/
+/***/ "./src/js/modules/calendar/calendarDOM.js":
+/*!************************************************!*\
+  !*** ./src/js/modules/calendar/calendarDOM.js ***!
+  \************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DOM; });
-class DOM {
-  constructor(selector, matrix, date, mode = 'max') {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CalendarDOM; });
+class CalendarDOM {
+  constructor(selector, matrix, date, size = 'big') {
     this.container = document.querySelector(selector);
     this.matrix = matrix;
     this.date = date;
-    this.mode = mode;
+    this.size = size;
   }
 
   createDOM() {
-    const arrOfMonths = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-    const calendar = document.createElement('div');
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-    const header = document.createElement('div');
-    const month = document.createElement('div');
-    const prevMonth = document.createElement('div');
-    const nextMonth = document.createElement('div');
+    const arrOfMonths = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+          calendar = document.createElement('div'),
+          table = document.createElement('table'),
+          thead = document.createElement('thead'),
+          tbody = document.createElement('tbody'),
+          header = document.createElement('div'),
+          month = document.createElement('div'),
+          prevMonth = document.createElement('div'),
+          nextMonth = document.createElement('div');
     let arrOfDays = [];
 
-    if (this.mode == 'max') {
+    if (this.size == 'big') {
       arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
     } else {
       arrOfDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -299,17 +359,17 @@ class DOM {
         const now = new Date();
         const td = document.createElement('td');
         const item = document.createElement('div');
-        const day = document.createElement('div');
+        const dateDay = document.createElement('div');
         item.classList.add('item');
-        day.classList.add('day');
+        dateDay.classList.add('dateDay');
 
         if (array[i] == now.getDate() && this.date.getFullYear() == now.getUTCFullYear() && this.date.getMonth() == now.getMonth()) {
-          day.classList.add('today');
+          dateDay.classList.add('today');
         }
 
-        i == array.length - 1 || i == array.length - 2 ? day.classList.add('weekend') : null;
-        day.innerHTML = array[i];
-        item.appendChild(day);
+        i == array.length - 1 || i == array.length - 2 ? dateDay.classList.add('weekend') : null;
+        dateDay.innerHTML = array[i];
+        item.appendChild(dateDay);
         td.appendChild(item);
         tr.appendChild(td);
       }
@@ -322,28 +382,63 @@ class DOM {
     month.classList.add('month');
     prevMonth.classList.add('prevMonth', 'changeMonth');
     nextMonth.classList.add('nextMonth', 'changeMonth');
-    month.innerHTML = arrOfMonths[this.date.getMonth()];
-
-    if (arrOfMonths[this.date.getMonth() - 1] == undefined) {
-      prevMonth.innerHTML = `<img src="/assets/icons/arrow-left.png"> ${arrOfMonths[arrOfMonths.length - 1]}`;
-    } else {
-      prevMonth.innerHTML = `<img src="/assets/icons/arrow-left.png"> ${arrOfMonths[this.date.getMonth() - 1]}`;
-    }
-
-    if (arrOfMonths[this.date.getMonth() + 1] == undefined) {
-      nextMonth.innerHTML = `${arrOfMonths[0]} <img src="/assets/icons/arrow-right.png">`;
-    } else {
-      nextMonth.innerHTML = `${arrOfMonths[this.date.getMonth() + 1]} <img src="/assets/icons/arrow-right.png">`;
-    }
-
+    month.innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
+    prevMonth.innerHTML = `<img src="/assets/icons/arrow-left.png">`;
+    nextMonth.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
     table.append(thead, tbody);
     calendar.appendChild(table);
-    header.append(prevMonth, month, nextMonth);
-    this.container.append(header, calendar);
+
+    if (this.size == 'big') {
+      header.append(month, prevMonth, nextMonth);
+      document.querySelector('header').appendChild(header);
+    } else {
+      header.append(prevMonth, month, nextMonth);
+      this.container.appendChild(header);
+    }
+
+    this.container.appendChild(calendar);
   }
 
   init() {
     return this.createDOM();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/js/modules/calendar/day.js":
+/*!****************************************!*\
+  !*** ./src/js/modules/calendar/day.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Day; });
+class Day {
+  constructor(day) {
+    this.day = day;
+  }
+
+  createDay() {
+    const day = document.createElement('div');
+    day.classList.add('day');
+    day.appendChild(this.day);
+    document.querySelector('.diary').appendChild(day);
+  }
+
+  centeringNumberOfDay() {
+    const width = document.querySelector('.dateDay').offsetWidth;
+    const width1 = document.querySelector('.dateDay').clientWidth;
+    const height = document.querySelector('.dateDay').offsetHeight;
+    console.log(width, width1, height);
+  }
+
+  init() {
+    this.createDay();
+    this.centeringNumberOfDay();
   }
 
 }
@@ -390,6 +485,49 @@ class Matrix {
 
   init() {
     return this.createCalendarMatrix();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/js/modules/calendar/week.js":
+/*!*****************************************!*\
+  !*** ./src/js/modules/calendar/week.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Week; });
+class Week {
+  constructor(week) {
+    this.week = week;
+  }
+
+  createWeek() {
+    const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+    const week = document.createElement('div');
+    week.classList.add('week');
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+
+    for (let elem of arrOfDays) {
+      const th = document.createElement('th');
+      th.innerHTML = elem;
+      thead.appendChild(th);
+    }
+
+    tbody.appendChild(this.week);
+    table.append(thead, tbody);
+    week.appendChild(table);
+    document.querySelector('.diary').appendChild(week);
+  }
+
+  init() {
+    this.createWeek();
   }
 
 }
