@@ -1,3 +1,5 @@
+import Modal from "./modal";
+
 export default class Day {
 	constructor(day) {
 		this.day = day;
@@ -46,6 +48,12 @@ export default class Day {
 		document.querySelector('.day').addEventListener('scroll', () => {
 			const px = document.querySelector('.day').scrollTop;
 			document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
+		});
+
+		document.querySelectorAll('.day td').forEach((time) => {
+			time.addEventListener('click', () => {
+				new Modal(time).init();
+			});
 		});
 	}
 

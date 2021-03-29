@@ -417,6 +417,8 @@ class CalendarDOM {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Day; });
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./src/js/modules/calendar/modal.js");
+
 class Day {
   constructor(day) {
     this.day = day;
@@ -462,6 +464,11 @@ class Day {
     document.querySelector('.day').addEventListener('scroll', () => {
       const px = document.querySelector('.day').scrollTop;
       document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
+    });
+    document.querySelectorAll('.day td').forEach(time => {
+      time.addEventListener('click', () => {
+        new _modal__WEBPACK_IMPORTED_MODULE_0__["default"](time).init();
+      });
     });
   }
 
@@ -516,6 +523,56 @@ class Matrix {
 
   init() {
     return this.createCalendarMatrix();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/js/modules/calendar/modal.js":
+/*!******************************************!*\
+  !*** ./src/js/modules/calendar/modal.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
+class Modal {
+  constructor(time) {
+    this.time = time;
+  }
+
+  createModal() {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('modal_wrapper');
+    wrapper.innerHTML = `
+			<div class="modal add_event">
+				<div class="user_event_name">
+					<input type="text">
+				</div>
+
+				<div class="events_name">
+					<div class="event_task">
+						<span>Задача</span>
+					</div>
+					<div class="event_meet">
+						<span>Встреча</span>
+					</div>
+
+					<div class="reminder">
+						<span>Напоминание</span>
+					</div>
+				</div>
+			
+			</div>
+		`;
+    document.body.appendChild(wrapper);
+  }
+
+  init() {
+    this.createModal();
   }
 
 }
