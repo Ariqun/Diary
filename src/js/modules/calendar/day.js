@@ -64,7 +64,7 @@ export default class Day {
 			});
 		});
 
-		document.querySelectorAll('.day .task').forEach((task) => {
+		document.querySelectorAll('.day .task_sticker').forEach((task) => {
 			const descr = task.querySelector('.task_descr');
 
 			task.addEventListener('mouseover', () => {
@@ -75,14 +75,14 @@ export default class Day {
 				descr.classList.remove('hidden');
 				task.classList.add('arrow_dialog');
 
-				task.closest('.static_wrapper').style.width = `${stickerWidth}px`;
+				task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
 
 				task.style.cssText = `
 					position: absolute;
-					top: -15px;
 					left: ${posSticker - posTd}px;
 					min-height: 80px;
 					font-size: 18px;
+					padding: 10px 10px;
 					z-index: 1;
 				`;
 			});

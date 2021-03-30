@@ -15,9 +15,13 @@ function createDOM(type, obj) {
 
 	if (type == 'task') {
 		node = `
-			<div id="${obj.id}" class="${type}">
-				<div class="${type}_name">${obj.name}</div>
-				<div class="${type}_time">${obj.time}</div>
+			<div id="${obj.id}" class="${type}_sticker">
+				<div class="${type}_name">${obj.name}
+					<div class="${type}_time">
+						<span>[</span>${obj.time}<span>]</span>
+					</div>
+				</div>
+				
 				<div class="${type}_descr hidden">${obj.descr}<div>
 			</div>
 		`;

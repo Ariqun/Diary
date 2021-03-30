@@ -201,9 +201,17 @@ class Calendar {
       item.addEventListener('mouseover', () => {
         item.classList.add('hover');
         this.createPerspectiveAnimation(item);
+        item.querySelectorAll('.small_sticker').forEach(stick => {
+          stick.innerHTML = `
+						${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
+					`;
+        });
       });
       item.addEventListener('mouseout', () => {
         item.classList.remove('hover');
+        item.querySelectorAll('.small_sticker').forEach(stick => {
+          stick.innerHTML = stick.getAttribute('data-time');
+        });
       });
     }); // Листаем месяцы в календаре
 
@@ -268,6 +276,36 @@ class Calendar {
     requestAnimationFrame(animation);
   }
 
+  loadLocalStorage() {
+    const obj = { ...localStorage
+    };
+
+    for (let key in obj) {
+      const typeOfNote = key.split('_')[0];
+      const date = key.split('_')[1];
+      const month = date.split('.')[1];
+      const day = date.split('.')[0];
+
+      if (this.date.getMonth() == month) {
+        document.querySelectorAll('.calendar .dateDay').forEach(dateDay => {
+          if (dateDay.innerHTML == day) {
+            const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
+            dateDay.previousElementSibling.prepend(sticker);
+          }
+        });
+      }
+    }
+
+    function createStickers(type, obj) {
+      const smallSticker = document.createElement('div');
+      smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+      smallSticker.setAttribute('data-name', obj.name);
+      smallSticker.setAttribute('data-time', obj.time);
+      smallSticker.innerHTML = `${obj.time}`;
+      return smallSticker;
+    }
+  }
+
   clear() {
     this.diary.innerHTML = '';
     document.querySelector('header .header').remove();
@@ -275,6 +313,7 @@ class Calendar {
 
   init() {
     this.createCalendar(this.date);
+    this.loadLocalStorage();
     this.createListeners();
   }
 
@@ -328,8 +367,10 @@ class CalendarDOM {
         const now = new Date();
         const td = document.createElement('td');
         const item = document.createElement('div');
+        const stickers = document.createElement('div');
         const dateDay = document.createElement('div');
         item.classList.add('item');
+        stickers.classList.add('stickers');
         dateDay.classList.add('dateDay');
 
         if (array[i] == now.getDate() && this.date.getFullYear() == now.getUTCFullYear() && this.date.getMonth() == now.getMonth()) {
@@ -338,7 +379,7 @@ class CalendarDOM {
 
         i == array.length - 1 || i == array.length - 2 ? dateDay.classList.add('weekend') : null;
         dateDay.innerHTML = array[i];
-        item.appendChild(dateDay);
+        item.append(stickers, dateDay);
         td.appendChild(item);
         tr.appendChild(td);
       }
@@ -446,7 +487,7 @@ class Day {
         new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
       });
     });
-    document.querySelectorAll('.day .task').forEach(task => {
+    document.querySelectorAll('.day .task_sticker').forEach(task => {
       const descr = task.querySelector('.task_descr');
       task.addEventListener('mouseover', () => {
         const stickerWidth = task.offsetWidth;
@@ -454,13 +495,13 @@ class Day {
         const posSticker = task.getBoundingClientRect().left;
         descr.classList.remove('hidden');
         task.classList.add('arrow_dialog');
-        task.closest('.static_wrapper').style.width = `${stickerWidth}px`;
+        task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
         task.style.cssText = `
 					position: absolute;
-					top: -15px;
 					left: ${posSticker - posTd}px;
 					min-height: 80px;
 					font-size: 18px;
+					padding: 10px 10px;
 					z-index: 1;
 				`;
       });
@@ -727,9 +768,13 @@ function createDOM(type, obj) {
 
   if (type == 'task') {
     node = `
-			<div id="${obj.id}" class="${type}">
-				<div class="${type}_name">${obj.name}</div>
-				<div class="${type}_time">${obj.time}</div>
+			<div id="${obj.id}" class="${type}_sticker">
+				<div class="${type}_name">${obj.name}
+					<div class="${type}_time">
+						<span>[</span>${obj.time}<span>]</span>
+					</div>
+				</div>
+				
 				<div class="${type}_descr hidden">${obj.descr}<div>
 			</div>
 		`;

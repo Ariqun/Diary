@@ -22,10 +22,20 @@ export default class Calendar {
 			item.addEventListener('mouseover', () => {
 				item.classList.add('hover');
 				this.createPerspectiveAnimation(item);
+
+				item.querySelectorAll('.small_sticker').forEach((stick) => {
+					stick.innerHTML = `
+						${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
+					`;
+				});
 			});
 
 			item.addEventListener('mouseout', () => {
 				item.classList.remove('hover');
+
+				item.querySelectorAll('.small_sticker').forEach((stick) => {
+					stick.innerHTML = stick.getAttribute('data-time');
+				});
 			});
 		});
 
@@ -50,7 +60,7 @@ export default class Calendar {
 		this.diary.querySelectorAll('.dateDay').forEach((day) => {
 			day.addEventListener('click', () => {
 				const clone = day.cloneNode(true);
-				
+
 				this.clear();
 
 				new Day(this.date, clone).init();
@@ -94,6 +104,38 @@ export default class Calendar {
 		requestAnimationFrame(animation);
 	}
 
+	loadLocalStorage() {
+		const obj = {...localStorage};
+
+		for (let key in obj) {
+			const typeOfNote = key.split('_')[0];
+			const date = key.split('_')[1];
+			const month = date.split('.')[1];
+			const day = date.split('.')[0];
+
+			if (this.date.getMonth() == month) {
+				document.querySelectorAll('.calendar .dateDay').forEach((dateDay) => {
+					if (dateDay.innerHTML == day) {
+						const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
+
+						dateDay.previousElementSibling.prepend(sticker);
+					}
+				});
+			}
+		}
+
+		function createStickers(type, obj) {
+			const smallSticker = document.createElement('div');
+				  smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+				  smallSticker.setAttribute('data-name', obj.name);
+				  smallSticker.setAttribute('data-time', obj.time);
+
+			smallSticker.innerHTML = `${obj.time}`;
+
+			return smallSticker;
+		}
+	}
+
 	clear() {
 		this.diary.innerHTML = '';
 		document.querySelector('header .header').remove();
@@ -101,6 +143,8 @@ export default class Calendar {
 
 	init() {
 		this.createCalendar(this.date);
+		this.loadLocalStorage();
 		this.createListeners();
+		
 	}
 }

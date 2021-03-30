@@ -13,6 +13,7 @@
 html
 	position: relative
 	min-height: 100%;
+	font-family: 'Roboto', sans-serif;
 body
 	margin: 0
 	background: url('/assets/img/bg.jpg');
@@ -156,16 +157,38 @@ header
 						.item
 							position: relative
 							width: 100%
-							height: 100%
+							height: inherit
 							cursor: pointer
 							transition: 0.5s all
+							.stickers
+								position: absolute
+								top: 0
+								left: 0
+								display: flex
+								flex-direction: column
+								flex-wrap: wrap
+								pointer-events: none
+								z-index: 2
+								.small_sticker
+									span
+										font-size: 12px
+										&:first-of-type
+											margin-left: 5px
+								.task_small_sticker
+									@include flex-row
+									min-width: 50px
+									margin: 0 5px 5px 0
+									background: skyblue
 							.dateDay
 								@include flex-column
 								position: absolute
+								top: 0
+								left: 0
 								width: 100%
 								height: 100%
 								font-size: 6em
 								opacity: 0.1
+								z-index: 1
 							.weekend
 								color: red
 							.today
@@ -177,8 +200,12 @@ header
 							transition: 0.3s transform
 							box-shadow: 3px 3px 10px 0px
 							border: 1px solid black
+							box-sizing: border-box
 							background: white
-							z-index: 1000
+							z-index: 100
+							.small_sticker
+								font-size: 10px
+								padding: 3px
 				.weekArrows
 					position: absolute
 					top: 31px
@@ -253,23 +280,39 @@ header
 					position: relative
 					display: flex
 					height: 100%
-					.task
+					.task_sticker
 						@include flex-column
 						max-width: 300px
 						min-height: 100%
-						padding: 0 10px
+						padding: 3px 10px
 						margin: 0 10px
 						cursor: pointer
+						box-sizing: border-box
+						border-radius: 5px
 						background: skyblue
+						.task_name
+							@include flex-row
+							.task_time
+								margin-left: 10px
+								span
+									font-size: 20px
+						.task_descr
+							color: rgba(0, 0, 0, 0.6)
+							text-align: center
+							margin-top: 5px
+							padding-top: 5px
+							border-top: 1px solid #1a73e8
 					.arrow_dialog
 						&::before
 							content: ''
 							position: absolute
-							top: 20px
-							left: -18px
-							border: solid transparent
-							border-width: 9px
-							border-right-color: skyblue
+							top: 15px
+							left: -10px
+							width: 20px
+							height: 20px
+							transform: rotate(45deg)
+							background: skyblue
+							z-index: -1
 			.time
 				@include flex-column
 				position: relative

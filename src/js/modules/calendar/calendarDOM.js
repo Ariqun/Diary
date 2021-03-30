@@ -35,9 +35,11 @@ export default class CalendarDOM {
 				const now = new Date();
 				const td = document.createElement('td');
 				const item = document.createElement('div');
+				const stickers = document.createElement('div');
 				const dateDay = document.createElement('div');
 
 				item.classList.add('item');
+				stickers.classList.add('stickers');
 				dateDay.classList.add('dateDay');
 
 				if (array[i] == now.getDate() && this.date.getFullYear() == now.getUTCFullYear() && this.date.getMonth() == now.getMonth()) {
@@ -47,7 +49,7 @@ export default class CalendarDOM {
 
 				dateDay.innerHTML = array[i];
 
-				item.appendChild(dateDay);
+				item.append(stickers, dateDay);
 				td.appendChild(item);
 				tr.appendChild(td);
 			}
