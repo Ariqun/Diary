@@ -137,11 +137,11 @@ class CalendarMini {
   }
 
   createListeners() {
-    this.aside.querySelectorAll('.changeMonth').forEach(arrow => {
+    this.aside.querySelectorAll('.change_month').forEach(arrow => {
       arrow.addEventListener('click', () => {
         let date;
 
-        if (arrow.classList.contains('prevMonth')) {
+        if (arrow.classList.contains('prev_month')) {
           date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
         } else {
           date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
@@ -179,9 +179,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Calendar; });
 /* harmony import */ var _matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./matrix */ "./src/js/modules/calendar/matrix.js");
 /* harmony import */ var _calendarDOM__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendarDOM */ "./src/js/modules/calendar/calendarDOM.js");
-/* harmony import */ var _week__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./week */ "./src/js/modules/calendar/week.js");
-/* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
-
+/* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
 
 
 
@@ -209,11 +207,11 @@ class Calendar {
       });
     }); // Листаем месяцы в календаре
 
-    document.querySelectorAll('header .changeMonth').forEach(arrow => {
+    document.querySelectorAll('header .change_month').forEach(arrow => {
       arrow.addEventListener('click', () => {
         let date;
 
-        if (arrow.classList.contains('prevMonth')) {
+        if (arrow.classList.contains('prev_month')) {
           date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
         } else {
           date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
@@ -223,26 +221,13 @@ class Calendar {
         this.createCalendar(date);
         this.createListeners();
       });
-    }); // Показываем выбранную неделю
-    // this.diary.querySelectorAll('.weekArrow').forEach((arrow) => {
-    // 	arrow.addEventListener('click', () => {
-    // 		const id = arrow.id.substr(-1, 1);
-    // 		this.diary.querySelectorAll('tr').forEach((tr, i) => {
-    // 			if (i == id) {
-    // 				const clone = tr.cloneNode(true);
-    // 				this.clear();
-    // 				new Week(clone).init();
-    // 			}
-    // 		});
-    // 	});
-    // });
-    // Показываем выбранный день
+    }); // Показываем выбранный день
 
     this.diary.querySelectorAll('.dateDay').forEach(day => {
       day.addEventListener('click', () => {
         const clone = day.cloneNode(true);
         this.clear();
-        new _day__WEBPACK_IMPORTED_MODULE_3__["default"](clone).init();
+        new _day__WEBPACK_IMPORTED_MODULE_2__["default"](this.date, clone).init();
         document.querySelector('.diary').style.flexGrow = '1';
       });
     });
@@ -281,19 +266,7 @@ class Calendar {
     }
 
     requestAnimationFrame(animation);
-  } // createWeekArrows() {
-  // 	const weekArrows = document.createElement('div');
-  // 		  weekArrows.classList.add('weekArrows');
-  // 	for (let i = 0; i <= 5; i++) {
-  // 		const arrow = document.createElement('div');
-  // 			  arrow.classList.add('weekArrow');
-  // 			  arrow.id = `week_${i}`;
-  // 	    arrow.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
-  // 		weekArrows.appendChild(arrow);
-  // 	}
-  // 	this.diary.querySelector('tbody').appendChild(weekArrows);
-  // }
-
+  }
 
   clear() {
     this.diary.innerHTML = '';
@@ -301,8 +274,7 @@ class Calendar {
   }
 
   init() {
-    this.createCalendar(this.date); // this.createWeekArrows();
-
+    this.createCalendar(this.date);
     this.createListeners();
   }
 
@@ -334,10 +306,7 @@ class CalendarDOM {
           table = document.createElement('table'),
           thead = document.createElement('thead'),
           tbody = document.createElement('tbody'),
-          header = document.createElement('div'),
-          month = document.createElement('div'),
-          prevMonth = document.createElement('div'),
-          nextMonth = document.createElement('div');
+          header = document.createElement('div');
     let arrOfDays = [];
 
     if (this.size == 'big') {
@@ -377,25 +346,26 @@ class CalendarDOM {
       tbody.appendChild(tr);
     }
 
-    calendar.classList.add('calendar');
-    header.classList.add('header');
-    month.classList.add('month');
-    prevMonth.classList.add('prevMonth', 'changeMonth');
-    nextMonth.classList.add('nextMonth', 'changeMonth');
-    month.innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
-    prevMonth.innerHTML = `<img src="/assets/icons/arrow-left.png">`;
-    nextMonth.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
-    table.append(thead, tbody);
-    calendar.appendChild(table);
-
     if (this.size == 'big') {
-      header.append(month, prevMonth, nextMonth);
+      header.innerHTML = `
+				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
+				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
+				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
+			`;
       document.querySelector('header').appendChild(header);
     } else {
-      header.append(prevMonth, month, nextMonth);
+      header.innerHTML = `
+				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
+				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
+				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
+			`;
       this.container.appendChild(header);
     }
 
+    calendar.classList.add('calendar');
+    header.classList.add('header');
+    table.append(thead, tbody);
+    calendar.appendChild(table);
     this.container.appendChild(calendar);
   }
 
@@ -420,7 +390,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./src/js/modules/calendar/modal.js");
 
 class Day {
-  constructor(day) {
+  constructor(date, day) {
+    this.date = date;
     this.day = day;
   }
 
@@ -465,9 +436,11 @@ class Day {
       const px = document.querySelector('.day').scrollTop;
       document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
     });
-    document.querySelectorAll('.day td').forEach(time => {
-      time.addEventListener('click', () => {
-        new _modal__WEBPACK_IMPORTED_MODULE_0__["default"](time).init();
+    document.querySelectorAll('.day td').forEach(row => {
+      row.addEventListener('click', () => {
+        const time = row.previousElementSibling.innerHTML;
+        const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+        new _modal__WEBPACK_IMPORTED_MODULE_0__["default"](choiceDate, time, row).init();
       });
     });
   }
@@ -540,8 +513,10 @@ class Matrix {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
 class Modal {
-  constructor(time) {
+  constructor(date, time, row) {
+    this.date = date;
     this.time = time;
+    this.row = row;
   }
 
   createModal() {
@@ -550,72 +525,110 @@ class Modal {
     wrapper.innerHTML = `
 			<div class="modal add_event">
 				<div class="user_event_name">
-					<input type="text">
+					<input type="text" placeholder="Введите название">
 				</div>
 
 				<div class="events_name">
-					<div class="event_task">
+					<div class="event event_task active">
 						<span>Задача</span>
 					</div>
-					<div class="event_meet">
-						<span>Встреча</span>
+
+					<div class="event event_reminder">
+						<span>Напоминание</span>
 					</div>
 
-					<div class="reminder">
-						<span>Напоминание</span>
+					<div class="event event_meet">
+						<span>Встреча</span>
 					</div>
 				</div>
 			
+				<div class="event_options">
+					${this.createTask()}
+				</div>
 			</div>
 		`;
     document.body.appendChild(wrapper);
   }
 
+  createTask() {
+    const task = `
+			<div class="modal_task">
+				<div class="modal_date_and_time">
+					<div class="modal_date">
+						${this.createDate()}
+					</div>
+
+					<div class="modal_time">
+						${this.createTimeList()}
+					</div>
+
+					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
+				</div>
+
+				<div class="task_descr">
+					<textarea placeholder="Описание задачи"></textarea>
+				</div>
+
+				<button class="modal_save">Записать</button>
+			</div>
+		`;
+    return task;
+  }
+
+  createReminder() {
+    const reminder = `
+			<div class="modal_reminder">
+				<div class="modal_date_and_time">
+					<div class="modal_date">
+						${this.createDate()}
+					</div>
+
+					<div class="modal_time">
+						${this.createTimeList()}
+					</div>
+
+					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
+				</div>
+
+				<button class="modal_save">Записать</button>
+			</div>
+		`;
+    return reminder;
+  }
+
+  createTimeList() {
+    const hour = this.time.substr(0, 3);
+    const select = `
+			<select>
+				<option>${hour}00</option>
+				<option>${hour}10</option>
+				<option>${hour}20</option>
+				<option>${hour}30</option>
+				<option>${hour}40</option>
+				<option>${hour}50</option>
+			</select>
+		`;
+    return select;
+  }
+
+  createDate() {
+    const arrOfMonths = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
+    const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+    const year = this.date.getFullYear();
+    const month = this.date.getMonth();
+    const dayOfWeek = this.date.getDay();
+    const day = this.date.getDate();
+    const date = `
+			${arrOfDays[dayOfWeek - 1]}, ${day} ${arrOfMonths[month]} ${year}
+		`;
+    return date;
+  }
+
   init() {
     this.createModal();
-  }
-
-}
-
-/***/ }),
-
-/***/ "./src/js/modules/calendar/week.js":
-/*!*****************************************!*\
-  !*** ./src/js/modules/calendar/week.js ***!
-  \*****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Week; });
-class Week {
-  constructor(week) {
-    this.week = week;
-  }
-
-  createWeek() {
-    const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
-    const week = document.createElement('div');
-    week.classList.add('week');
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-
-    for (let elem of arrOfDays) {
-      const th = document.createElement('th');
-      th.innerHTML = elem;
-      thead.appendChild(th);
-    }
-
-    tbody.appendChild(this.week);
-    table.append(thead, tbody);
-    week.appendChild(table);
-    document.querySelector('.diary').appendChild(week);
-  }
-
-  init() {
-    this.createWeek();
+    this.createTimeList();
+    console.log(this.time);
+    console.log(this.date);
   }
 
 }

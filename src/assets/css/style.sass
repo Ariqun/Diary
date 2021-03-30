@@ -46,7 +46,7 @@ header
 		flex-grow: 1
 		align-items: center
 		padding: 0 10px
-		.changeMonth
+		.change_month
 			@include flex-row
 			cursor: pointer
 			padding: 0 15px
@@ -71,7 +71,7 @@ header
 		width: 100%
 		box-sizing: border-box
 		background: white
-		.prevMonth, .nextMonth
+		.prev_month, .next_month
 			@include flex-row
 			font-size: 12px
 			cursor: pointer
@@ -278,6 +278,85 @@ header
 		top: calc(50% - 300px)
 		left: calc(50% - 150px)
 		width: 500px
-		height: 600px
+		padding: 40px
 		border: 1px solid black
+		box-sizing: border-box
 		background: white
+		.user_event_name
+			width: 100%
+			input
+				width: 100%
+				height: 35px
+				font-size: 23px
+				outline: none
+				padding: 0 5px
+				border: none
+				border-bottom: 1px solid #dadce0
+				box-sizing: border-box
+				&:focus
+					border-bottom: 2px solid #1a73e8
+		.events_name
+			display: flex
+			justify-content: space-around
+			margin-top: 20px
+			.event
+				@include flex-row
+				height: 40px
+				font-size: 18px
+				padding: 0 15px
+			.active
+				color: #1a73e8
+				border-radius: 5px
+				background: #dadce0
+		.event_options
+			.modal_task, .modal_reminder
+				position: relative
+				height: 350px
+				padding: 40px 10px 10px
+				border-left: 1px solid #dadce0
+				box-sizing: border-box
+				.modal_date_and_time
+					display: flex
+					.modal_date
+						margin-right: 10px
+					.modal_time
+						margin-right: 10px
+						select
+							outline: none
+							border: none
+						&:hover
+							border-bottom: 2px solid #1a73e8
+				.task_descr
+					margin-top: 10px
+					textarea
+						width: 395px
+						height: 200px
+						font-size: 15px
+						resize: none
+						outline: none
+						padding: 10px
+						border-radius: 10px
+						border: none
+						box-sizing: border-box
+						background: rgb(237, 238, 240)
+						&:focus
+							border-bottom: 2px solid #1a73e8
+							border-bottom-left-radius: 0
+							border-bottom-right-radius: 0
+				.modal_save
+					position: absolute
+					bottom: 0px
+					right: 10px
+					width: 100px
+					height: 35px
+					color: white
+					outline: none
+					cursor: pointer
+					border: 1px solid #0396ff
+					border-radius: 5px
+					background: linear-gradient( 180deg, #ABDCFF 10%, #0396FF 100%)
+					&:hover
+						opacity: 0.8
+					&:active
+						box-shadow: inset 0px 1px 4px -1px black
+						

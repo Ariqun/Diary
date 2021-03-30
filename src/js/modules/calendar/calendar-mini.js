@@ -17,11 +17,11 @@ export default class CalendarMini {
 	}
 
 	createListeners() {
-		this.aside.querySelectorAll('.changeMonth').forEach((arrow) => {
+		this.aside.querySelectorAll('.change_month').forEach((arrow) => {
 			arrow.addEventListener('click', () => {
 				let date;
 				
-				if (arrow.classList.contains('prevMonth')) {
+				if (arrow.classList.contains('prev_month')) {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
 				} else {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);

@@ -12,10 +12,7 @@ export default class CalendarDOM {
 			  table = document.createElement('table'),
 		  	  thead = document.createElement('thead'),
 			  tbody = document.createElement('tbody'),
-			  header = document.createElement('div'),
-			  month = document.createElement('div'),
-			  prevMonth = document.createElement('div'),
-			  nextMonth = document.createElement('div');
+			  header = document.createElement('div');
 		let arrOfDays = [];
 
 		if (this.size == 'big') {
@@ -58,27 +55,27 @@ export default class CalendarDOM {
 			tbody.appendChild(tr);
 		}
 
-		calendar.classList.add('calendar');
-		header.classList.add('header');
-		month.classList.add('month');
-		prevMonth.classList.add('prevMonth', 'changeMonth');
-		nextMonth.classList.add('nextMonth', 'changeMonth');
-
-		month.innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
-		prevMonth.innerHTML = `<img src="/assets/icons/arrow-left.png">`;
-		nextMonth.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
-
-		table.append(thead, tbody);
-		calendar.appendChild(table);
-
 		if (this.size == 'big') {
-			header.append(month, prevMonth, nextMonth);
+			header.innerHTML = `
+				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
+				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
+				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
+			`;
 			document.querySelector('header').appendChild(header);
 		} else {
-			header.append(prevMonth, month, nextMonth);
+			header.innerHTML = `
+				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
+				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
+				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
+			`;
 			this.container.appendChild(header);
 		}
 
+		calendar.classList.add('calendar');
+		header.classList.add('header');
+
+		table.append(thead, tbody);
+		calendar.appendChild(table);
 		this.container.appendChild(calendar);
 	}
 

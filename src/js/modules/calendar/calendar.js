@@ -1,6 +1,5 @@
 import Matrix from "./matrix";
 import CalendarDOM from "./calendarDOM";
-import Week from "./week";
 import Day from "./day";
 
 export default class Calendar {
@@ -31,11 +30,11 @@ export default class Calendar {
 		});
 
 		// Листаем месяцы в календаре
-		document.querySelectorAll('header .changeMonth').forEach((arrow) => {
+		document.querySelectorAll('header .change_month').forEach((arrow) => {
 			arrow.addEventListener('click', () => {
 				let date;
 
-				if (arrow.classList.contains('prevMonth')) {
+				if (arrow.classList.contains('prev_month')) {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
 				} else {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
@@ -47,23 +46,6 @@ export default class Calendar {
 			});
 		});
 
-		// Показываем выбранную неделю
-		// this.diary.querySelectorAll('.weekArrow').forEach((arrow) => {
-		// 	arrow.addEventListener('click', () => {
-		// 		const id = arrow.id.substr(-1, 1);
-
-		// 		this.diary.querySelectorAll('tr').forEach((tr, i) => {
-		// 			if (i == id) {
-		// 				const clone = tr.cloneNode(true);
-
-		// 				this.clear();
-
-		// 				new Week(clone).init();
-		// 			}
-		// 		});
-		// 	});
-		// });
-
 		// Показываем выбранный день
 		this.diary.querySelectorAll('.dateDay').forEach((day) => {
 			day.addEventListener('click', () => {
@@ -71,7 +53,7 @@ export default class Calendar {
 				
 				this.clear();
 
-				new Day(clone).init();
+				new Day(this.date, clone).init();
 				document.querySelector('.diary').style.flexGrow = '1';
 			});
 		});
@@ -112,23 +94,6 @@ export default class Calendar {
 		requestAnimationFrame(animation);
 	}
 
-	// createWeekArrows() {
-	// 	const weekArrows = document.createElement('div');
-	// 		  weekArrows.classList.add('weekArrows');
-
-	// 	for (let i = 0; i <= 5; i++) {
-	// 		const arrow = document.createElement('div');
-	// 			  arrow.classList.add('weekArrow');
-	// 			  arrow.id = `week_${i}`;
-			
-	// 	    arrow.innerHTML = `<img src="/assets/icons/arrow-right.png">`;
-
-	// 		weekArrows.appendChild(arrow);
-	// 	}
-
-	// 	this.diary.querySelector('tbody').appendChild(weekArrows);
-	// }
-
 	clear() {
 		this.diary.innerHTML = '';
 		document.querySelector('header .header').remove();
@@ -136,7 +101,6 @@ export default class Calendar {
 
 	init() {
 		this.createCalendar(this.date);
-		// this.createWeekArrows();
 		this.createListeners();
 	}
 }

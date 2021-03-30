@@ -1,7 +1,8 @@
 import Modal from "./modal";
 
 export default class Day {
-	constructor(day) {
+	constructor(date, day) {
+		this.date = date;
 		this.day = day;
 	}
 
@@ -50,9 +51,13 @@ export default class Day {
 			document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
 		});
 
-		document.querySelectorAll('.day td').forEach((time) => {
-			time.addEventListener('click', () => {
-				new Modal(time).init();
+		document.querySelectorAll('.day td').forEach((row) => {
+			row.addEventListener('click', () => {
+				const time = row.previousElementSibling.innerHTML;
+
+				const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+
+				new Modal(choiceDate, time, row).init();
 			});
 		});
 	}
