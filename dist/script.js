@@ -387,7 +387,9 @@ class CalendarDOM {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Day; });
-/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./src/js/modules/calendar/modal.js");
+/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal */ "./src/js/modules/calendar/modal.js");
+
 
 class Day {
   constructor(date, day) {
@@ -416,6 +418,7 @@ class Day {
       const time = document.createElement('div');
       time.classList.add('time');
       time.innerHTML = `${addZero(i)}:00`;
+      td.innerHTML = `<div class="inner_wrapper"></div>`;
       tr.append(time, td);
       table.appendChild(tr);
     }
@@ -440,15 +443,43 @@ class Day {
       row.addEventListener('click', () => {
         const time = row.previousElementSibling.innerHTML;
         const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-        new _modal__WEBPACK_IMPORTED_MODULE_0__["default"](choiceDate, time, row).init();
+        new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
+      });
+    });
+    document.querySelectorAll('.day .task').forEach(task => {
+      const descr = task.querySelector('.task_descr');
+      task.addEventListener('mouseover', () => {
+        const stickerWidth = task.offsetWidth;
+        const posTd = task.closest('td').getBoundingClientRect().left;
+        const posSticker = task.getBoundingClientRect().left;
+        descr.classList.remove('hidden');
+        task.classList.add('arrow_dialog');
+        task.closest('.static_wrapper').style.width = `${stickerWidth}px`;
+        task.style.cssText = `
+					position: absolute;
+					top: -15px;
+					left: ${posSticker - posTd}px;
+					min-height: 80px;
+					font-size: 18px;
+					z-index: 1;
+				`;
+      });
+      task.addEventListener('mouseout', () => {
+        descr.classList.add('hidden');
+        task.classList.remove('arrow_dialog');
+        task.closest('.static_wrapper').style.width = '';
+        task.style.cssText = '';
       });
     });
   }
 
   init() {
+    // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+    const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
     this.createDay();
     this.centeringNumberOfDay();
     this.createGraph();
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
     this.createListeners();
   }
 
@@ -512,11 +543,14 @@ class Matrix {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
+/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+
 class Modal {
   constructor(date, time, row) {
     this.date = date;
     this.time = time;
     this.row = row;
+    this.typeOfNote = 'task';
   }
 
   createModal() {
@@ -559,7 +593,7 @@ class Modal {
 					</div>
 
 					<div class="modal_time">
-						${this.createTimeList()}
+						<input type="text" value="${this.time}">
 					</div>
 
 					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
@@ -584,7 +618,7 @@ class Modal {
 					</div>
 
 					<div class="modal_time">
-						${this.createTimeList()}
+						<input type="text" value="${this.time}">
 					</div>
 
 					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
@@ -611,27 +645,116 @@ class Modal {
     return select;
   }
 
-  createDate() {
+  createDate(mode = 'modal') {
     const arrOfMonths = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
     const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
     const year = this.date.getFullYear();
     const month = this.date.getMonth();
     const dayOfWeek = this.date.getDay();
     const day = this.date.getDate();
-    const date = `
-			${arrOfDays[dayOfWeek - 1]}, ${day} ${arrOfMonths[month]} ${year}
-		`;
+    let date = '';
+
+    if (mode == 'modal') {
+      date = `${arrOfDays[dayOfWeek - 1]}, ${day} ${arrOfMonths[month]} ${year}`;
+    } else {
+      date = `${day}.${month}.${year}`;
+    }
+
     return date;
+  }
+
+  checkTimeInInput() {
+    document.querySelector('.modal_time input').addEventListener('change', () => {
+      const str = document.querySelector('.modal_time input').value;
+    });
+  }
+
+  saveNote() {
+    document.querySelector('.modal_save').addEventListener('click', () => {
+      const name = document.querySelector('.user_event_name input').value;
+      const time = document.querySelector('.modal_time input').value;
+      const descr = document.querySelector('.task_descr textarea').value;
+      const note = `${this.typeOfNote}_${this.createDate('localStorage')}_${time}`; // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+
+      const dateForLocalStorage = `${this.date.getDate()}.${this.date.getMonth()}.${this.date.getFullYear()}`;
+      const obj = {
+        'id': note,
+        'name': name,
+        'time': time,
+        'descr': descr,
+        'date': dateForLocalStorage
+      };
+      localStorage.setItem(note, JSON.stringify(obj));
+      document.querySelector('.modal_wrapper').remove();
+      Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
+    });
   }
 
   init() {
     this.createModal();
     this.createTimeList();
-    console.log(this.time);
-    console.log(this.date);
+    this.checkTimeInInput();
+    this.saveNote();
   }
 
 }
+
+/***/ }),
+
+/***/ "./src/js/modules/localStorage.js":
+/*!****************************************!*\
+  !*** ./src/js/modules/localStorage.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+
+const checkLocalStorage = date => {
+  const obj = { ...localStorage
+  };
+
+  for (let key in obj) {
+    const typeOfNote = key.split('_')[0];
+    pushNote(date, typeOfNote, JSON.parse(obj[key]));
+  }
+};
+
+function createDOM(type, obj) {
+  let node = '';
+
+  if (type == 'task') {
+    node = `
+			<div id="${obj.id}" class="${type}">
+				<div class="${type}_name">${obj.name}</div>
+				<div class="${type}_time">${obj.time}</div>
+				<div class="${type}_descr hidden">${obj.descr}<div>
+			</div>
+		`;
+  }
+
+  return node;
+}
+
+function pushNote(date, type, obj) {
+  document.querySelectorAll('.time').forEach(time => {
+    const hourRow = time.innerHTML.substr(0, 2);
+    const hourInDB = obj.time.substr(0, 2);
+
+    if (date == obj.date) {
+      if (hourRow == hourInDB) {
+        const item = document.createElement('div');
+        item.classList.add('static_wrapper');
+        item.innerHTML = createDOM(type, obj);
+        time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+      }
+    }
+  });
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (checkLocalStorage);
 
 /***/ })
 

@@ -1,8 +1,11 @@
+import checkLocalStorage from '../localStorage';
+
 export default class Modal {
 	constructor(date, time, row) {
 		this.date = date;
 		this.time = time;
 		this.row = row;
+		this.typeOfNote = 'task';
 	}
 
 	createModal() {
@@ -47,7 +50,7 @@ export default class Modal {
 					</div>
 
 					<div class="modal_time">
-						${this.createTimeList()}
+						<input type="text" value="${this.time}">
 					</div>
 
 					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
@@ -73,7 +76,7 @@ export default class Modal {
 					</div>
 
 					<div class="modal_time">
-						${this.createTimeList()}
+						<input type="text" value="${this.time}">
 					</div>
 
 					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
@@ -102,25 +105,60 @@ export default class Modal {
 		return select;
 	}
 
-	createDate() {
+	createDate(mode = 'modal') {
 		const arrOfMonths = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
 		const arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 		const year = this.date.getFullYear();
 		const month = this.date.getMonth();
 		const dayOfWeek = this.date.getDay();
 		const day = this.date.getDate();
+		let date = '';
 
-		const date = `
-			${arrOfDays[dayOfWeek - 1]}, ${day} ${arrOfMonths[month]} ${year}
-		`;
-
+		if (mode == 'modal') {
+			date = `${arrOfDays[dayOfWeek - 1]}, ${day} ${arrOfMonths[month]} ${year}`;
+		} else {
+			date = `${day}.${month}.${year}`; 
+		}
+		
 		return date;
+	}
+
+	checkTimeInInput() {
+		document.querySelector('.modal_time input').addEventListener('change', () => {
+			const str = document.querySelector('.modal_time input').value;
+			
+		});
+	}
+
+	saveNote() {
+		document.querySelector('.modal_save').addEventListener('click', () => {
+			const name = document.querySelector('.user_event_name input').value;
+			const time = document.querySelector('.modal_time input').value;
+			const descr = document.querySelector('.task_descr textarea').value;
+			const note = `${this.typeOfNote}_${this.createDate('localStorage')}_${time}`;
+			// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+			const dateForLocalStorage = `${this.date.getDate()}.${this.date.getMonth()}.${this.date.getFullYear()}`;
+
+			const obj = {
+				'id': note,
+				'name': name,
+				'time': time,
+				'descr': descr,
+				'date': dateForLocalStorage
+			};
+
+			localStorage.setItem(note, JSON.stringify(obj));
+
+			document.querySelector('.modal_wrapper').remove();
+
+			checkLocalStorage(dateForLocalStorage);
+		});
 	}
 
 	init() {
 		this.createModal();
 		this.createTimeList();
-		console.log(this.time);
-		console.log(this.date);
+		this.checkTimeInInput();
+		this.saveNote();
 	}
 }

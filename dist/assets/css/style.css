@@ -19,6 +19,9 @@ footer {
   position: relative;
   display: flex; }
 
+.hidden {
+  display: none; }
+
 /* -------------- Header -------------- */
 header {
   display: flex;
@@ -231,6 +234,29 @@ header {
       box-sizing: border-box; }
       .day table tr td:first-of-type {
         border-top: none; }
+      .day table tr td .inner_wrapper {
+        position: relative;
+        display: flex;
+        height: 100%; }
+        .day table tr td .inner_wrapper .task {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          max-width: 300px;
+          min-height: 100%;
+          padding: 0 10px;
+          margin: 0 10px;
+          cursor: pointer;
+          background: skyblue; }
+        .day table tr td .inner_wrapper .arrow_dialog::before {
+          content: '';
+          position: absolute;
+          top: 20px;
+          left: -18px;
+          border: solid transparent;
+          border-width: 9px;
+          border-right-color: skyblue; }
     .day table tr .time {
       display: flex;
       flex-direction: column;
@@ -302,16 +328,23 @@ header {
       border-left: 1px solid #dadce0;
       box-sizing: border-box; }
       .modal_wrapper .modal .event_options .modal_task .modal_date_and_time, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time {
-        display: flex; }
+        display: flex;
+        align-items: center;
+        height: 30px; }
         .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_date, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_date {
           margin-right: 10px; }
         .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time {
           margin-right: 10px; }
-          .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time select, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time select {
+          .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time input, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time input {
+            width: 50px;
+            height: 30px;
+            font-size: 16px;
+            text-align: center;
             outline: none;
-            border: none; }
-          .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time:hover, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time:hover {
-            border-bottom: 2px solid #1a73e8; }
+            border: none;
+            border-bottom: 2px solid rgba(0, 0, 0, 0); }
+            .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time input:focus, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time input:focus {
+              border-bottom: 2px solid #1a73e8; }
       .modal_wrapper .modal .event_options .modal_task .task_descr, .modal_wrapper .modal .event_options .modal_reminder .task_descr {
         margin-top: 10px; }
         .modal_wrapper .modal .event_options .modal_task .task_descr textarea, .modal_wrapper .modal .event_options .modal_reminder .task_descr textarea {
