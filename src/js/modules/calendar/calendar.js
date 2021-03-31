@@ -4,21 +4,22 @@ import Day from "./day";
 
 export default class Calendar {
 	constructor(selector, date) {
-		this.diary = document.querySelector(selector);
+		this.selector = selector;
+		this.container = document.querySelector(selector);
 		this.date = date;
 	}
 
 	createCalendar(date) {
 		this.date = date;
+		this.container.style = '';
 
 		const matrix = new Matrix(date).init();
-		
-		new CalendarDOM('.diary', matrix, date).init();
+		new CalendarDOM(this.selector, matrix, date).init();
 	}
 
 	createListeners() {
 		// Реализуем анимацию на ячейках календаря при наведении
-		this.diary.querySelectorAll('.calendar .item').forEach((item) => {
+		this.container.querySelectorAll('.calendar_big .item').forEach((item) => {
 			item.addEventListener('mouseover', () => {
 				item.classList.add('hover');
 				this.createPerspectiveAnimation(item);
@@ -52,20 +53,27 @@ export default class Calendar {
 	
 				this.clear();
 				this.createCalendar(date);
-				this.createListeners();
+				this.loadLocalStorage();
 			});
 		});
 
 		// Показываем выбранный день
-		this.diary.querySelectorAll('.dateDay').forEach((day) => {
+		this.container.querySelectorAll('.dateDay').forEach((day) => {
 			day.addEventListener('click', () => {
 				const clone = day.cloneNode(true);
 
 				this.clear();
-
 				new Day(this.date, clone).init();
-				document.querySelector('.diary').style.flexGrow = '1';
+				this.container.style.flexGrow = '1';
 			});
+		});
+
+		// Возвращаемся на главную
+		document.querySelector('header .title').addEventListener('click', () => {
+			const date = new Date();
+	
+			this.clear();
+			new Calendar(this.selector, date).init();
 		});
 	}
 
@@ -114,7 +122,7 @@ export default class Calendar {
 			const day = date.split('.')[0];
 
 			if (this.date.getMonth() == month) {
-				document.querySelectorAll('.calendar .dateDay').forEach((dateDay) => {
+				document.querySelectorAll('.calendar_big .dateDay').forEach((dateDay) => {
 					if (dateDay.innerHTML == day) {
 						const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
 
@@ -137,8 +145,8 @@ export default class Calendar {
 	}
 
 	clear() {
-		this.diary.innerHTML = '';
-		document.querySelector('header .header').remove();
+		this.container.innerHTML = '';
+		document.querySelectorAll('header .month').forEach(item => item.innerHTML = '');
 	}
 
 	init() {

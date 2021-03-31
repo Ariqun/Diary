@@ -41,10 +41,15 @@ header
 	border-bottom: 1px solid #dadce0
 	box-sizing: border-box
 	background: white
-	.name
-		@include flex-column
+	.title
+		display: flex
+		flex-direction: column
+		justify-content: center
 		width: 355px
-	.header
+		padding: 0 10px
+		box-sizing: border-box
+		cursor: pointer
+	.current_month
 		display: flex
 		flex-grow: 1
 		align-items: center
@@ -56,7 +61,7 @@ header
 			img
 				width: 15px
 		.month
-			width: 165px
+			width: 185px
 			font-size: 26px
 
 
@@ -67,57 +72,58 @@ header
 	padding: 5px 10px
 	margin-right: 20px
 	background: white
-	.header
-		display: flex
-		justify-content: space-between
-		align-items: center
-		width: 100%
-		box-sizing: border-box
-		background: white
-		.prev_month, .next_month
-			@include flex-row
-			font-size: 12px
-			cursor: pointer
-			img
-				width: 15px
-				padding: 10px
-		.month
-			@include flex-column
-			font-size: 20px
-	.calendar
-		table
-			margin: 0 auto
-			border-collapse: collapse
-			thead
-				th
-					height: 30px
-			tbody
-				background: white
-				tr
-					td
-						position: relative
-						width: 40px
-						height: 40px
-						padding: 0
-						box-sizing: border-box
-						.item
+	.wrapper_for_small_calendar
+		.current_month
+			display: flex
+			justify-content: space-between
+			align-items: center
+			width: 100%
+			box-sizing: border-box
+			background: white
+			.prev_month, .next_month
+				@include flex-row
+				font-size: 12px
+				cursor: pointer
+				img
+					width: 15px
+					padding: 10px
+			.month
+				@include flex-column
+				font-size: 20px
+		.calendar_small
+			table
+				margin: 0 auto
+				border-collapse: collapse
+				thead
+					th
+						height: 30px
+				tbody
+					background: white
+					tr
+						td
 							position: relative
-							width: 100%
-							height: 100%
-							cursor: pointer
-							transition: 0.5s all
-							.dateDay
-								@include flex-column
-								position: absolute
+							width: 40px
+							height: 40px
+							padding: 0
+							box-sizing: border-box
+							.item
+								position: relative
 								width: 100%
 								height: 100%
-								font-size: 1em
-							.weekend
-								color: red
-							.today
-								color: white
-								border-radius: 50%
-								background: #1a73e8
+								cursor: pointer
+								transition: 0.5s all
+								.dateDay
+									@include flex-column
+									position: absolute
+									width: 100%
+									height: 100%
+									font-size: 1em
+								.weekend
+									color: red
+								.today
+									color: white
+									border-radius: 50%
+									background: #1a73e8
 
 /* -------------- Right Side -------------- */
 
@@ -134,93 +140,94 @@ header
 .diary
 	@include flex-column
 	justify-content: flex-start
-	.calendar
-		table
-			position: relative
-			border-collapse: collapse
-			thead
-				border-right: 1px solid #dadce0
-				border-left: 1px solid #dadce0
-				background: white
-				th
-					height: 28px
-			tbody
-				background: white
-				tr
-					td
-						position: relative
-						width: 200px
-						height: 135px
-						padding: 0
-						box-sizing: border-box
-						border: 1px solid #dadce0
-						.item
+	.wrapper_for_big_calendar
+		.calendar_big
+			table
+				position: relative
+				border-collapse: collapse
+				thead
+					border-right: 1px solid #dadce0
+					border-left: 1px solid #dadce0
+					background: white
+					th
+						height: 28px
+				tbody
+					background: white
+					tr
+						td
 							position: relative
-							width: 100%
-							height: inherit
-							cursor: pointer
-							transition: 0.5s all
-							.stickers
-								position: absolute
-								top: 0
-								left: 0
-								display: flex
-								flex-direction: column
-								flex-wrap: wrap
-								pointer-events: none
-								z-index: 2
-								.small_sticker
-									span
-										font-size: 12px
-										&:first-of-type
-											margin-left: 5px
-								.task_small_sticker
-									@include flex-row
-									min-width: 50px
-									margin: 0 5px 5px 0
-									background: skyblue
-							.dateDay
-								@include flex-column
-								position: absolute
-								top: 0
-								left: 0
-								width: 100%
-								height: 100%
-								font-size: 6em
-								opacity: 0.1
-								z-index: 1
-							.weekend
-								color: red
-							.today
-								opacity: 0.7
-						.hover
-							position: absolute
-							top: 0
-							transform: scale(1.5)
-							transition: 0.3s transform
-							box-shadow: 3px 3px 10px 0px
-							border: 1px solid black
+							width: 200px
+							height: 135px
+							padding: 0
 							box-sizing: border-box
-							background: white
-							z-index: 100
-							.small_sticker
-								font-size: 10px
-								padding: 3px
-				.weekArrows
-					position: absolute
-					top: 31px
-					right: -40px
-					width: 40px
-					div
-						@include flex-column
-						height: 125px
-						opacity: 0.7
-						transition: 0.5s all
-						box-sizing: border-box
-						background: skyblue
-						&:hover
-							width: 50px
-							opacity: 1
+							border: 1px solid #dadce0
+							.item
+								position: relative
+								width: 100%
+								height: inherit
+								cursor: pointer
+								transition: 0.5s all
+								.stickers
+									position: absolute
+									top: 0
+									left: 0
+									display: flex
+									flex-direction: column
+									flex-wrap: wrap
+									pointer-events: none
+									z-index: 2
+									.small_sticker
+										span
+											font-size: 12px
+											&:first-of-type
+												margin-left: 5px
+									.task_small_sticker
+										@include flex-row
+										min-width: 50px
+										margin: 0 5px 5px 0
+										background: skyblue
+								.dateDay
+									@include flex-column
+									position: absolute
+									top: 0
+									left: 0
+									width: 100%
+									height: 100%
+									font-size: 6em
+									opacity: 0.1
+									z-index: 1
+								.weekend
+									color: red
+								.today
+									opacity: 0.7
+							.hover
+								position: absolute
+								top: 0
+								transform: scale(1.5)
+								transition: 0.3s transform
+								box-shadow: 3px 3px 10px 0px
+								border: 1px solid black
+								box-sizing: border-box
+								background: white
+								z-index: 100
+								.small_sticker
+									font-size: 10px
+									padding: 3px
+					.weekArrows
+						position: absolute
+						top: 31px
+						right: -40px
+						width: 40px
+						div
+							@include flex-column
+							height: 125px
+							opacity: 0.7
+							transition: 0.5s all
+							box-sizing: border-box
+							background: skyblue
+							&:hover
+								width: 50px
+								opacity: 1
 
 
 /* -------------- Week -------------- */

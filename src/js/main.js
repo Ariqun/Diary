@@ -1,12 +1,13 @@
 'use strict';
 
 import Calendar from "./modules/calendar/calendar";
-import CalendarMini from "./modules/calendar/calendar-mini";
+import LeftSide from "./modules/left_side";
 
 window.addEventListener('DOMContentLoaded', () => {
 	const date = new Date();
 
-	new Calendar('.diary', date).init();
-	new CalendarMini('.left_side', date).init();
+	new LeftSide('.left_side', date).init();
+	new Calendar('.calendar_big', date).init();
+	
 
 });

@@ -3,21 +3,20 @@ import Matrix from "./matrix";
 
 export default class CalendarMini {
 	constructor(selector, date) {
-		this.aside = document.querySelector(selector);
+		this.container = document.querySelector(selector);
 		this.selector = selector;
 		this.date = date;
 	}
 
-	createCalendar(date) {
+	createSmallCalendar(date) {
 		this.date = date;
 		const matrix = new Matrix(this.date).init();
 
 		new CalendarDOM(this.selector, matrix, date, 'mini').init();
-
 	}
 
 	createListeners() {
-		this.aside.querySelectorAll('.change_month').forEach((arrow) => {
+		document.querySelectorAll('.wrapper_for_small_calendar .change_month').forEach((arrow) => {
 			arrow.addEventListener('click', () => {
 				let date;
 				
@@ -26,20 +25,20 @@ export default class CalendarMini {
 				} else {
 					date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
 				}
-	
+
 				this.remove();
-				this.createCalendar(date);
-				this.createListeners();
+				this.createSmallCalendar(date);
 			});
 		});
 	}
 
 	remove() {
-		this.aside.innerHTML = '';
+		this.container.innerHTML = '';
+		document.querySelectorAll('.wrapper_for_small_calendar .month').innerHTML = '';
 	}
 
 	init() {
-		this.createCalendar(this.date);
+		this.createSmallCalendar(this.date);
 		this.createListeners();
 	}
 }

@@ -8,16 +8,16 @@ export default class CalendarDOM {
 
 	createDOM() {
 		const arrOfMonths = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-			  calendar = document.createElement('div'),
 			  table = document.createElement('table'),
 		  	  thead = document.createElement('thead'),
-			  tbody = document.createElement('tbody'),
-			  header = document.createElement('div');
+			  tbody = document.createElement('tbody');
 		let arrOfDays = [];
 
 		if (this.size == 'big') {
+			document.querySelector('.current_month .month').innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
 			arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 		} else {
+			document.querySelector('.wrapper_for_small_calendar .month').innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
 			arrOfDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 		}
 		
@@ -56,29 +56,9 @@ export default class CalendarDOM {
 
 			tbody.appendChild(tr);
 		}
-
-		if (this.size == 'big') {
-			header.innerHTML = `
-				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
-				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
-				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
-			`;
-			document.querySelector('header').appendChild(header);
-		} else {
-			header.innerHTML = `
-				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
-				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
-				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
-			`;
-			this.container.appendChild(header);
-		}
-
-		calendar.classList.add('calendar');
-		header.classList.add('header');
-
+		
 		table.append(thead, tbody);
-		calendar.appendChild(table);
-		this.container.appendChild(calendar);
+		this.container.appendChild(table);
 	}
 
 	init() {

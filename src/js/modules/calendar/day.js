@@ -10,7 +10,7 @@ export default class Day {
 	createDay() {
 		const day = document.createElement('div');
 			  day.classList.add('day');
-		
+
 		day.appendChild(this.day);
 		document.querySelector('.diary').appendChild(day);
 	}

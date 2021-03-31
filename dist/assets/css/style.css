@@ -30,27 +30,29 @@ header {
   border-bottom: 1px solid #dadce0;
   box-sizing: border-box;
   background: white; }
-  header .name {
+  header .title {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    width: 355px; }
-  header .header {
+    width: 355px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    cursor: pointer; }
+  header .current_month {
     display: flex;
     flex-grow: 1;
     align-items: center;
     padding: 0 10px; }
-    header .header .change_month {
+    header .current_month .change_month {
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       padding: 0 15px; }
-      header .header .change_month img {
+      header .current_month .change_month img {
         width: 15px; }
-    header .header .month {
-      width: 165px;
+    header .current_month .month {
+      width: 185px;
       font-size: 26px; }
 
 /* -------------- Left Side -------------- */
@@ -59,48 +61,48 @@ header {
   padding: 5px 10px;
   margin-right: 20px;
   background: white; }
-  .left_side .header {
+  .left_side .wrapper_for_small_calendar .current_month {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
     background: white; }
-    .left_side .header .prev_month, .left_side .header .next_month {
+    .left_side .wrapper_for_small_calendar .current_month .prev_month, .left_side .wrapper_for_small_calendar .current_month .next_month {
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 12px;
       cursor: pointer; }
-      .left_side .header .prev_month img, .left_side .header .next_month img {
+      .left_side .wrapper_for_small_calendar .current_month .prev_month img, .left_side .wrapper_for_small_calendar .current_month .next_month img {
         width: 15px;
         padding: 10px; }
-    .left_side .header .month {
+    .left_side .wrapper_for_small_calendar .current_month .month {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       font-size: 20px; }
-  .left_side .calendar table {
+  .left_side .wrapper_for_small_calendar .calendar_small table {
     margin: 0 auto;
     border-collapse: collapse; }
-    .left_side .calendar table thead th {
+    .left_side .wrapper_for_small_calendar .calendar_small table thead th {
       height: 30px; }
-    .left_side .calendar table tbody {
+    .left_side .wrapper_for_small_calendar .calendar_small table tbody {
       background: white; }
-      .left_side .calendar table tbody tr td {
+      .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td {
         position: relative;
         width: 40px;
         height: 40px;
         padding: 0;
         box-sizing: border-box; }
-        .left_side .calendar table tbody tr td .item {
+        .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item {
           position: relative;
           width: 100%;
           height: 100%;
           cursor: pointer;
           transition: 0.5s all; }
-          .left_side .calendar table tbody tr td .item .dateDay {
+          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .dateDay {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -109,9 +111,9 @@ header {
             width: 100%;
             height: 100%;
             font-size: 1em; }
-          .left_side .calendar table tbody tr td .item .weekend {
+          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .weekend {
             color: red; }
-          .left_side .calendar table tbody tr td .item .today {
+          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .today {
             color: white;
             border-radius: 50%;
             background: #1a73e8; }
@@ -124,31 +126,31 @@ header {
   justify-content: center;
   align-items: center;
   justify-content: flex-start; }
-  .diary .calendar table {
+  .diary .wrapper_for_big_calendar .calendar_big table {
     position: relative;
     border-collapse: collapse; }
-    .diary .calendar table thead {
+    .diary .wrapper_for_big_calendar .calendar_big table thead {
       border-right: 1px solid #dadce0;
       border-left: 1px solid #dadce0;
       background: white; }
-      .diary .calendar table thead th {
+      .diary .wrapper_for_big_calendar .calendar_big table thead th {
         height: 28px; }
-    .diary .calendar table tbody {
+    .diary .wrapper_for_big_calendar .calendar_big table tbody {
       background: white; }
-      .diary .calendar table tbody tr td {
+      .diary .wrapper_for_big_calendar .calendar_big table tbody tr td {
         position: relative;
         width: 200px;
         height: 135px;
         padding: 0;
         box-sizing: border-box;
         border: 1px solid #dadce0; }
-        .diary .calendar table tbody tr td .item {
+        .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item {
           position: relative;
           width: 100%;
           height: inherit;
           cursor: pointer;
           transition: 0.5s all; }
-          .diary .calendar table tbody tr td .item .stickers {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers {
             position: absolute;
             top: 0;
             left: 0;
@@ -157,18 +159,18 @@ header {
             flex-wrap: wrap;
             pointer-events: none;
             z-index: 2; }
-            .diary .calendar table tbody tr td .item .stickers .small_sticker span {
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span {
               font-size: 12px; }
-              .diary .calendar table tbody tr td .item .stickers .small_sticker span:first-of-type {
+              .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span:first-of-type {
                 margin-left: 5px; }
-            .diary .calendar table tbody tr td .item .stickers .task_small_sticker {
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .task_small_sticker {
               display: flex;
               justify-content: center;
               align-items: center;
               min-width: 50px;
               margin: 0 5px 5px 0;
               background: skyblue; }
-          .diary .calendar table tbody tr td .item .dateDay {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .dateDay {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -181,11 +183,11 @@ header {
             font-size: 6em;
             opacity: 0.1;
             z-index: 1; }
-          .diary .calendar table tbody tr td .item .weekend {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .weekend {
             color: red; }
-          .diary .calendar table tbody tr td .item .today {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .today {
             opacity: 0.7; }
-        .diary .calendar table tbody tr td .hover {
+        .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .hover {
           position: absolute;
           top: 0;
           transform: scale(1.5);
@@ -195,15 +197,15 @@ header {
           box-sizing: border-box;
           background: white;
           z-index: 100; }
-          .diary .calendar table tbody tr td .hover .small_sticker {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .hover .small_sticker {
             font-size: 10px;
             padding: 3px; }
-      .diary .calendar table tbody .weekArrows {
+      .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows {
         position: absolute;
         top: 31px;
         right: -40px;
         width: 40px; }
-        .diary .calendar table tbody .weekArrows div {
+        .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows div {
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -213,7 +215,7 @@ header {
           transition: 0.5s all;
           box-sizing: border-box;
           background: skyblue; }
-          .diary .calendar table tbody .weekArrows div:hover {
+          .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows div:hover {
             width: 50px;
             opacity: 1; }
 

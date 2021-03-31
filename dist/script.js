@@ -96,15 +96,15 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_calendar_calendar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/calendar/calendar */ "./src/js/modules/calendar/calendar.js");
-/* harmony import */ var _modules_calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/calendar/calendar-mini */ "./src/js/modules/calendar/calendar-mini.js");
+/* harmony import */ var _modules_left_side__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/left_side */ "./src/js/modules/left_side.js");
 
 
 
 
 window.addEventListener('DOMContentLoaded', () => {
   const date = new Date();
-  new _modules_calendar_calendar__WEBPACK_IMPORTED_MODULE_0__["default"]('.diary', date).init();
-  new _modules_calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_1__["default"]('.left_side', date).init();
+  new _modules_left_side__WEBPACK_IMPORTED_MODULE_1__["default"]('.left_side', date).init();
+  new _modules_calendar_calendar__WEBPACK_IMPORTED_MODULE_0__["default"]('.calendar_big', date).init();
 });
 
 /***/ }),
@@ -125,19 +125,19 @@ __webpack_require__.r(__webpack_exports__);
 
 class CalendarMini {
   constructor(selector, date) {
-    this.aside = document.querySelector(selector);
+    this.container = document.querySelector(selector);
     this.selector = selector;
     this.date = date;
   }
 
-  createCalendar(date) {
+  createSmallCalendar(date) {
     this.date = date;
     const matrix = new _matrix__WEBPACK_IMPORTED_MODULE_1__["default"](this.date).init();
     new _calendarDOM__WEBPACK_IMPORTED_MODULE_0__["default"](this.selector, matrix, date, 'mini').init();
   }
 
   createListeners() {
-    this.aside.querySelectorAll('.change_month').forEach(arrow => {
+    document.querySelectorAll('.wrapper_for_small_calendar .change_month').forEach(arrow => {
       arrow.addEventListener('click', () => {
         let date;
 
@@ -148,18 +148,18 @@ class CalendarMini {
         }
 
         this.remove();
-        this.createCalendar(date);
-        this.createListeners();
+        this.createSmallCalendar(date);
       });
     });
   }
 
   remove() {
-    this.aside.innerHTML = '';
+    this.container.innerHTML = '';
+    document.querySelectorAll('.wrapper_for_small_calendar .month').innerHTML = '';
   }
 
   init() {
-    this.createCalendar(this.date);
+    this.createSmallCalendar(this.date);
     this.createListeners();
   }
 
@@ -185,19 +185,21 @@ __webpack_require__.r(__webpack_exports__);
 
 class Calendar {
   constructor(selector, date) {
-    this.diary = document.querySelector(selector);
+    this.selector = selector;
+    this.container = document.querySelector(selector);
     this.date = date;
   }
 
   createCalendar(date) {
     this.date = date;
+    this.container.style = '';
     const matrix = new _matrix__WEBPACK_IMPORTED_MODULE_0__["default"](date).init();
-    new _calendarDOM__WEBPACK_IMPORTED_MODULE_1__["default"]('.diary', matrix, date).init();
+    new _calendarDOM__WEBPACK_IMPORTED_MODULE_1__["default"](this.selector, matrix, date).init();
   }
 
   createListeners() {
     // Реализуем анимацию на ячейках календаря при наведении
-    this.diary.querySelectorAll('.calendar .item').forEach(item => {
+    this.container.querySelectorAll('.calendar_big .item').forEach(item => {
       item.addEventListener('mouseover', () => {
         item.classList.add('hover');
         this.createPerspectiveAnimation(item);
@@ -227,17 +229,23 @@ class Calendar {
 
         this.clear();
         this.createCalendar(date);
-        this.createListeners();
+        this.loadLocalStorage();
       });
     }); // Показываем выбранный день
 
-    this.diary.querySelectorAll('.dateDay').forEach(day => {
+    this.container.querySelectorAll('.dateDay').forEach(day => {
       day.addEventListener('click', () => {
         const clone = day.cloneNode(true);
         this.clear();
         new _day__WEBPACK_IMPORTED_MODULE_2__["default"](this.date, clone).init();
-        document.querySelector('.diary').style.flexGrow = '1';
+        this.container.style.flexGrow = '1';
       });
+    }); // Возвращаемся на главную
+
+    document.querySelector('header .title').addEventListener('click', () => {
+      const date = new Date();
+      this.clear();
+      new Calendar(this.selector, date).init();
     });
   } // Анимация каждой ячейки календаря при наведениее мышки
 
@@ -287,7 +295,7 @@ class Calendar {
       const day = date.split('.')[0];
 
       if (this.date.getMonth() == month) {
-        document.querySelectorAll('.calendar .dateDay').forEach(dateDay => {
+        document.querySelectorAll('.calendar_big .dateDay').forEach(dateDay => {
           if (dateDay.innerHTML == day) {
             const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
             dateDay.previousElementSibling.prepend(sticker);
@@ -307,8 +315,8 @@ class Calendar {
   }
 
   clear() {
-    this.diary.innerHTML = '';
-    document.querySelector('header .header').remove();
+    this.container.innerHTML = '';
+    document.querySelectorAll('header .month').forEach(item => item.innerHTML = '');
   }
 
   init() {
@@ -341,16 +349,16 @@ class CalendarDOM {
 
   createDOM() {
     const arrOfMonths = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-          calendar = document.createElement('div'),
           table = document.createElement('table'),
           thead = document.createElement('thead'),
-          tbody = document.createElement('tbody'),
-          header = document.createElement('div');
+          tbody = document.createElement('tbody');
     let arrOfDays = [];
 
     if (this.size == 'big') {
+      document.querySelector('.current_month .month').innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
       arrOfDays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
     } else {
+      document.querySelector('.wrapper_for_small_calendar .month').innerHTML = `${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}`;
       arrOfDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     }
 
@@ -387,27 +395,8 @@ class CalendarDOM {
       tbody.appendChild(tr);
     }
 
-    if (this.size == 'big') {
-      header.innerHTML = `
-				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
-				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
-				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
-			`;
-      document.querySelector('header').appendChild(header);
-    } else {
-      header.innerHTML = `
-				<div class="prev_month change_month"><img src="/assets/icons/arrow-left.png"></div>
-				<div class="month">${arrOfMonths[this.date.getMonth()]} ${this.date.getFullYear()}</div>
-				<div class="next_month change_month"><img src="/assets/icons/arrow-right.png"></div>
-			`;
-      this.container.appendChild(header);
-    }
-
-    calendar.classList.add('calendar');
-    header.classList.add('header');
     table.append(thead, tbody);
-    calendar.appendChild(table);
-    this.container.appendChild(calendar);
+    this.container.appendChild(table);
   }
 
   init() {
@@ -736,6 +725,32 @@ class Modal {
     this.createTimeList();
     this.checkTimeInInput();
     this.saveNote();
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/js/modules/left_side.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/left_side.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LeftSide; });
+/* harmony import */ var _calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calendar/calendar-mini */ "./src/js/modules/calendar/calendar-mini.js");
+
+class LeftSide {
+  constructor(container, date) {
+    this.container = container;
+    this.date = date;
+  }
+
+  init() {
+    new _calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_0__["default"]('.calendar_small', this.date).init();
   }
 
 }

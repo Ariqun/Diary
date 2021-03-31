@@ -9,13 +9,40 @@
 </head>
 <body>
 	<header>
-		<div class="name">Ежедневник</div>
+		<div class="title">Ежедневник</div>
+		<div class="current_month">
+			<div class="month"></div>
+			<div class="prev_month change_month">
+				<img src="/assets/icons/arrow-left.png" alt='arrow_left'>
+			</div>
+			<div class="next_month change_month">
+				<img src="/assets/icons/arrow-right.png" alt='arrow_right'>
+			</div>
+		</div>
 	</header>
 
 	<div class="main_container">
-		<div class="left_side"></div>
+		<div class="left_side">
+			<div class="wrapper_for_small_calendar">
+				<div class="current_month">
+					<div class="prev_month change_month">
+						<img src="/assets/icons/arrow-left.png" alt='arrow_left'>
+					</div>
+					<div class="month"></div>
+					<div class="next_month change_month">
+						<img src="/assets/icons/arrow-right.png" alt='arrow_right'>
+					</div>
+				</div>
 
-		<div class="diary"></div>
+				<div class="calendar_small"></div>
+			</div>
+		</div>
+
+		<div class="diary">
+			<div class="wrapper_for_big_calendar">
+				<div class="calendar_big"></div>
+			</div>
+		</div>
 
 		<div class="right_side"></div>
 	</div>
