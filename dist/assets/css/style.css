@@ -117,6 +117,69 @@ header {
             color: white;
             border-radius: 50%;
             background: #1a73e8; }
+  .left_side .options .option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    margin: 5px 20px; }
+    .left_side .options .option label:first-of-type {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 2rem;
+      background: #FF5335; }
+      .left_side .options .option label:first-of-type:before, .left_side .options .option label:first-of-type:after {
+        position: absolute;
+        right: 1rem;
+        transition: all 0.2s .1s ease-out; }
+      .left_side .options .option label:first-of-type:before {
+        opacity: 0;
+        transform: translate(0, 20px); }
+      .left_side .options .option label:first-of-type:after {
+        opacity: 1;
+        transform: translate(0, 0); }
+    .left_side .options .option label:last-of-type {
+      color: black;
+      cursor: pointer;
+      margin-left: 10px; }
+    .left_side .options .option input {
+      display: none; }
+    .left_side .options .option input:checked ~ label#dt {
+      background: skyblue; }
+    .left_side .options .option input:checked ~ label#dr {
+      background: pink; }
+    .left_side .options .option input:checked ~ label#dm {
+      background: lightgreen; }
+    .left_side .options .option input:checked ~ .option__icon:before {
+      transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1); }
+    .left_side .options .option input:checked ~ .option__icon:after {
+      transform: translate(20%) rotate(-45deg); }
+    .left_side .options .option__icon {
+      position: absolute;
+      height: 25px;
+      width: 25px;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+      pointer-events: none; }
+      .left_side .options .option__icon:before, .left_side .options .option__icon:after {
+        content: "";
+        position: absolute;
+        top: 45%;
+        left: 32%;
+        width: 13px;
+        height: 2px;
+        margin-left: -10%;
+        transition: 0.2s ease-out;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        background: #fff; }
+      .left_side .options .option__icon:before {
+        transform: rotate(45deg); }
+      .left_side .options .option__icon:after {
+        transform: rotate(-45deg); }
 
 /* -------------- Right Side -------------- */
 /* -------------- Diary -------------- */
@@ -426,3 +489,5 @@ header {
           opacity: 0.8; }
         .modal_wrapper .modal .event_options .modal_task .modal_save:active, .modal_wrapper .modal .event_options .modal_reminder .modal_save:active {
           box-shadow: inset 0px 1px 4px -1px black; }
+
+/* -------------- CheckBoxes -------------- */

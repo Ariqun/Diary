@@ -10,13 +10,17 @@
 	justify-content: center
 	align-items: center
 
+$color-gray: #dadce0
+$color-blue: #1a73e8
+$color-for-tasks: skyblue
+
 html
 	position: relative
-	min-height: 100%;
-	font-family: 'Roboto', sans-serif;
+	min-height: 100%
+	font-family: 'Roboto', sans-serif
 body
 	margin: 0
-	background: url('/assets/img/bg.jpg');
+	background: url('/assets/img/bg.jpg')
 
 footer
 	position: absolute
@@ -24,7 +28,7 @@ footer
 	left: 0
 	width: 100%
 	height: 50px
-	background: skyblue
+	background: $color-for-tasks
 
 .main_container
 	position: relative
@@ -38,7 +42,7 @@ footer
 header
 	display: flex
 	height: 35px
-	border-bottom: 1px solid #dadce0
+	border-bottom: 1px solid $color-gray
 	box-sizing: border-box
 	background: white
 	.title
@@ -63,7 +67,6 @@ header
 		.month
 			width: 185px
 			font-size: 26px
-
 
 /* -------------- Left Side -------------- */
 
@@ -123,7 +126,71 @@ header
 								.today
 									color: white
 									border-radius: 50%
-									background: #1a73e8
+									background: $color-blue
+	.options
+		.option
+			position: relative
+			display: flex
+			align-items: center
+			color: #fff
+			margin: 5px 20px
+			label:first-of-type
+				display: inline-block
+				width: 25px
+				height: 25px
+				cursor: pointer
+				transition: all 0.2s
+				border-radius: 2rem
+				background: #FF5335
+				&:before, &:after
+					position: absolute
+					right: 1rem
+					transition: all 0.2s .1s ease-out
+				&:before
+					opacity: 0
+					transform: translate(0, 20px)
+				&:after
+					opacity: 1
+					transform: translate(0, 0)
+			label:last-of-type
+				color: black
+				cursor: pointer
+				margin-left: 10px
+			input
+				display: none
+			input:checked ~ label#dt
+				background: $color-for-tasks
+			input:checked ~ label#dr
+				background: pink
+			input:checked ~ label#dm
+				background: lightgreen
+			input:checked ~ .option__icon:before
+				transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1)
+			input:checked ~ .option__icon:after
+				transform: translate(20%) rotate(-45deg)
+			&__icon
+				position: absolute
+				height: 25px
+				width: 25px
+				top: 0
+				left: 0
+				cursor: pointer
+				pointer-events: none
+				&:before, &:after
+					content: ""
+					position: absolute
+					top: 45%
+					left: 32%
+					width: 13px
+					height: 2px
+					margin-left: -10%
+					transition: 0.2s ease-out
+					box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1)
+					background: #fff
+				&:before
+					transform: rotate(45deg)
+				&:after
+					transform: rotate(-45deg)
 
 /* -------------- Right Side -------------- */
 
@@ -146,8 +213,8 @@ header
 				position: relative
 				border-collapse: collapse
 				thead
-					border-right: 1px solid #dadce0
-					border-left: 1px solid #dadce0
+					border-right: 1px solid $color-gray
+					border-left: 1px solid $color-gray
 					background: white
 					th
 						height: 28px
@@ -160,7 +227,7 @@ header
 							height: 135px
 							padding: 0
 							box-sizing: border-box
-							border: 1px solid #dadce0
+							border: 1px solid $color-gray
 							.item
 								position: relative
 								width: 100%
@@ -185,7 +252,7 @@ header
 										@include flex-row
 										min-width: 50px
 										margin: 0 5px 5px 0
-										background: skyblue
+										background: $color-for-tasks
 								.dateDay
 									@include flex-column
 									position: absolute
@@ -224,11 +291,10 @@ header
 							opacity: 0.7
 							transition: 0.5s all
 							box-sizing: border-box
-							background: skyblue
+							background: $color-for-tasks
 							&:hover
 								width: 50px
 								opacity: 1
-
 
 /* -------------- Week -------------- */
 
@@ -250,7 +316,6 @@ header
 						.dateDay
 							font-size: 6em
 							opacity: 0.1
-
 
 /* -------------- Day -------------- */
 
@@ -278,7 +343,7 @@ header
 			td
 				width: 100%
 				height: 50px
-				border: 1px solid #dadce0
+				border: 1px solid $color-gray
 				border-left: none
 				box-sizing: border-box
 				&:first-of-type
@@ -296,7 +361,7 @@ header
 						cursor: pointer
 						box-sizing: border-box
 						border-radius: 5px
-						background: skyblue
+						background: $color-for-tasks
 						.task_name
 							@include flex-row
 							.task_time
@@ -308,7 +373,7 @@ header
 							text-align: center
 							margin-top: 5px
 							padding-top: 5px
-							border-top: 1px solid #1a73e8
+							border-top: 1px solid $color-blue
 					.arrow_dialog
 						&::before
 							content: ''
@@ -318,7 +383,7 @@ header
 							width: 20px
 							height: 20px
 							transform: rotate(45deg)
-							background: skyblue
+							background: $color-for-tasks
 							z-index: -1
 			.time
 				@include flex-column
@@ -326,7 +391,7 @@ header
 				width: 50px
 				height: 50px
 				box-sizing: border-box
-				border-right: 1px solid #dadce0
+				border-right: 1px solid $color-gray
 				&::after
 					content: ''
 					position: absolute
@@ -334,9 +399,8 @@ header
 					right: 0
 					width: 25px
 					height: 1px
-					background: #dadce0
-			
-	
+					background: $color-gray
+
 /* -------------- Modal -------------- */
 
 .modal_wrapper
@@ -364,10 +428,10 @@ header
 				outline: none
 				padding: 0 5px
 				border: none
-				border-bottom: 1px solid #dadce0
+				border-bottom: 1px solid $color-gray
 				box-sizing: border-box
 				&:focus
-					border-bottom: 2px solid #1a73e8
+					border-bottom: 2px solid $color-blue
 		.events_name
 			display: flex
 			justify-content: space-around
@@ -378,7 +442,7 @@ header
 				font-size: 18px
 				padding: 0 15px
 			.active
-				color: #1a73e8
+				color: $color-blue
 				border-radius: 5px
 				background: #dadce0
 		.event_options
@@ -405,7 +469,7 @@ header
 							border: none
 							border-bottom: 2px solid rgba(0, 0, 0, 0)
 							&:focus
-								border-bottom: 2px solid #1a73e8
+								border-bottom: 2px solid $color-blue
 				.task_descr
 					margin-top: 10px
 					textarea
@@ -420,7 +484,7 @@ header
 						box-sizing: border-box
 						background: rgb(237, 238, 240)
 						&:focus
-							border-bottom: 2px solid #1a73e8
+							border-bottom: 2px solid $color-blue
 							border-bottom-left-radius: 0
 							border-bottom-right-radius: 0
 				.modal_save
@@ -439,4 +503,7 @@ header
 						opacity: 0.8
 					&:active
 						box-shadow: inset 0px 1px 4px -1px black
-						
+
+/* -------------- CheckBoxes -------------- */
+
+

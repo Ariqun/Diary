@@ -40,7 +40,27 @@ export default class Calendar {
 			});
 		});
 
-		// Листаем месяцы в календаре
+		// Показываем выбранный день
+		this.container.querySelectorAll('.dateDay').forEach((day) => {
+			day.addEventListener('click', () => {
+				const clone = day.cloneNode(true);
+
+				this.clear();
+				new Day(this.date, clone).init();
+				document.querySelector('.diary').style.flexGrow = '1';
+			});
+		});
+
+		// Возвращаемся на главную
+		document.querySelector('header .title').addEventListener('click', () => {
+			const date = new Date();
+	
+			this.clear();
+			new Calendar(this.selector, date).init();
+		});
+	}
+
+	changeMonth() {
 		document.querySelectorAll('header .change_month').forEach((arrow) => {
 			arrow.addEventListener('click', () => {
 				let date;
@@ -54,26 +74,8 @@ export default class Calendar {
 				this.clear();
 				this.createCalendar(date);
 				this.loadLocalStorage();
+				this.createListeners();
 			});
-		});
-
-		// Показываем выбранный день
-		this.container.querySelectorAll('.dateDay').forEach((day) => {
-			day.addEventListener('click', () => {
-				const clone = day.cloneNode(true);
-
-				this.clear();
-				new Day(this.date, clone).init();
-				this.container.style.flexGrow = '1';
-			});
-		});
-
-		// Возвращаемся на главную
-		document.querySelector('header .title').addEventListener('click', () => {
-			const date = new Date();
-	
-			this.clear();
-			new Calendar(this.selector, date).init();
 		});
 	}
 
@@ -146,13 +148,14 @@ export default class Calendar {
 
 	clear() {
 		this.container.innerHTML = '';
-		document.querySelectorAll('header .month').forEach(item => item.innerHTML = '');
+		document.querySelector('.diary').style = '';
+		document.querySelectorAll('.day').forEach(item => item.remove());
 	}
 
 	init() {
 		this.createCalendar(this.date);
 		this.loadLocalStorage();
 		this.createListeners();
-		
+		this.changeMonth();
 	}
 }
