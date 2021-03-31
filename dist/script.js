@@ -557,6 +557,24 @@ class Matrix {
       arr.push(row);
     }
 
+    function removeEmptySubArrs() {
+      let x = 0;
+
+      for (let subArr of arr) {
+        let counter = 0;
+
+        for (let elem of subArr) {
+          elem == '' ? counter++ : null;
+          counter == 7 ? x++ : null;
+        }
+      }
+
+      for (let i = 0; i < x; i++) {
+        arr.pop();
+      }
+    }
+
+    removeEmptySubArrs();
     return arr;
   }
 
@@ -753,6 +771,8 @@ class LeftSide {
     this.container = container;
     this.date = date;
   }
+
+  createOptionsForDisplayStickers() {}
 
   init() {
     new _calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_0__["default"]('.calendar_small', this.date).init();

@@ -13,8 +13,8 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50px;
-  background: skyblue; }
+  height: 52px;
+  background: white; }
 
 .main_container {
   position: relative;
@@ -34,10 +34,11 @@ header {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 355px;
+    width: 316px;
+    cursor: pointer;
     padding: 0 10px;
     box-sizing: border-box;
-    cursor: pointer; }
+    border-right: 1px solid #dadce0; }
   header .current_month {
     display: flex;
     flex-grow: 1;
@@ -53,13 +54,14 @@ header {
         width: 15px; }
     header .current_month .month {
       width: 185px;
-      font-size: 26px; }
+      font-size: 24px; }
 
 /* -------------- Left Side -------------- */
 .left_side {
   width: 315px;
   padding: 5px 10px;
-  margin-right: 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #dadce0;
   background: white; }
   .left_side .wrapper_for_small_calendar .current_month {
     display: flex;
@@ -117,69 +119,71 @@ header {
             color: white;
             border-radius: 50%;
             background: #1a73e8; }
-  .left_side .options .option {
-    position: relative;
-    display: flex;
-    align-items: center;
-    color: #fff;
-    margin: 5px 20px; }
-    .left_side .options .option label:first-of-type {
-      display: inline-block;
-      width: 25px;
-      height: 25px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border-radius: 2rem;
-      background: #FF5335; }
-      .left_side .options .option label:first-of-type:before, .left_side .options .option label:first-of-type:after {
+  .left_side .options {
+    margin-top: 50px; }
+    .left_side .options .option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      margin: 10px 20px; }
+      .left_side .options .option label:first-of-type {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 2rem;
+        background: #FF5335; }
+        .left_side .options .option label:first-of-type:before, .left_side .options .option label:first-of-type:after {
+          position: absolute;
+          right: 1rem;
+          transition: all 0.2s .1s ease-out; }
+        .left_side .options .option label:first-of-type:before {
+          opacity: 0;
+          transform: translate(0, 20px); }
+        .left_side .options .option label:first-of-type:after {
+          opacity: 1;
+          transform: translate(0, 0); }
+      .left_side .options .option label:last-of-type {
+        color: black;
+        cursor: pointer;
+        margin-left: 10px; }
+      .left_side .options .option input {
+        display: none; }
+      .left_side .options .option input:checked ~ label#dt {
+        background: skyblue; }
+      .left_side .options .option input:checked ~ label#dr {
+        background: pink; }
+      .left_side .options .option input:checked ~ label#dm {
+        background: lightgreen; }
+      .left_side .options .option input:checked ~ .option__icon:before {
+        transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1); }
+      .left_side .options .option input:checked ~ .option__icon:after {
+        transform: translate(20%) rotate(-45deg); }
+      .left_side .options .option__icon {
         position: absolute;
-        right: 1rem;
-        transition: all 0.2s .1s ease-out; }
-      .left_side .options .option label:first-of-type:before {
-        opacity: 0;
-        transform: translate(0, 20px); }
-      .left_side .options .option label:first-of-type:after {
-        opacity: 1;
-        transform: translate(0, 0); }
-    .left_side .options .option label:last-of-type {
-      color: black;
-      cursor: pointer;
-      margin-left: 10px; }
-    .left_side .options .option input {
-      display: none; }
-    .left_side .options .option input:checked ~ label#dt {
-      background: skyblue; }
-    .left_side .options .option input:checked ~ label#dr {
-      background: pink; }
-    .left_side .options .option input:checked ~ label#dm {
-      background: lightgreen; }
-    .left_side .options .option input:checked ~ .option__icon:before {
-      transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1); }
-    .left_side .options .option input:checked ~ .option__icon:after {
-      transform: translate(20%) rotate(-45deg); }
-    .left_side .options .option__icon {
-      position: absolute;
-      height: 25px;
-      width: 25px;
-      top: 0;
-      left: 0;
-      cursor: pointer;
-      pointer-events: none; }
-      .left_side .options .option__icon:before, .left_side .options .option__icon:after {
-        content: "";
-        position: absolute;
-        top: 45%;
-        left: 32%;
-        width: 13px;
-        height: 2px;
-        margin-left: -10%;
-        transition: 0.2s ease-out;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-        background: #fff; }
-      .left_side .options .option__icon:before {
-        transform: rotate(45deg); }
-      .left_side .options .option__icon:after {
-        transform: rotate(-45deg); }
+        height: 25px;
+        width: 25px;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+        pointer-events: none; }
+        .left_side .options .option__icon:before, .left_side .options .option__icon:after {
+          content: "";
+          position: absolute;
+          top: 45%;
+          left: 32%;
+          width: 13px;
+          height: 2px;
+          margin-left: -10%;
+          transition: 0.2s ease-out;
+          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+          background: #fff; }
+        .left_side .options .option__icon:before {
+          transform: rotate(45deg); }
+        .left_side .options .option__icon:after {
+          transform: rotate(-45deg); }
 
 /* -------------- Right Side -------------- */
 /* -------------- Diary -------------- */
@@ -191,6 +195,7 @@ header {
   justify-content: flex-start; }
   .diary .wrapper_for_big_calendar .calendar_big table {
     position: relative;
+    height: 860px;
     border-collapse: collapse; }
     .diary .wrapper_for_big_calendar .calendar_big table thead {
       border-right: 1px solid #dadce0;
@@ -202,15 +207,14 @@ header {
       background: white; }
       .diary .wrapper_for_big_calendar .calendar_big table tbody tr td {
         position: relative;
-        width: 200px;
-        height: 135px;
+        width: 220px;
         padding: 0;
         box-sizing: border-box;
         border: 1px solid #dadce0; }
         .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item {
           position: relative;
           width: 100%;
-          height: inherit;
+          height: 100%;
           cursor: pointer;
           transition: 0.5s all; }
           .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers {
@@ -302,8 +306,10 @@ header {
 .day {
   position: relative;
   width: 100%;
-  height: 53em;
+  max-height: 860px;
   overflow: auto;
+  border-bottom: 1px solid #dadce0;
+  box-sizing: border-box;
   background: white; }
   .day .dateDay {
     position: absolute;
@@ -319,14 +325,18 @@ header {
   .day table {
     width: 100%;
     border-collapse: collapse; }
+    .day table tr:first-of-type td {
+      border-top: none; }
+    .day table tr:last-of-type td {
+      border-bottom: none; }
+    .day table tr:last-of-type .time::after {
+      display: none; }
     .day table tr td {
       width: 100%;
       height: 50px;
       border: 1px solid #dadce0;
       border-left: none;
       box-sizing: border-box; }
-      .day table tr td:first-of-type {
-        border-top: none; }
       .day table tr td .inner_wrapper {
         position: relative;
         display: flex;

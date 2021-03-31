@@ -27,8 +27,8 @@ footer
 	bottom: 0
 	left: 0
 	width: 100%
-	height: 50px
-	background: $color-for-tasks
+	height: 52px
+	background: white
 
 .main_container
 	position: relative
@@ -49,10 +49,11 @@ header
 		display: flex
 		flex-direction: column
 		justify-content: center
-		width: 355px
+		width: 316px
+		cursor: pointer
 		padding: 0 10px
 		box-sizing: border-box
-		cursor: pointer
+		border-right: 1px solid $color-gray
 	.current_month
 		display: flex
 		flex-grow: 1
@@ -66,14 +67,15 @@ header
 				width: 15px
 		.month
 			width: 185px
-			font-size: 26px
+			font-size: 24px
 
 /* -------------- Left Side -------------- */
 
 .left_side
 	width: 315px
 	padding: 5px 10px
-	margin-right: 20px
+	box-sizing: border-box
+	border-bottom: 1px solid $color-gray
 	background: white
 	.wrapper_for_small_calendar
 		.current_month
@@ -128,12 +130,13 @@ header
 									border-radius: 50%
 									background: $color-blue
 	.options
+		margin-top: 50px
 		.option
 			position: relative
 			display: flex
 			align-items: center
 			color: #fff
-			margin: 5px 20px
+			margin: 10px 20px
 			label:first-of-type
 				display: inline-block
 				width: 25px
@@ -211,6 +214,7 @@ header
 		.calendar_big
 			table
 				position: relative
+				height: 860px
 				border-collapse: collapse
 				thead
 					border-right: 1px solid $color-gray
@@ -223,15 +227,14 @@ header
 					tr
 						td
 							position: relative
-							width: 200px
-							height: 135px
+							width: 220px
 							padding: 0
 							box-sizing: border-box
 							border: 1px solid $color-gray
 							.item
 								position: relative
 								width: 100%
-								height: inherit
+								height: 100%
 								cursor: pointer
 								transition: 0.5s all
 								.stickers
@@ -322,8 +325,10 @@ header
 .day
 	position: relative
 	width: 100%
-	height: 53em
+	max-height: 860px
 	overflow: auto
+	border-bottom: 1px solid $color-gray
+	box-sizing: border-box
 	background: white
 	.dateDay
 		position: absolute
@@ -340,14 +345,18 @@ header
 		width: 100%
 		border-collapse: collapse
 		tr
+			&:first-of-type td
+				border-top: none
+			&:last-of-type td
+				border-bottom: none
+			&:last-of-type .time::after
+				display: none
 			td
 				width: 100%
 				height: 50px
 				border: 1px solid $color-gray
 				border-left: none
 				box-sizing: border-box
-				&:first-of-type
-					border-top: none
 				.inner_wrapper
 					position: relative
 					display: flex

@@ -6,6 +6,10 @@ export default class LeftSide {
 		this.date = date;
 	}
 
+	createOptionsForDisplayStickers() {
+		
+	}
+
 	init() {
 		new CalendarMini('.calendar_small', this.date).init();
 	}
