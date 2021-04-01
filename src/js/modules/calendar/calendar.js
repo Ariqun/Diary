@@ -1,6 +1,7 @@
 import Matrix from "./matrix";
 import CalendarDOM from "./calendarDOM";
 import Day from "./day";
+import checkLocalStorage from "../localStorage";
 
 export default class Calendar {
 	constructor(selector, date) {
@@ -18,46 +19,53 @@ export default class Calendar {
 	}
 
 	createListeners() {
-		// Реализуем анимацию на ячейках календаря при наведении
-		this.container.querySelectorAll('.calendar_big .item').forEach((item) => {
-			item.addEventListener('mouseover', () => {
-				item.classList.add('hover');
-				this.createPerspectiveAnimation(item);
-
-				item.querySelectorAll('.small_sticker').forEach((stick) => {
-					stick.innerHTML = `
-						${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
-					`;
-				});
-			});
-
-			item.addEventListener('mouseout', () => {
-				item.classList.remove('hover');
-
-				item.querySelectorAll('.small_sticker').forEach((stick) => {
-					stick.innerHTML = stick.getAttribute('data-time');
-				});
-			});
-		});
-
-		// Показываем выбранный день
-		this.container.querySelectorAll('.dateDay').forEach((day) => {
-			day.addEventListener('click', () => {
-				const clone = day.cloneNode(true);
-
-				this.clear();
-				new Day(this.date, clone).init();
-				document.querySelector('.diary').style.flexGrow = '1';
-			});
-		});
-
-		// Возвращаемся на главную
-		document.querySelector('header .title').addEventListener('click', () => {
-			const date = new Date();
+		const showAndHideHoverAnimation = () => {
+			this.container.querySelectorAll('.calendar_big .item').forEach((item) => {
+				item.addEventListener('mouseover', () => {
+					item.classList.add('hover');
+					this.createPerspectiveAnimation(item);
 	
-			this.clear();
-			new Calendar(this.selector, date).init();
-		});
+					item.querySelectorAll('.small_sticker').forEach((stick) => {
+						stick.innerHTML = `
+							${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
+						`;
+					});
+				});
+	
+				item.addEventListener('mouseout', () => {
+					item.classList.remove('hover');
+	
+					item.querySelectorAll('.small_sticker').forEach((stick) => {
+						stick.innerHTML = stick.getAttribute('data-time');
+					});
+				});
+			});
+		};
+		
+		const displayChosenDay = () => {
+			this.container.querySelectorAll('.dateDay').forEach((day) => {
+				day.addEventListener('click', () => {
+					const clone = day.cloneNode(true);
+	
+					this.clear();
+					new Day(this.date, clone).init();
+					document.querySelector('.diary').style.flexGrow = '1';
+				});
+			});
+		};
+
+		const backToMainScreen = () => {
+			document.querySelector('header .title').addEventListener('click', () => {
+				const date = new Date();
+		
+				this.clear();
+				new Calendar(this.selector, date).init();
+			});
+		};
+
+		showAndHideHoverAnimation();
+		displayChosenDay();
+		backToMainScreen();
 	}
 
 	changeMonth() {
@@ -73,7 +81,7 @@ export default class Calendar {
 	
 				this.clear();
 				this.createCalendar(date);
-				this.loadLocalStorage();
+				checkLocalStorage('month', this.date);
 				this.createListeners();
 			});
 		});
@@ -114,38 +122,6 @@ export default class Calendar {
 		requestAnimationFrame(animation);
 	}
 
-	loadLocalStorage() {
-		const obj = {...localStorage};
-
-		for (let key in obj) {
-			const typeOfNote = key.split('_')[0];
-			const date = key.split('_')[1];
-			const month = date.split('.')[1];
-			const day = date.split('.')[0];
-
-			if (this.date.getMonth() == month) {
-				document.querySelectorAll('.calendar_big .dateDay').forEach((dateDay) => {
-					if (dateDay.innerHTML == day) {
-						const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
-
-						dateDay.previousElementSibling.prepend(sticker);
-					}
-				});
-			}
-		}
-
-		function createStickers(type, obj) {
-			const smallSticker = document.createElement('div');
-				  smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-				  smallSticker.setAttribute('data-name', obj.name);
-				  smallSticker.setAttribute('data-time', obj.time);
-
-			smallSticker.innerHTML = `${obj.time}`;
-
-			return smallSticker;
-		}
-	}
-
 	clear() {
 		this.container.innerHTML = '';
 		document.querySelector('.diary').style = '';
@@ -154,7 +130,7 @@ export default class Calendar {
 
 	init() {
 		this.createCalendar(this.date);
-		this.loadLocalStorage();
+		checkLocalStorage('month', this.date);
 		this.createListeners();
 		this.changeMonth();
 	}

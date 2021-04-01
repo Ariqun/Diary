@@ -180,6 +180,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _matrix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./matrix */ "./src/js/modules/calendar/matrix.js");
 /* harmony import */ var _calendarDOM__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendarDOM */ "./src/js/modules/calendar/calendarDOM.js");
 /* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
+/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+
 
 
 
@@ -198,39 +200,48 @@ class Calendar {
   }
 
   createListeners() {
-    // Реализуем анимацию на ячейках календаря при наведении
-    this.container.querySelectorAll('.calendar_big .item').forEach(item => {
-      item.addEventListener('mouseover', () => {
-        item.classList.add('hover');
-        this.createPerspectiveAnimation(item);
-        item.querySelectorAll('.small_sticker').forEach(stick => {
-          stick.innerHTML = `
-						${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
-					`;
+    const showAndHideHoverAnimation = () => {
+      this.container.querySelectorAll('.calendar_big .item').forEach(item => {
+        item.addEventListener('mouseover', () => {
+          item.classList.add('hover');
+          this.createPerspectiveAnimation(item);
+          item.querySelectorAll('.small_sticker').forEach(stick => {
+            stick.innerHTML = `
+							${stick.getAttribute('data-name')} <span>[</span>${stick.getAttribute('data-time')}<span>]</span>
+						`;
+          });
+        });
+        item.addEventListener('mouseout', () => {
+          item.classList.remove('hover');
+          item.querySelectorAll('.small_sticker').forEach(stick => {
+            stick.innerHTML = stick.getAttribute('data-time');
+          });
         });
       });
-      item.addEventListener('mouseout', () => {
-        item.classList.remove('hover');
-        item.querySelectorAll('.small_sticker').forEach(stick => {
-          stick.innerHTML = stick.getAttribute('data-time');
-        });
-      });
-    }); // Показываем выбранный день
+    };
 
-    this.container.querySelectorAll('.dateDay').forEach(day => {
-      day.addEventListener('click', () => {
-        const clone = day.cloneNode(true);
+    const displayChosenDay = () => {
+      this.container.querySelectorAll('.dateDay').forEach(day => {
+        day.addEventListener('click', () => {
+          const clone = day.cloneNode(true);
+          this.clear();
+          new _day__WEBPACK_IMPORTED_MODULE_2__["default"](this.date, clone).init();
+          document.querySelector('.diary').style.flexGrow = '1';
+        });
+      });
+    };
+
+    const backToMainScreen = () => {
+      document.querySelector('header .title').addEventListener('click', () => {
+        const date = new Date();
         this.clear();
-        new _day__WEBPACK_IMPORTED_MODULE_2__["default"](this.date, clone).init();
-        document.querySelector('.diary').style.flexGrow = '1';
+        new Calendar(this.selector, date).init();
       });
-    }); // Возвращаемся на главную
+    };
 
-    document.querySelector('header .title').addEventListener('click', () => {
-      const date = new Date();
-      this.clear();
-      new Calendar(this.selector, date).init();
-    });
+    showAndHideHoverAnimation();
+    displayChosenDay();
+    backToMainScreen();
   }
 
   changeMonth() {
@@ -246,7 +257,7 @@ class Calendar {
 
         this.clear();
         this.createCalendar(date);
-        this.loadLocalStorage();
+        Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date);
         this.createListeners();
       });
     });
@@ -287,36 +298,6 @@ class Calendar {
     requestAnimationFrame(animation);
   }
 
-  loadLocalStorage() {
-    const obj = { ...localStorage
-    };
-
-    for (let key in obj) {
-      const typeOfNote = key.split('_')[0];
-      const date = key.split('_')[1];
-      const month = date.split('.')[1];
-      const day = date.split('.')[0];
-
-      if (this.date.getMonth() == month) {
-        document.querySelectorAll('.calendar_big .dateDay').forEach(dateDay => {
-          if (dateDay.innerHTML == day) {
-            const sticker = createStickers(typeOfNote, JSON.parse(obj[key]));
-            dateDay.previousElementSibling.prepend(sticker);
-          }
-        });
-      }
-    }
-
-    function createStickers(type, obj) {
-      const smallSticker = document.createElement('div');
-      smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-      smallSticker.setAttribute('data-name', obj.name);
-      smallSticker.setAttribute('data-time', obj.time);
-      smallSticker.innerHTML = `${obj.time}`;
-      return smallSticker;
-    }
-  }
-
   clear() {
     this.container.innerHTML = '';
     document.querySelector('.diary').style = '';
@@ -325,7 +306,7 @@ class Calendar {
 
   init() {
     this.createCalendar(this.date);
-    this.loadLocalStorage();
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date);
     this.createListeners();
     this.changeMonth();
   }
@@ -483,28 +464,30 @@ class Day {
     };
 
     const showAndHideExtendSticker = () => {
-      document.querySelectorAll('.day .sticker').forEach(task => {
-        const extend = task.querySelector('.sticker_extend');
-        task.addEventListener('mouseover', () => {
-          const stickerWidth = task.offsetWidth;
-          const posTd = task.closest('td').getBoundingClientRect().left;
-          const posSticker = task.getBoundingClientRect().left;
-          extend.classList.remove('hidden');
-          task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
-          task.style.cssText = `
-						position: absolute;
-						left: ${posSticker - posTd}px;
-						min-height: 80px;
-						font-size: 18px;
-						padding: 10px 10px;
-						z-index: 1;
-					`;
-        }); // task.addEventListener('mouseout', () => {
-        // 	extend.classList.add('hidden');
-        // 	task.classList.remove('arrow_dialog');
-        // 	task.closest('.static_wrapper').style.width = '';
-        // 	task.style.cssText = '';
-        // });
+      document.querySelectorAll('.day .sticker').forEach(sticker => {
+        if (!sticker.classList.contains('reminder_sticker')) {
+          const extend = sticker.querySelector('.sticker_extend');
+          sticker.addEventListener('mouseover', () => {
+            const posTd = sticker.closest('td').getBoundingClientRect().left;
+            const posSticker = sticker.getBoundingClientRect().left;
+            extend.classList.remove('hidden');
+            sticker.style.cssText = `
+							position: absolute;
+							left: ${posSticker - posTd}px;
+							min-height: 80px;
+							font-size: 18px;
+							padding: 7px;
+							z-index: 1;
+						`;
+            sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 30}px`;
+          });
+          sticker.addEventListener('mouseout', () => {
+            extend.classList.add('hidden');
+            sticker.classList.remove('arrow_dialog');
+            sticker.closest('.sticker_wrapper').style.width = '';
+            sticker.style.cssText = '';
+          });
+        }
       });
     };
 
@@ -518,7 +501,7 @@ class Day {
     const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
     this.createDay();
     this.createGraph();
-    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', dateForLocalStorage);
     this.createListeners();
   }
 
@@ -677,9 +660,10 @@ class Modal {
           obj.people = people;
         }
 
+        document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
         localStorage.setItem(id, JSON.stringify(obj));
-        closeModal();
-        Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
+        Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', dateForLocalStorage);
+        document.querySelector('.modal_wrapper').classList.add('hidden');
       });
     };
 
@@ -793,68 +777,118 @@ class LeftSide {
 __webpack_require__.r(__webpack_exports__);
 
 
-const checkLocalStorage = date => {
+const checkLocalStorage = (mode, date) => {
   const obj = { ...localStorage
   };
+  let arr = [];
 
-  for (let key in obj) {
-    const eventType = key.split('_')[0];
-    pushEvent(date, eventType, JSON.parse(obj[key]));
+  if (mode == 'day') {
+    for (let key in obj) {
+      const eventType = key.split('_')[0];
+      createStickersForDay(date, eventType, JSON.parse(obj[key]));
+    }
+  } else if (mode == 'month') {
+    for (let key in obj) {
+      arr.push(JSON.parse(obj[key]));
+    }
+
+    createStickersForMonth(date, arr);
   }
 };
 
-function pushEvent(date, type, obj) {
-  document.querySelectorAll('.time').forEach(time => {
-    const hourRow = time.innerHTML.substr(0, 2);
-    const hourInDB = obj.time.substr(0, 2);
+function createStickersForDay(date, type, obj) {
+  function pushEvent() {
+    document.querySelectorAll('.time').forEach(time => {
+      const hourRow = time.innerHTML.substr(0, 2);
+      const hourInDB = obj.time.substr(0, 2);
 
-    if (date == obj.date) {
-      if (hourRow == hourInDB) {
-        const item = document.createElement('div');
-        item.classList.add('static_wrapper');
-        item.innerHTML = createDOM(type, obj);
-        time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+      if (date == obj.date) {
+        if (hourRow == hourInDB) {
+          const item = document.createElement('div');
+          item.classList.add('sticker_wrapper');
+          item.innerHTML = createDOM();
+          time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+        }
       }
-    }
-  });
-}
-
-function createDOM(type, obj) {
-  const node = `
-		<div id="${obj.id}" class="sticker ${type}_sticker">
-			<div class="event_name">${obj.name}
-				<div class="event_time">
-					<span>[</span>${obj.time}<span>]</span>
-				</div>
-			</div>
-			
-			<div class="sticker_extend hidden">
-				${createTaskExtend(type, obj)}
-			</div>
-
-			<div class="arrow_dialog"></div>
-		</div>
-	`;
-  return node;
-}
-
-function createTaskExtend(type, obj) {
-  let ex = '';
-
-  if (type == 'task') {
-    ex = `<div class="descr">${obj.descr}</div>`;
-  } else if (type == 'meeting') {
-    const people = obj.people.join(', ');
-    ex = `
-			<div class="people">${people}</div>
-			<div class="location">${obj.location}</div>
-			<div class="descr">${obj.descr}</div>
-		`;
-  } else if (type == 'reminder') {
-    ex = '';
+    });
   }
 
-  return ex;
+  function createDOM() {
+    const node = `
+			<div id="${obj.id}" class="sticker ${type}_sticker">
+				<div class="event_name">${obj.name}
+					<div class="event_time">
+						<span>[</span>${obj.time}<span>]</span>
+					</div>
+				</div>
+				
+				<div class="sticker_extend hidden">
+					${createTaskExtend()}
+				</div>
+	
+				<div class="arrow_dialog"></div>
+			</div>
+		`;
+    return node;
+  }
+
+  function createTaskExtend() {
+    let ex = '';
+
+    if (type == 'task') {
+      ex = `<div class="descr">${obj.descr}</div>`;
+    } else if (type == 'meeting') {
+      const people = obj.people.join(', ');
+      ex = `
+				<div class="people"><span>Кто:</span>${people}</div>
+				<div class="location"><span>Где:</span>${obj.location}</div>
+				<div class="descr"><span>Что:</span>${obj.descr}</div>
+			`;
+    } else if (type == 'reminder') {
+      ex = '';
+    }
+
+    return ex;
+  }
+
+  pushEvent();
+}
+
+function createStickersForMonth(date, arr) {
+  arr.sort(function (a, b) {
+    let x = a.time.replace(/\D+/g, '');
+    let y = b.time.replace(/\D+/g, '');
+    return x - y;
+  });
+  arr.reduce((acc, el) => {
+    acc[el.date] = (acc[el.date] || 0) + 1;
+    return acc;
+  }, {}, null, 2);
+
+  for (let obj of arr) {
+    const eventType = obj.id.split('_')[0];
+    const fullDate = obj.id.split('_')[1];
+    const month = fullDate.split('.')[1];
+    const day = fullDate.split('.')[0];
+
+    if (date.getMonth() == month) {
+      document.querySelectorAll('.calendar_big .dateDay').forEach(item => {
+        if (item.innerHTML == day) {
+          const sticker = createStickers(eventType, obj);
+          item.previousElementSibling.appendChild(sticker);
+        }
+      });
+    }
+  }
+
+  function createStickers(type, obj) {
+    const smallSticker = document.createElement('div');
+    smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+    smallSticker.setAttribute('data-name', obj.name);
+    smallSticker.setAttribute('data-time', obj.time);
+    smallSticker.innerHTML = `${obj.time}`;
+    return smallSticker;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (checkLocalStorage);

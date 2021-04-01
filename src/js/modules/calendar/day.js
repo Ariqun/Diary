@@ -63,36 +63,38 @@ export default class Day {
 		};
 	
 		const showAndHideExtendSticker = () => {
-			document.querySelectorAll('.day .sticker').forEach((task) => {
-				const extend = task.querySelector('.sticker_extend');
-	
-				task.addEventListener('mouseover', () => {
-					const stickerWidth = task.offsetWidth;
-					const posTd = task.closest('td').getBoundingClientRect().left;
-					const posSticker = task.getBoundingClientRect().left;
-	
-					extend.classList.remove('hidden');
-	
-					task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
-	
-					task.style.cssText = `
-						position: absolute;
-						left: ${posSticker - posTd}px;
-						min-height: 80px;
-						font-size: 18px;
-						padding: 10px 10px;
-						z-index: 1;
-					`;
-				});
-	
-				// task.addEventListener('mouseout', () => {
-				// 	extend.classList.add('hidden');
-				// 	task.classList.remove('arrow_dialog');
-	
-				// 	task.closest('.static_wrapper').style.width = '';
-	
-				// 	task.style.cssText = '';
-				// });
+			document.querySelectorAll('.day .sticker').forEach((sticker) => {
+				if (!sticker.classList.contains('reminder_sticker')) {
+					const extend = sticker.querySelector('.sticker_extend');
+
+					sticker.addEventListener('mouseover', () => {
+						const posTd = sticker.closest('td').getBoundingClientRect().left;
+						const posSticker = sticker.getBoundingClientRect().left;
+		
+						extend.classList.remove('hidden');
+		
+						sticker.style.cssText = `
+							position: absolute;
+							left: ${posSticker - posTd}px;
+							min-height: 80px;
+							font-size: 18px;
+							padding: 7px;
+							z-index: 1;
+						`;
+
+						sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 30}px`;
+					});
+		
+					sticker.addEventListener('mouseout', () => {
+						extend.classList.add('hidden');
+						sticker.classList.remove('arrow_dialog');
+		
+						sticker.closest('.sticker_wrapper').style.width = '';
+		
+						sticker.style.cssText = '';
+					});
+				}
+				
 			});
 		};
 
@@ -108,7 +110,7 @@ export default class Day {
 		this.createDay();
 		this.createGraph();
 
-		checkLocalStorage(dateForLocalStorage);
+		checkLocalStorage('day', dateForLocalStorage);
 
 		this.createListeners();
 	}

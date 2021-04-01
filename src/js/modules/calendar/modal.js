@@ -82,11 +82,15 @@ export default class Modal {
 					obj.descr = descr;
 					obj.people = people;
 				}
+
+				document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
 	
 				localStorage.setItem(id, JSON.stringify(obj));
 	
-				closeModal();
-				checkLocalStorage(dateForLocalStorage);
+				checkLocalStorage('day', dateForLocalStorage);
+
+
+				document.querySelector('.modal_wrapper').classList.add('hidden');
 			});
 		};
 		

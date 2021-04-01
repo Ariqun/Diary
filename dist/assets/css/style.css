@@ -227,10 +227,11 @@ header {
             z-index: 2; }
             .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker {
               display: flex;
-              justify-content: center;
               align-items: center;
               min-width: 50px;
-              margin: 0 5px 5px 0; }
+              padding: 5px 5px;
+              margin: 0 5px 5px 0;
+              box-sizing: border-box; }
               .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span {
                 font-size: 12px; }
                 .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span:first-of-type {
@@ -271,24 +272,6 @@ header {
           .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .hover .small_sticker {
             font-size: 10px;
             padding: 3px; }
-      .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows {
-        position: absolute;
-        top: 31px;
-        right: -40px;
-        width: 40px; }
-        .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows div {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          height: 125px;
-          opacity: 0.7;
-          transition: 0.5s all;
-          box-sizing: border-box;
-          background: skyblue; }
-          .diary .wrapper_for_big_calendar .calendar_big table tbody .weekArrows div:hover {
-            width: 50px;
-            opacity: 1; }
 
 /* -------------- Week -------------- */
 .week {
@@ -360,11 +343,20 @@ header {
           .day table tr td .inner_wrapper .sticker .event_name {
             display: flex;
             justify-content: center;
-            align-items: center; }
+            align-items: center;
+            text-align: center; }
             .day table tr td .inner_wrapper .sticker .event_name .event_time {
               margin-left: 10px; }
               .day table tr td .inner_wrapper .sticker .event_name .event_time span {
                 font-size: 20px; }
+          .day table tr td .inner_wrapper .sticker .sticker_extend {
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid #1a73e8; }
+            .day table tr td .inner_wrapper .sticker .sticker_extend .people, .day table tr td .inner_wrapper .sticker .sticker_extend .location, .day table tr td .inner_wrapper .sticker .sticker_extend .descr {
+              padding: 5px 0; }
+              .day table tr td .inner_wrapper .sticker .sticker_extend .people span, .day table tr td .inner_wrapper .sticker .sticker_extend .location span, .day table tr td .inner_wrapper .sticker .sticker_extend .descr span {
+                margin-right: 5px; }
           .day table tr td .inner_wrapper .sticker .arrow_dialog::before {
             content: '';
             position: absolute;

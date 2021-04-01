@@ -247,9 +247,12 @@ header
 									pointer-events: none
 									z-index: 2
 									.small_sticker
-										@include flex-row
+										display: flex
+										align-items: center
 										min-width: 50px
+										padding: 5px 5px
 										margin: 0 5px 5px 0
+										box-sizing: border-box
 										span
 											font-size: 12px
 											&:first-of-type
@@ -287,21 +290,6 @@ header
 								.small_sticker
 									font-size: 10px
 									padding: 3px
-					.weekArrows
-						position: absolute
-						top: 31px
-						right: -40px
-						width: 40px
-						div
-							@include flex-column
-							height: 125px
-							opacity: 0.7
-							transition: 0.5s all
-							box-sizing: border-box
-							background: $color-for-tasks
-							&:hover
-								width: 50px
-								opacity: 1
 
 /* -------------- Week -------------- */
 
@@ -376,10 +364,19 @@ header
 						border-radius: 5px
 						.event_name
 							@include flex-row
+							text-align: center
 							.event_time
 								margin-left: 10px
 								span
 									font-size: 20px
+						.sticker_extend
+							margin-top: 5px
+							padding-top: 5px
+							border-top: 1px solid $color-blue
+							.people, .location, .descr
+								padding: 5px 0
+								span
+									margin-right: 5px
 						.arrow_dialog
 							&::before
 								content: ''
