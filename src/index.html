@@ -68,6 +68,46 @@
 		<div class="right_side"></div>
 	</div>
 
+	<div class="modal_wrapper hidden">
+		<div class="modal_add_event">
+			<div class="user_event_name">
+				<input type="text" placeholder="Введите название">
+			</div>
+	
+			<div class="events_name">
+				<div id="event_task" class="event active">
+					<span>Задача</span>
+				</div>
+	
+				<div id="event_reminder" class="event">
+					<span>Напоминание</span>
+				</div>
+	
+				<div id="event_meeting" class="event">
+					<span>Встреча</span>
+				</div>
+			</div>
+		
+			<div class="event_options">
+				<div class="event_date_and_time">
+					<div class="event_date"></div>
+	
+					<div class="event_time">
+						<input type="text">
+					</div>
+	
+					<label for="whole_day"><input id="whole_day" type="checkbox">Весь день</label>
+				</div>
+
+				<div class="event_preferences"></div>
+			</div>
+
+			<button class="event_save">Записать</button>
+
+			<div class="modal_close">&times;</div>
+		</div>
+	</div>
+	
 	<footer>Футер</footer>
 	<script src="script.js"></script>
 </body>

@@ -439,11 +439,6 @@ class Day {
     document.querySelector('.diary').appendChild(day);
   }
 
-  centeringNumberOfDay() {
-    const top = document.querySelector('.dateDay').getBoundingClientRect();
-    console.log(top);
-  }
-
   createGraph() {
     const table = document.createElement('table');
 
@@ -470,49 +465,58 @@ class Day {
   }
 
   createListeners() {
-    document.querySelector('.day').addEventListener('scroll', () => {
-      const px = document.querySelector('.day').scrollTop;
-      document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
-    });
-    document.querySelectorAll('.day td').forEach(row => {
-      row.addEventListener('click', () => {
-        const time = row.previousElementSibling.innerHTML;
-        const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-        new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
+    const scrollDateWithScreen = () => {
+      document.querySelector('.day').addEventListener('scroll', () => {
+        const px = document.querySelector('.day').scrollTop;
+        document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
       });
-    });
-    document.querySelectorAll('.day .task_sticker').forEach(task => {
-      const descr = task.querySelector('.task_descr');
-      task.addEventListener('mouseover', () => {
-        const stickerWidth = task.offsetWidth;
-        const posTd = task.closest('td').getBoundingClientRect().left;
-        const posSticker = task.getBoundingClientRect().left;
-        descr.classList.remove('hidden');
-        task.classList.add('arrow_dialog');
-        task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
-        task.style.cssText = `
-					position: absolute;
-					left: ${posSticker - posTd}px;
-					min-height: 80px;
-					font-size: 18px;
-					padding: 10px 10px;
-					z-index: 1;
-				`;
+    };
+
+    const displayModal = () => {
+      document.querySelectorAll('.day td').forEach(row => {
+        row.addEventListener('click', () => {
+          const time = row.previousElementSibling.innerHTML;
+          const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+          new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
+        });
       });
-      task.addEventListener('mouseout', () => {
-        descr.classList.add('hidden');
-        task.classList.remove('arrow_dialog');
-        task.closest('.static_wrapper').style.width = '';
-        task.style.cssText = '';
+    };
+
+    const showAndHideExtendSticker = () => {
+      document.querySelectorAll('.day .sticker').forEach(task => {
+        const extend = task.querySelector('.sticker_extend');
+        task.addEventListener('mouseover', () => {
+          const stickerWidth = task.offsetWidth;
+          const posTd = task.closest('td').getBoundingClientRect().left;
+          const posSticker = task.getBoundingClientRect().left;
+          extend.classList.remove('hidden');
+          task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
+          task.style.cssText = `
+						position: absolute;
+						left: ${posSticker - posTd}px;
+						min-height: 80px;
+						font-size: 18px;
+						padding: 10px 10px;
+						z-index: 1;
+					`;
+        }); // task.addEventListener('mouseout', () => {
+        // 	extend.classList.add('hidden');
+        // 	task.classList.remove('arrow_dialog');
+        // 	task.closest('.static_wrapper').style.width = '';
+        // 	task.style.cssText = '';
+        // });
       });
-    });
+    };
+
+    scrollDateWithScreen();
+    displayModal();
+    showAndHideExtendSticker();
   }
 
   init() {
     // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
     const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
     this.createDay();
-    this.centeringNumberOfDay();
     this.createGraph();
     Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
     this.createListeners();
@@ -600,102 +604,122 @@ __webpack_require__.r(__webpack_exports__);
 
 class Modal {
   constructor(date, time, row) {
+    this.block = document.querySelector('.event_preferences');
     this.date = date;
     this.time = time;
     this.row = row;
-    this.typeOfNote = 'task';
+    this.eventType = 'task';
   }
 
   createModal() {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('modal_wrapper');
-    wrapper.innerHTML = `
-			<div class="modal add_event">
-				<div class="user_event_name">
-					<input type="text" placeholder="Введите название">
-				</div>
+    document.querySelector('.modal_wrapper').classList.remove('hidden');
+    document.querySelector('.event_date').innerHTML = this.createDate();
+    document.querySelector('.event_time input').value = this.time;
+    this.createTask();
+  }
 
-				<div class="events_name">
-					<div class="event event_task active">
-						<span>Задача</span>
-					</div>
+  createListeners() {
+    const eventBtns = document.querySelectorAll('.event');
 
-					<div class="event event_reminder">
-						<span>Напоминание</span>
-					</div>
+    const switchTabs = () => {
+      eventBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          eventBtns.forEach(item => item.classList.remove('active'));
+          btn.classList.add('active');
+          this.block.innerHTML = '';
+          document.querySelector('.event_date').innerHTML = this.createDate();
+          document.querySelector('.event_time input').value = this.time;
 
-					<div class="event event_meet">
-						<span>Встреча</span>
-					</div>
-				</div>
-			
-				<div class="event_options">
-					${this.createTask()}
-				</div>
-			</div>
-		`;
-    document.body.appendChild(wrapper);
+          if (btn.id == 'event_task') {
+            this.eventType = 'task';
+            this.createTask();
+          } else if (btn.id == 'event_reminder') {
+            this.eventType = 'reminder';
+            this.createReminder();
+          } else {
+            this.eventType = 'meeting';
+            this.createMeeting();
+          }
+        });
+      });
+    };
+
+    const closeModal = () => {
+      document.querySelector('.modal_close').addEventListener('click', () => {
+        document.querySelector('.modal_wrapper').classList.add('hidden');
+      });
+    };
+
+    const saveEvent = () => {
+      document.querySelector('.event_save').addEventListener('click', () => {
+        // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+        const dateForLocalStorage = this.createDate('localStorage');
+        const name = document.querySelector('.user_event_name input').value;
+        const time = document.querySelector('.event_time input').value;
+        const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
+        const obj = {
+          'id': id,
+          'name': name,
+          'time': time,
+          'date': dateForLocalStorage
+        };
+
+        if (this.eventType == 'task') {
+          const descr = document.querySelector('.task_descr textarea').value;
+          obj.descr = descr;
+        } else if (this.eventType == 'meeting') {
+          const location = document.querySelector('.meeting_location input').value;
+          const descr = document.querySelector('.meeting_descr input').value;
+          const peopleStr = document.querySelector('.meeting_people input').value;
+          const people = peopleStr.split(',');
+          obj.location = location;
+          obj.descr = descr;
+          obj.people = people;
+        }
+
+        localStorage.setItem(id, JSON.stringify(obj));
+        closeModal();
+        Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
+      });
+    };
+
+    switchTabs();
+    closeModal();
+    saveEvent();
   }
 
   createTask() {
-    const task = `
-			<div class="modal_task">
-				<div class="modal_date_and_time">
-					<div class="modal_date">
-						${this.createDate()}
-					</div>
-
-					<div class="modal_time">
-						<input type="text" value="${this.time}">
-					</div>
-
-					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
-				</div>
-
+    this.block.innerHTML = `
+			<div class="event_task">
 				<div class="task_descr">
 					<textarea placeholder="Описание задачи"></textarea>
 				</div>
-
-				<button class="modal_save">Записать</button>
 			</div>
 		`;
-    return task;
   }
 
   createReminder() {
-    const reminder = `
-			<div class="modal_reminder">
-				<div class="modal_date_and_time">
-					<div class="modal_date">
-						${this.createDate()}
-					</div>
-
-					<div class="modal_time">
-						<input type="text" value="${this.time}">
-					</div>
-
-					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
-				</div>
-
-				<button class="modal_save">Записать</button>
-			</div>
+    this.block.innerHTML = `
+			<div class="event_reminder"></div>
 		`;
-    return reminder;
   }
 
-  createTimeList() {
-    const hour = this.time.substr(0, 3);
-    const select = `
-			<select>
-				<option>${hour}00</option>
-				<option>${hour}10</option>
-				<option>${hour}20</option>
-				<option>${hour}30</option>
-				<option>${hour}40</option>
-				<option>${hour}50</option>
-			</select>
+  createMeeting() {
+    this.block.innerHTML = `
+			<div class="event_meeting">
+				<div class="meeting_people">
+					<label><input type="text" placeholder="Укажите имена через запятую"></label>
+				</div>
+
+				<div class="meeting_location">
+					<label><input type="text" placeholder="Укажите место встречи"></label>
+				</div>
+
+				<div class="meeting_descr">
+					<label><input type="text" placeholder="Добавьте описание"></label>
+				</div>
+			</div>
 		`;
-    return select;
   }
 
   createDate(mode = 'modal') {
@@ -714,40 +738,16 @@ class Modal {
     }
 
     return date;
-  }
+  } // checkTimeInInput() {
+  // 	document.querySelector('.modal_time input').addEventListener('change', () => {
+  // 		const str = document.querySelector('.modal_time input').value;
+  // 	});
+  // }
 
-  checkTimeInInput() {
-    document.querySelector('.modal_time input').addEventListener('change', () => {
-      const str = document.querySelector('.modal_time input').value;
-    });
-  }
-
-  saveNote() {
-    document.querySelector('.modal_save').addEventListener('click', () => {
-      const name = document.querySelector('.user_event_name input').value;
-      const time = document.querySelector('.modal_time input').value;
-      const descr = document.querySelector('.task_descr textarea').value;
-      const note = `${this.typeOfNote}_${this.createDate('localStorage')}_${time}`; // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-
-      const dateForLocalStorage = `${this.date.getDate()}.${this.date.getMonth()}.${this.date.getFullYear()}`;
-      const obj = {
-        'id': note,
-        'name': name,
-        'time': time,
-        'descr': descr,
-        'date': dateForLocalStorage
-      };
-      localStorage.setItem(note, JSON.stringify(obj));
-      document.querySelector('.modal_wrapper').remove();
-      Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(dateForLocalStorage);
-    });
-  }
 
   init() {
     this.createModal();
-    this.createTimeList();
-    this.checkTimeInInput();
-    this.saveNote();
+    this.createListeners(); // this.checkTimeInInput();
   }
 
 }
@@ -798,32 +798,12 @@ const checkLocalStorage = date => {
   };
 
   for (let key in obj) {
-    const typeOfNote = key.split('_')[0];
-    pushNote(date, typeOfNote, JSON.parse(obj[key]));
+    const eventType = key.split('_')[0];
+    pushEvent(date, eventType, JSON.parse(obj[key]));
   }
 };
 
-function createDOM(type, obj) {
-  let node = '';
-
-  if (type == 'task') {
-    node = `
-			<div id="${obj.id}" class="${type}_sticker">
-				<div class="${type}_name">${obj.name}
-					<div class="${type}_time">
-						<span>[</span>${obj.time}<span>]</span>
-					</div>
-				</div>
-				
-				<div class="${type}_descr hidden">${obj.descr}<div>
-			</div>
-		`;
-  }
-
-  return node;
-}
-
-function pushNote(date, type, obj) {
+function pushEvent(date, type, obj) {
   document.querySelectorAll('.time').forEach(time => {
     const hourRow = time.innerHTML.substr(0, 2);
     const hourInDB = obj.time.substr(0, 2);
@@ -837,6 +817,44 @@ function pushNote(date, type, obj) {
       }
     }
   });
+}
+
+function createDOM(type, obj) {
+  const node = `
+		<div id="${obj.id}" class="sticker ${type}_sticker">
+			<div class="event_name">${obj.name}
+				<div class="event_time">
+					<span>[</span>${obj.time}<span>]</span>
+				</div>
+			</div>
+			
+			<div class="sticker_extend hidden">
+				${createTaskExtend(type, obj)}
+			</div>
+
+			<div class="arrow_dialog"></div>
+		</div>
+	`;
+  return node;
+}
+
+function createTaskExtend(type, obj) {
+  let ex = '';
+
+  if (type == 'task') {
+    ex = `<div class="descr">${obj.descr}</div>`;
+  } else if (type == 'meeting') {
+    const people = obj.people.join(', ');
+    ex = `
+			<div class="people">${people}</div>
+			<div class="location">${obj.location}</div>
+			<div class="descr">${obj.descr}</div>
+		`;
+  } else if (type == 'reminder') {
+    ex = '';
+  }
+
+  return ex;
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (checkLocalStorage);

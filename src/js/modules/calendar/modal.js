@@ -2,107 +2,131 @@ import checkLocalStorage from '../localStorage';
 
 export default class Modal {
 	constructor(date, time, row) {
+		this.block = document.querySelector('.event_preferences');
 		this.date = date;
 		this.time = time;
 		this.row = row;
-		this.typeOfNote = 'task';
+		this.eventType = 'task';
 	}
 
 	createModal() {
-		const wrapper = document.createElement('div'); 
-			  wrapper.classList.add('modal_wrapper');
+		document.querySelector('.modal_wrapper').classList.remove('hidden');
 
-		wrapper.innerHTML = `
-			<div class="modal add_event">
-				<div class="user_event_name">
-					<input type="text" placeholder="Введите название">
-				</div>
+		document.querySelector('.event_date').innerHTML = this.createDate();
+		document.querySelector('.event_time input').value = this.time;
 
-				<div class="events_name">
-					<div class="event event_task active">
-						<span>Задача</span>
-					</div>
+		this.createTask();
+	}
 
-					<div class="event event_reminder">
-						<span>Напоминание</span>
-					</div>
+	createListeners() {
+		const eventBtns = document.querySelectorAll('.event');
 
-					<div class="event event_meet">
-						<span>Встреча</span>
-					</div>
-				</div>
-			
-				<div class="event_options">
-					${this.createTask()}
-				</div>
-			</div>
-		`;
+		const switchTabs = () => {
+			eventBtns.forEach((btn) => {
+				btn.addEventListener('click', () => {
+					eventBtns.forEach(item => item.classList.remove('active'));
+					btn.classList.add('active');
+	
+					this.block.innerHTML = '';
+	
+					document.querySelector('.event_date').innerHTML = this.createDate();
+					document.querySelector('.event_time input').value = this.time;
+	
+					if (btn.id == 'event_task') {
+						this.eventType = 'task';
+						this.createTask();
+					} else if (btn.id == 'event_reminder') {
+						this.eventType = 'reminder';
+						this.createReminder();
+					} else {
+						this.eventType = 'meeting';
+						this.createMeeting();
+					}
+				});
+			});
+		};
+		
+		const closeModal = () => {
+			document.querySelector('.modal_close').addEventListener('click', () => {
+				document.querySelector('.modal_wrapper').classList.add('hidden');
+			});
+		};
 
-		document.body.appendChild(wrapper);
+		const saveEvent = () => {
+			document.querySelector('.event_save').addEventListener('click', () => {
+				// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+				const dateForLocalStorage = this.createDate('localStorage');
+
+				const name = document.querySelector('.user_event_name input').value;
+				const time = document.querySelector('.event_time input').value;
+				const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
+				
+				const obj = {
+					'id': id,
+					'name': name,
+					'time': time,
+					'date': dateForLocalStorage
+				};
+
+				if (this.eventType == 'task') {
+					const descr = document.querySelector('.task_descr textarea').value;
+
+					obj.descr = descr;
+				} else if (this.eventType == 'meeting') {
+					const location = document.querySelector('.meeting_location input').value;
+					const descr = document.querySelector('.meeting_descr input').value;
+					const peopleStr = document.querySelector('.meeting_people input').value;
+					const people = peopleStr.split(',');
+
+					obj.location = location;
+					obj.descr = descr;
+					obj.people = people;
+				}
+	
+				localStorage.setItem(id, JSON.stringify(obj));
+	
+				closeModal();
+				checkLocalStorage(dateForLocalStorage);
+			});
+		};
+		
+		switchTabs();
+		closeModal();
+		saveEvent();
 	}
 
 	createTask() {
-		const task = `
-			<div class="modal_task">
-				<div class="modal_date_and_time">
-					<div class="modal_date">
-						${this.createDate()}
-					</div>
-
-					<div class="modal_time">
-						<input type="text" value="${this.time}">
-					</div>
-
-					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
-				</div>
-
+		this.block.innerHTML = `
+			<div class="event_task">
 				<div class="task_descr">
 					<textarea placeholder="Описание задачи"></textarea>
 				</div>
-
-				<button class="modal_save">Записать</button>
 			</div>
 		`;
-
-		return task;
 	}
 
 	createReminder() {
-		const reminder = `
-			<div class="modal_reminder">
-				<div class="modal_date_and_time">
-					<div class="modal_date">
-						${this.createDate()}
-					</div>
-
-					<div class="modal_time">
-						<input type="text" value="${this.time}">
-					</div>
-
-					<label for="wholeDay"><input type="checkbox" name="wholeDay">Весь день</label>
-				</div>
-
-				<button class="modal_save">Записать</button>
-			</div>
+		this.block.innerHTML = `
+			<div class="event_reminder"></div>
 		`;
-
-		return reminder;
 	}
 
-	createTimeList() {
-		const hour = this.time.substr(0, 3);
+	createMeeting() {
+		this.block.innerHTML = `
+			<div class="event_meeting">
+				<div class="meeting_people">
+					<label><input type="text" placeholder="Укажите имена через запятую"></label>
+				</div>
 
-		const select = `
-			<select>
-				<option>${hour}00</option>
-				<option>${hour}10</option>
-				<option>${hour}20</option>
-				<option>${hour}30</option>
-				<option>${hour}40</option>
-				<option>${hour}50</option>
-			</select>
+				<div class="meeting_location">
+					<label><input type="text" placeholder="Укажите место встречи"></label>
+				</div>
+
+				<div class="meeting_descr">
+					<label><input type="text" placeholder="Добавьте описание"></label>
+				</div>
+			</div>
 		`;
-		return select;
 	}
 
 	createDate(mode = 'modal') {
@@ -123,42 +147,16 @@ export default class Modal {
 		return date;
 	}
 
-	checkTimeInInput() {
-		document.querySelector('.modal_time input').addEventListener('change', () => {
-			const str = document.querySelector('.modal_time input').value;
+	// checkTimeInInput() {
+	// 	document.querySelector('.modal_time input').addEventListener('change', () => {
+	// 		const str = document.querySelector('.modal_time input').value;
 			
-		});
-	}
-
-	saveNote() {
-		document.querySelector('.modal_save').addEventListener('click', () => {
-			const name = document.querySelector('.user_event_name input').value;
-			const time = document.querySelector('.modal_time input').value;
-			const descr = document.querySelector('.task_descr textarea').value;
-			const note = `${this.typeOfNote}_${this.createDate('localStorage')}_${time}`;
-			// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-			const dateForLocalStorage = `${this.date.getDate()}.${this.date.getMonth()}.${this.date.getFullYear()}`;
-
-			const obj = {
-				'id': note,
-				'name': name,
-				'time': time,
-				'descr': descr,
-				'date': dateForLocalStorage
-			};
-
-			localStorage.setItem(note, JSON.stringify(obj));
-
-			document.querySelector('.modal_wrapper').remove();
-
-			checkLocalStorage(dateForLocalStorage);
-		});
-	}
+	// 	});
+	// }
 
 	init() {
 		this.createModal();
-		this.createTimeList();
-		this.checkTimeInInput();
-		this.saveNote();
+		this.createListeners();
+		// this.checkTimeInInput();
 	}
 }

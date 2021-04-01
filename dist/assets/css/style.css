@@ -20,13 +20,10 @@ footer {
   position: relative;
   display: flex; }
 
-.hidden {
-  display: none; }
-
 /* -------------- Header -------------- */
 header {
   display: flex;
-  height: 35px;
+  height: 50px;
   border-bottom: 1px solid #dadce0;
   box-sizing: border-box;
   background: white; }
@@ -85,40 +82,42 @@ header {
       justify-content: center;
       align-items: center;
       font-size: 20px; }
-  .left_side .wrapper_for_small_calendar .calendar_small table {
-    margin: 0 auto;
-    border-collapse: collapse; }
-    .left_side .wrapper_for_small_calendar .calendar_small table thead th {
-      height: 30px; }
-    .left_side .wrapper_for_small_calendar .calendar_small table tbody {
-      background: white; }
-      .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td {
-        position: relative;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        box-sizing: border-box; }
-        .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item {
+  .left_side .wrapper_for_small_calendar .calendar_small {
+    height: 275px; }
+    .left_side .wrapper_for_small_calendar .calendar_small table {
+      margin: 0 auto;
+      border-collapse: collapse; }
+      .left_side .wrapper_for_small_calendar .calendar_small table thead th {
+        height: 30px; }
+      .left_side .wrapper_for_small_calendar .calendar_small table tbody {
+        background: white; }
+        .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td {
           position: relative;
-          width: 100%;
-          height: 100%;
-          cursor: pointer;
-          transition: 0.5s all; }
-          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .dateDay {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
+          width: 40px;
+          height: 40px;
+          padding: 0;
+          box-sizing: border-box; }
+          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item {
+            position: relative;
             width: 100%;
             height: 100%;
-            font-size: 1em; }
-          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .weekend {
-            color: red; }
-          .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .today {
-            color: white;
-            border-radius: 50%;
-            background: #1a73e8; }
+            cursor: pointer;
+            transition: 0.5s all; }
+            .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .dateDay {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              font-size: 1em; }
+            .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .weekend {
+              color: red; }
+            .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item .today {
+              color: white;
+              border-radius: 50%;
+              background: #1a73e8; }
   .left_side .options {
     margin-top: 50px; }
     .left_side .options .option {
@@ -195,7 +194,7 @@ header {
   justify-content: flex-start; }
   .diary .wrapper_for_big_calendar .calendar_big table {
     position: relative;
-    height: 860px;
+    height: 845px;
     border-collapse: collapse; }
     .diary .wrapper_for_big_calendar .calendar_big table thead {
       border-right: 1px solid #dadce0;
@@ -226,17 +225,22 @@ header {
             flex-wrap: wrap;
             pointer-events: none;
             z-index: 2; }
-            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span {
-              font-size: 12px; }
-              .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span:first-of-type {
-                margin-left: 5px; }
-            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .task_small_sticker {
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker {
               display: flex;
               justify-content: center;
               align-items: center;
               min-width: 50px;
-              margin: 0 5px 5px 0;
+              margin: 0 5px 5px 0; }
+              .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span {
+                font-size: 12px; }
+                .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span:first-of-type {
+                  margin-left: 5px; }
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .task_small_sticker {
               background: skyblue; }
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .reminder_small_sticker {
+              background: pink; }
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .meeting_small_sticker {
+              background: lightgreen; }
           .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .dateDay {
             display: flex;
             flex-direction: column;
@@ -306,7 +310,7 @@ header {
 .day {
   position: relative;
   width: 100%;
-  max-height: 860px;
+  max-height: 845px;
   overflow: auto;
   border-bottom: 1px solid #dadce0;
   box-sizing: border-box;
@@ -341,7 +345,7 @@ header {
         position: relative;
         display: flex;
         height: 100%; }
-        .day table tr td .inner_wrapper .task_sticker {
+        .day table tr td .inner_wrapper .sticker {
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -352,32 +356,42 @@ header {
           margin: 0 10px;
           cursor: pointer;
           box-sizing: border-box;
-          border-radius: 5px;
-          background: skyblue; }
-          .day table tr td .inner_wrapper .task_sticker .task_name {
+          border-radius: 5px; }
+          .day table tr td .inner_wrapper .sticker .event_name {
             display: flex;
             justify-content: center;
             align-items: center; }
-            .day table tr td .inner_wrapper .task_sticker .task_name .task_time {
+            .day table tr td .inner_wrapper .sticker .event_name .event_time {
               margin-left: 10px; }
-              .day table tr td .inner_wrapper .task_sticker .task_name .task_time span {
+              .day table tr td .inner_wrapper .sticker .event_name .event_time span {
                 font-size: 20px; }
+          .day table tr td .inner_wrapper .sticker .arrow_dialog::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: -10px;
+            width: 20px;
+            height: 20px;
+            transform: rotate(45deg);
+            z-index: -1; }
+        .day table tr td .inner_wrapper .task_sticker {
+          background: skyblue; }
           .day table tr td .inner_wrapper .task_sticker .task_descr {
             color: rgba(0, 0, 0, 0.6);
             text-align: center;
             margin-top: 5px;
             padding-top: 5px;
             border-top: 1px solid #1a73e8; }
-        .day table tr td .inner_wrapper .arrow_dialog::before {
-          content: '';
-          position: absolute;
-          top: 15px;
-          left: -10px;
-          width: 20px;
-          height: 20px;
-          transform: rotate(45deg);
-          background: skyblue;
-          z-index: -1; }
+          .day table tr td .inner_wrapper .task_sticker .arrow_dialog::before {
+            background: skyblue; }
+        .day table tr td .inner_wrapper .reminder_sticker {
+          background: pink; }
+          .day table tr td .inner_wrapper .reminder_sticker .arrow_dialog::before {
+            background: pink; }
+        .day table tr td .inner_wrapper .meeting_sticker {
+          background: lightgreen; }
+          .day table tr td .inner_wrapper .meeting_sticker .arrow_dialog::before {
+            background: lightgreen; }
     .day table tr .time {
       display: flex;
       flex-direction: column;
@@ -402,102 +416,153 @@ header {
   position: fixed;
   top: 0;
   left: 0;
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5); }
-  .modal_wrapper .modal {
-    position: fixed;
-    top: calc(50% - 300px);
-    left: calc(50% - 150px);
+  .modal_wrapper .modal_add_event {
+    position: absolute;
+    top: calc(50% - 290px);
     width: 500px;
-    padding: 40px;
+    padding: 40px 20px 20px;
     border: 1px solid black;
     box-sizing: border-box;
     background: white; }
-    .modal_wrapper .modal .user_event_name {
+    .modal_wrapper .modal_add_event .user_event_name {
       width: 100%; }
-      .modal_wrapper .modal .user_event_name input {
+      .modal_wrapper .modal_add_event .user_event_name input {
         width: 100%;
         height: 35px;
         font-size: 23px;
+        cursor: pointer;
         outline: none;
         padding: 0 5px;
         border: none;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
         border-bottom: 1px solid #dadce0;
         box-sizing: border-box; }
-        .modal_wrapper .modal .user_event_name input:focus {
+        .modal_wrapper .modal_add_event .user_event_name input:hover {
+          background: rgba(218, 220, 224, 0.5); }
+        .modal_wrapper .modal_add_event .user_event_name input:focus {
+          cursor: auto;
           border-bottom: 2px solid #1a73e8; }
-    .modal_wrapper .modal .events_name {
+    .modal_wrapper .modal_add_event .events_name {
       display: flex;
       justify-content: space-around;
       margin-top: 20px; }
-      .modal_wrapper .modal .events_name .event {
+      .modal_wrapper .modal_add_event .events_name .event {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 40px;
         font-size: 18px;
-        padding: 0 15px; }
-      .modal_wrapper .modal .events_name .active {
+        cursor: pointer;
+        padding: 0 15px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px; }
+        .modal_wrapper .modal_add_event .events_name .event:hover {
+          background: rgba(218, 220, 224, 0.5); }
+      .modal_wrapper .modal_add_event .events_name .active {
         color: #1a73e8;
-        border-radius: 5px;
-        background: #dadce0; }
-    .modal_wrapper .modal .event_options .modal_task, .modal_wrapper .modal .event_options .modal_reminder {
-      position: relative;
-      height: 350px;
-      padding: 40px 10px 10px;
+        background: rgba(218, 220, 224, 0.5); }
+    .modal_wrapper .modal_add_event .event_options {
+      padding: 10px 0 10px 10px;
+      margin-bottom: 40px;
       border-left: 1px solid #dadce0;
       box-sizing: border-box; }
-      .modal_wrapper .modal .event_options .modal_task .modal_date_and_time, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time {
+      .modal_wrapper .modal_add_event .event_options .event_date_and_time {
         display: flex;
         align-items: center;
-        height: 30px; }
-        .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_date, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_date {
+        height: 30px;
+        margin-bottom: 10px; }
+        .modal_wrapper .modal_add_event .event_options .event_date_and_time .event_date {
           margin-right: 10px; }
-        .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time {
+        .modal_wrapper .modal_add_event .event_options .event_date_and_time .event_time {
           margin-right: 10px; }
-          .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time input, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time input {
+          .modal_wrapper .modal_add_event .event_options .event_date_and_time .event_time input {
             width: 50px;
             height: 30px;
             font-size: 16px;
             text-align: center;
+            cursor: pointer;
             outline: none;
             border: none;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
             border-bottom: 2px solid rgba(0, 0, 0, 0); }
-            .modal_wrapper .modal .event_options .modal_task .modal_date_and_time .modal_time input:focus, .modal_wrapper .modal .event_options .modal_reminder .modal_date_and_time .modal_time input:focus {
-              border-bottom: 2px solid #1a73e8; }
-      .modal_wrapper .modal .event_options .modal_task .task_descr, .modal_wrapper .modal .event_options .modal_reminder .task_descr {
-        margin-top: 10px; }
-        .modal_wrapper .modal .event_options .modal_task .task_descr textarea, .modal_wrapper .modal .event_options .modal_reminder .task_descr textarea {
-          width: 395px;
-          height: 200px;
-          font-size: 15px;
-          resize: none;
-          outline: none;
-          padding: 10px;
-          border-radius: 10px;
-          border: none;
-          box-sizing: border-box;
-          background: #edeef0; }
-          .modal_wrapper .modal .event_options .modal_task .task_descr textarea:focus, .modal_wrapper .modal .event_options .modal_reminder .task_descr textarea:focus {
-            border-bottom: 2px solid #1a73e8;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0; }
-      .modal_wrapper .modal .event_options .modal_task .modal_save, .modal_wrapper .modal .event_options .modal_reminder .modal_save {
-        position: absolute;
-        bottom: 0px;
-        right: 10px;
-        width: 100px;
-        height: 35px;
-        color: white;
+            .modal_wrapper .modal_add_event .event_options .event_date_and_time .event_time input:hover {
+              background: rgba(218, 220, 224, 0.5); }
+            .modal_wrapper .modal_add_event .event_options .event_date_and_time .event_time input:focus {
+              cursor: auto;
+              border-bottom: 2px solid #1a73e8;
+              background: rgba(218, 220, 224, 0.5); }
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_task .task_descr textarea {
+        width: 100%;
+        height: 200px;
+        font-size: 15px;
+        resize: none;
         outline: none;
-        cursor: pointer;
-        border: 1px solid #0396ff;
-        border-radius: 5px;
-        background: linear-gradient(180deg, #ABDCFF 10%, #0396FF 100%); }
-        .modal_wrapper .modal .event_options .modal_task .modal_save:hover, .modal_wrapper .modal .event_options .modal_reminder .modal_save:hover {
-          opacity: 0.8; }
-        .modal_wrapper .modal .event_options .modal_task .modal_save:active, .modal_wrapper .modal .event_options .modal_reminder .modal_save:active {
-          box-shadow: inset 0px 1px 4px -1px black; }
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        box-sizing: border-box;
+        background: #edeef0; }
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_task .task_descr textarea:focus {
+          border-bottom: 2px solid #1a73e8;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0; }
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr {
+        margin-bottom: 10px; }
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input {
+          width: 100%;
+          height: 40px;
+          font-size: 16px;
+          cursor: pointer;
+          outline: none;
+          padding: 0 5px;
+          border: none;
+          border-bottom: 2px solid transparent;
+          border-radius: 5px;
+          box-sizing: border-box;
+          transition: 0.5s all ease; }
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:hover {
+            background: rgba(218, 220, 224, 0.5); }
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:focus {
+            cursor: auto;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 2px solid #1a73e8;
+            background: rgba(218, 220, 224, 0.5); }
+    .modal_wrapper .modal_add_event .event_save {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 100px;
+      height: 35px;
+      color: white;
+      outline: none;
+      cursor: pointer;
+      border: 1px solid #0396ff;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #ABDCFF 10%, #0396FF 100%); }
+      .modal_wrapper .modal_add_event .event_save:hover {
+        opacity: 0.8; }
+      .modal_wrapper .modal_add_event .event_save:active {
+        box-shadow: inset 0px 1px 4px -1px black; }
+    .modal_wrapper .modal_add_event .modal_close {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      font-size: 40px;
+      cursor: pointer; }
 
-/* -------------- CheckBoxes -------------- */
+/* -------------- High Prioriti -------------- */
+.hidden {
+  display: none; }

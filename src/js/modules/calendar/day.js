@@ -15,12 +15,6 @@ export default class Day {
 		document.querySelector('.diary').appendChild(day);
 	}
 
-	centeringNumberOfDay() {
-		const top = document.querySelector('.dateDay').getBoundingClientRect();
-
-		console.log(top);
-	}
-
 	createGraph() {
 		const table = document.createElement('table');
 
@@ -49,53 +43,62 @@ export default class Day {
 	}
 
 	createListeners() {
-		document.querySelector('.day').addEventListener('scroll', () => {
-			const px = document.querySelector('.day').scrollTop;
-			document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
-		});
-
-		document.querySelectorAll('.day td').forEach((row) => {
-			row.addEventListener('click', () => {
-				const time = row.previousElementSibling.innerHTML;
-
-				const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-
-				new Modal(choiceDate, time, row).init();
+		const scrollDateWithScreen = () => {
+			document.querySelector('.day').addEventListener('scroll', () => {
+				const px = document.querySelector('.day').scrollTop;
+				document.querySelector('.day .dateDay').style.top = `calc(50% - ${200 - px}px)`;
 			});
-		});
-
-		document.querySelectorAll('.day .task_sticker').forEach((task) => {
-			const descr = task.querySelector('.task_descr');
-
-			task.addEventListener('mouseover', () => {
-				const stickerWidth = task.offsetWidth;
-				const posTd = task.closest('td').getBoundingClientRect().left;
-				const posSticker = task.getBoundingClientRect().left;
-
-				descr.classList.remove('hidden');
-				task.classList.add('arrow_dialog');
-
-				task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
-
-				task.style.cssText = `
-					position: absolute;
-					left: ${posSticker - posTd}px;
-					min-height: 80px;
-					font-size: 18px;
-					padding: 10px 10px;
-					z-index: 1;
-				`;
+		};
+		
+		const displayModal = () => {
+			document.querySelectorAll('.day td').forEach((row) => {
+				row.addEventListener('click', () => {
+					const time = row.previousElementSibling.innerHTML;
+	
+					const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+	
+					new Modal(choiceDate, time, row).init();
+				});
 			});
-
-			task.addEventListener('mouseout', () => {
-				descr.classList.add('hidden');
-				task.classList.remove('arrow_dialog');
-
-				task.closest('.static_wrapper').style.width = '';
-
-				task.style.cssText = '';
+		};
+	
+		const showAndHideExtendSticker = () => {
+			document.querySelectorAll('.day .sticker').forEach((task) => {
+				const extend = task.querySelector('.sticker_extend');
+	
+				task.addEventListener('mouseover', () => {
+					const stickerWidth = task.offsetWidth;
+					const posTd = task.closest('td').getBoundingClientRect().left;
+					const posSticker = task.getBoundingClientRect().left;
+	
+					extend.classList.remove('hidden');
+	
+					task.closest('.static_wrapper').style.width = `${stickerWidth + 20}px`;
+	
+					task.style.cssText = `
+						position: absolute;
+						left: ${posSticker - posTd}px;
+						min-height: 80px;
+						font-size: 18px;
+						padding: 10px 10px;
+						z-index: 1;
+					`;
+				});
+	
+				// task.addEventListener('mouseout', () => {
+				// 	extend.classList.add('hidden');
+				// 	task.classList.remove('arrow_dialog');
+	
+				// 	task.closest('.static_wrapper').style.width = '';
+	
+				// 	task.style.cssText = '';
+				// });
 			});
-		});
+		};
+
+		scrollDateWithScreen();
+		displayModal();
+		showAndHideExtendSticker();
 	}
 
 	init() {
@@ -103,7 +106,6 @@ export default class Day {
 		const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
 
 		this.createDay();
-		this.centeringNumberOfDay();
 		this.createGraph();
 
 		checkLocalStorage(dateForLocalStorage);
