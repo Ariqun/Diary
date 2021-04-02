@@ -1,4 +1,5 @@
 import checkLocalStorage from '../localStorage';
+import Day from './day';
 
 export default class Modal {
 	constructor(date, time, row) {
@@ -55,43 +56,44 @@ export default class Modal {
 
 		const saveEvent = () => {
 			document.querySelector('.event_save').addEventListener('click', () => {
-				// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-				const dateForLocalStorage = this.createDate('localStorage');
+				const name = document.querySelector('.user_event_name input');
 
-				const name = document.querySelector('.user_event_name input').value;
-				const time = document.querySelector('.event_time input').value;
-				const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
-				
-				const obj = {
-					'id': id,
-					'name': name,
-					'time': time,
-					'date': dateForLocalStorage
-				};
+				if (name.value == '') {
+					name.style.borderBottom = '2px solid red';
+					setTimeout(() => {name.style.cssText = '';}, 2000);
+				} else {
+					// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+					const dateForLocalStorage = this.createDate('localStorage');
+					const time = document.querySelector('.event_time input').value;
+					const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
 
-				if (this.eventType == 'task') {
-					const descr = document.querySelector('.task_descr textarea').value;
+					const obj = {
+						'id': id,
+						'name': name.value,
+						'time': time,
+						'date': dateForLocalStorage
+					};
 
-					obj.descr = descr;
-				} else if (this.eventType == 'meeting') {
-					const location = document.querySelector('.meeting_location input').value;
-					const descr = document.querySelector('.meeting_descr input').value;
-					const peopleStr = document.querySelector('.meeting_people input').value;
-					const people = peopleStr.split(',');
+					if (this.eventType == 'task') {
+						const descr = document.querySelector('.task_descr textarea').value;
 
-					obj.location = location;
-					obj.descr = descr;
-					obj.people = people;
+						obj.descr = descr;
+					} else if (this.eventType == 'meeting') {
+						const location = document.querySelector('.meeting_location input').value;
+						const descr = document.querySelector('.meeting_descr input').value;
+						const peopleStr = document.querySelector('.meeting_people input').value;
+						const people = peopleStr.split(',');
+
+						obj.location = location;
+						obj.descr = descr;
+						obj.people = people;
+					}
+
+					document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
+					localStorage.setItem(id, JSON.stringify(obj));
+					checkLocalStorage('day', dateForLocalStorage);
+					document.querySelector('.modal_wrapper').classList.add('hidden');
 				}
-
-				document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
-	
-				localStorage.setItem(id, JSON.stringify(obj));
-	
-				checkLocalStorage('day', dateForLocalStorage);
-
-
-				document.querySelector('.modal_wrapper').classList.add('hidden');
 			});
 		};
 

@@ -42,6 +42,11 @@ function createStickersForDay(date, type, obj) {
 
 		const node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
+				<div class="sticker_rules hidden">
+					<div class="sticker_edit"><img src="/assets/icons/sticker_edit.png"></div>
+					<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
+				</div>
+
 				<div class="event_header">
 					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
 						${shortName}

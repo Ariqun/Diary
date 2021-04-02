@@ -5,6 +5,8 @@ export default class Day {
 	constructor(date, day) {
 		this.date = date;
 		this.day = day;
+		// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+		this.dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
 	}
 
 	createDay() {
@@ -67,10 +69,12 @@ export default class Day {
 		const showAndHideExtendSticker = () => {
 			document.querySelectorAll('.day .sticker').forEach((sticker) => {
 				const extend = sticker.querySelector('.sticker_extend');
+				const rules = sticker.querySelector('.sticker_rules');
 				const eventName = sticker.querySelector('.event_name');
 
 				sticker.addEventListener('mouseover', () => {
 					extend.classList.remove('hidden');
+					rules.classList.remove('hidden');
 					eventName.innerText = eventName.getAttribute('data-fullName');
 
 					sticker.style.cssText = `
@@ -88,6 +92,7 @@ export default class Day {
 	
 				sticker.addEventListener('mouseout', () => {
 					extend.classList.add('hidden');
+					rules.classList.add('hidden');
 					eventName.innerText = eventName.getAttribute('data-shortName');
 
 					sticker.style.cssText = '';
@@ -96,19 +101,32 @@ export default class Day {
 			});
 		};
 
+		const deleteSticker = () => {
+			document.querySelectorAll('.sticker .sticker_delete').forEach((del) => {
+				del.addEventListener('click', () => {
+					const sticker = del.closest('.sticker');
+
+					localStorage.removeItem(sticker.id);
+					document.querySelectorAll('.sticker').forEach(sticker => sticker.remove());
+					checkLocalStorage('day', this.dateForLocalStorage);
+					
+					showAndHideExtendSticker();
+					deleteSticker();
+				});
+			});
+		};
+
 		scrollDateWithScreen();
 		displayModal();
 		showAndHideExtendSticker();
+		deleteSticker();
 	}
 
 	init() {
-		// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-		const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
-
 		this.createDay();
 		this.createGraph();
 
-		checkLocalStorage('day', dateForLocalStorage);
+		checkLocalStorage('day', this.dateForLocalStorage);
 
 		this.createListeners();
 	}

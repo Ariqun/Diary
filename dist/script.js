@@ -414,7 +414,9 @@ __webpack_require__.r(__webpack_exports__);
 class Day {
   constructor(date, day) {
     this.date = date;
-    this.day = day;
+    this.day = day; // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+
+    this.dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
   }
 
   createDay() {
@@ -472,9 +474,11 @@ class Day {
     const showAndHideExtendSticker = () => {
       document.querySelectorAll('.day .sticker').forEach(sticker => {
         const extend = sticker.querySelector('.sticker_extend');
+        const rules = sticker.querySelector('.sticker_rules');
         const eventName = sticker.querySelector('.event_name');
         sticker.addEventListener('mouseover', () => {
           extend.classList.remove('hidden');
+          rules.classList.remove('hidden');
           eventName.innerText = eventName.getAttribute('data-fullName');
           sticker.style.cssText = `
 						position: absolute;
@@ -489,6 +493,7 @@ class Day {
         });
         sticker.addEventListener('mouseout', () => {
           extend.classList.add('hidden');
+          rules.classList.add('hidden');
           eventName.innerText = eventName.getAttribute('data-shortName');
           sticker.style.cssText = '';
           sticker.closest('.sticker_wrapper').style.width = '';
@@ -496,17 +501,29 @@ class Day {
       });
     };
 
+    const deleteSticker = () => {
+      document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
+        del.addEventListener('click', () => {
+          const sticker = del.closest('.sticker');
+          localStorage.removeItem(sticker.id);
+          document.querySelectorAll('.sticker').forEach(sticker => sticker.remove());
+          Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', this.dateForLocalStorage);
+          showAndHideExtendSticker();
+          deleteSticker();
+        });
+      });
+    };
+
     scrollDateWithScreen();
     displayModal();
     showAndHideExtendSticker();
+    deleteSticker();
   }
 
   init() {
-    // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-    const dateForLocalStorage = `${this.day.innerHTML}.${this.date.getMonth()}.${this.date.getFullYear()}`;
     this.createDay();
     this.createGraph();
-    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', dateForLocalStorage);
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', this.dateForLocalStorage);
     this.createListeners();
   }
 
@@ -589,6 +606,8 @@ class Matrix {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
 /* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+/* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
+
 
 class Modal {
   constructor(date, time, row) {
@@ -641,35 +660,43 @@ class Modal {
 
     const saveEvent = () => {
       document.querySelector('.event_save').addEventListener('click', () => {
-        // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
-        const dateForLocalStorage = this.createDate('localStorage');
-        const name = document.querySelector('.user_event_name input').value;
-        const time = document.querySelector('.event_time input').value;
-        const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
-        const obj = {
-          'id': id,
-          'name': name,
-          'time': time,
-          'date': dateForLocalStorage
-        };
+        const name = document.querySelector('.user_event_name input');
 
-        if (this.eventType == 'task') {
-          const descr = document.querySelector('.task_descr textarea').value;
-          obj.descr = descr;
-        } else if (this.eventType == 'meeting') {
-          const location = document.querySelector('.meeting_location input').value;
-          const descr = document.querySelector('.meeting_descr input').value;
-          const peopleStr = document.querySelector('.meeting_people input').value;
-          const people = peopleStr.split(',');
-          obj.location = location;
-          obj.descr = descr;
-          obj.people = people;
+        if (name.value == '') {
+          name.style.borderBottom = '2px solid red';
+          setTimeout(() => {
+            name.style.cssText = '';
+          }, 2000);
+        } else {
+          // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
+          const dateForLocalStorage = this.createDate('localStorage');
+          const time = document.querySelector('.event_time input').value;
+          const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
+          const obj = {
+            'id': id,
+            'name': name.value,
+            'time': time,
+            'date': dateForLocalStorage
+          };
+
+          if (this.eventType == 'task') {
+            const descr = document.querySelector('.task_descr textarea').value;
+            obj.descr = descr;
+          } else if (this.eventType == 'meeting') {
+            const location = document.querySelector('.meeting_location input').value;
+            const descr = document.querySelector('.meeting_descr input').value;
+            const peopleStr = document.querySelector('.meeting_people input').value;
+            const people = peopleStr.split(',');
+            obj.location = location;
+            obj.descr = descr;
+            obj.people = people;
+          }
+
+          document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
+          localStorage.setItem(id, JSON.stringify(obj));
+          Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', dateForLocalStorage);
+          document.querySelector('.modal_wrapper').classList.add('hidden');
         }
-
-        document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
-        localStorage.setItem(id, JSON.stringify(obj));
-        Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', dateForLocalStorage);
-        document.querySelector('.modal_wrapper').classList.add('hidden');
       });
     };
 
@@ -901,6 +928,11 @@ function createStickersForDay(date, type, obj) {
     let shortName = createShortName(obj.name);
     const node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
+				<div class="sticker_rules hidden">
+					<div class="sticker_edit"><img src="/assets/icons/sticker_edit.png"></div>
+					<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
+				</div>
+
 				<div class="event_header">
 					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
 						${shortName}
