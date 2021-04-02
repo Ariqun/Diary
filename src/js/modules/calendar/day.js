@@ -52,49 +52,47 @@ export default class Day {
 		
 		const displayModal = () => {
 			document.querySelectorAll('.day td').forEach((row) => {
-				row.addEventListener('click', () => {
-					const time = row.previousElementSibling.innerHTML;
+				row.addEventListener('click', (e) => {
+					if (e.target.classList.contains('inner_wrapper')) {
+						const time = row.previousElementSibling.innerHTML;
 	
-					const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-	
-					new Modal(choiceDate, time, row).init();
+						const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+		
+						new Modal(choiceDate, time, row).init();
+					}
 				});
 			});
 		};
 	
 		const showAndHideExtendSticker = () => {
 			document.querySelectorAll('.day .sticker').forEach((sticker) => {
-				if (!sticker.classList.contains('reminder_sticker')) {
-					const extend = sticker.querySelector('.sticker_extend');
+				const extend = sticker.querySelector('.sticker_extend');
+				const eventName = sticker.querySelector('.event_name');
 
-					sticker.addEventListener('mouseover', () => {
-						const posTd = sticker.closest('td').getBoundingClientRect().left;
-						const posSticker = sticker.getBoundingClientRect().left;
-		
-						extend.classList.remove('hidden');
-		
-						sticker.style.cssText = `
-							position: absolute;
-							left: ${posSticker - posTd}px;
-							min-height: 80px;
-							font-size: 18px;
-							padding: 7px;
-							z-index: 1;
-						`;
+				sticker.addEventListener('mouseover', () => {
+					extend.classList.remove('hidden');
+					eventName.innerText = eventName.getAttribute('data-fullName');
 
-						sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 30}px`;
-					});
-		
-					sticker.addEventListener('mouseout', () => {
-						extend.classList.add('hidden');
-						sticker.classList.remove('arrow_dialog');
-		
-						sticker.closest('.sticker_wrapper').style.width = '';
-		
-						sticker.style.cssText = '';
-					});
-				}
-				
+					sticker.style.cssText = `
+						position: absolute;
+						min-height: 80px;
+						font-size: 18px;
+						padding: 7px;
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						box-shadow: 0px 2px 10px 0px black;
+						z-index: 1;
+					`;
+
+					sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
+				});
+	
+				sticker.addEventListener('mouseout', () => {
+					extend.classList.add('hidden');
+					eventName.innerText = eventName.getAttribute('data-shortName');
+
+					sticker.style.cssText = '';
+					sticker.closest('.sticker_wrapper').style.width = '';
+				});
 			});
 		};
 

@@ -181,6 +181,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _calendarDOM__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendarDOM */ "./src/js/modules/calendar/calendarDOM.js");
 /* harmony import */ var _day__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./day */ "./src/js/modules/calendar/day.js");
 /* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+/* harmony import */ var _left_side__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../left_side */ "./src/js/modules/left_side.js");
+
 
 
 
@@ -239,28 +241,31 @@ class Calendar {
       });
     };
 
+    const changeMonth = () => {
+      document.querySelectorAll('header .change_month').forEach(arrow => {
+        arrow.addEventListener('click', () => {
+          const arrOfTypes = new _left_side__WEBPACK_IMPORTED_MODULE_4__["default"]().checkSelectTypes();
+          let date;
+
+          if (arrow.classList.contains('prev_month')) {
+            date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
+          } else {
+            date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
+          }
+
+          this.clear();
+          this.createCalendar(date);
+          Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date, arrOfTypes);
+          showAndHideHoverAnimation();
+          displayChosenDay();
+        });
+      });
+    };
+
     showAndHideHoverAnimation();
     displayChosenDay();
     backToMainScreen();
-  }
-
-  changeMonth() {
-    document.querySelectorAll('header .change_month').forEach(arrow => {
-      arrow.addEventListener('click', () => {
-        let date;
-
-        if (arrow.classList.contains('prev_month')) {
-          date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
-        } else {
-          date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
-        }
-
-        this.clear();
-        this.createCalendar(date);
-        Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date);
-        this.createListeners();
-      });
-    });
+    changeMonth();
   } // Анимация каждой ячейки календаря при наведениее мышки
 
 
@@ -306,9 +311,8 @@ class Calendar {
 
   init() {
     this.createCalendar(this.date);
-    Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date);
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date, ['task', 'reminder', 'meeting']);
     this.createListeners();
-    this.changeMonth();
   }
 
 }
@@ -455,39 +459,40 @@ class Day {
 
     const displayModal = () => {
       document.querySelectorAll('.day td').forEach(row => {
-        row.addEventListener('click', () => {
-          const time = row.previousElementSibling.innerHTML;
-          const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-          new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
+        row.addEventListener('click', e => {
+          if (e.target.classList.contains('inner_wrapper')) {
+            const time = row.previousElementSibling.innerHTML;
+            const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+            new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
+          }
         });
       });
     };
 
     const showAndHideExtendSticker = () => {
       document.querySelectorAll('.day .sticker').forEach(sticker => {
-        if (!sticker.classList.contains('reminder_sticker')) {
-          const extend = sticker.querySelector('.sticker_extend');
-          sticker.addEventListener('mouseover', () => {
-            const posTd = sticker.closest('td').getBoundingClientRect().left;
-            const posSticker = sticker.getBoundingClientRect().left;
-            extend.classList.remove('hidden');
-            sticker.style.cssText = `
-							position: absolute;
-							left: ${posSticker - posTd}px;
-							min-height: 80px;
-							font-size: 18px;
-							padding: 7px;
-							z-index: 1;
-						`;
-            sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 30}px`;
-          });
-          sticker.addEventListener('mouseout', () => {
-            extend.classList.add('hidden');
-            sticker.classList.remove('arrow_dialog');
-            sticker.closest('.sticker_wrapper').style.width = '';
-            sticker.style.cssText = '';
-          });
-        }
+        const extend = sticker.querySelector('.sticker_extend');
+        const eventName = sticker.querySelector('.event_name');
+        sticker.addEventListener('mouseover', () => {
+          extend.classList.remove('hidden');
+          eventName.innerText = eventName.getAttribute('data-fullName');
+          sticker.style.cssText = `
+						position: absolute;
+						min-height: 80px;
+						font-size: 18px;
+						padding: 7px;
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						box-shadow: 0px 2px 10px 0px black;
+						z-index: 1;
+					`;
+          sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
+        });
+        sticker.addEventListener('mouseout', () => {
+          extend.classList.add('hidden');
+          eventName.innerText = eventName.getAttribute('data-shortName');
+          sticker.style.cssText = '';
+          sticker.closest('.sticker_wrapper').style.width = '';
+        });
       });
     };
 
@@ -622,6 +627,7 @@ class Modal {
           } else {
             this.eventType = 'meeting';
             this.createMeeting();
+            showAdressSuggestions();
           }
         });
       });
@@ -667,6 +673,52 @@ class Modal {
       });
     };
 
+    const showAdressSuggestions = () => {
+      const sugBlock = document.querySelector('.meeting_location .suggestions');
+      const input = document.querySelector('.meeting_location input');
+      input.addEventListener('input', suggestion);
+
+      function suggestion() {
+        const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+        const token = "f7f2fe36a577281d7b497460fd089ee837097d0b";
+        const query = input.value;
+        const options = {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Token " + token
+          },
+          body: JSON.stringify({
+            query: query
+          })
+        };
+        fetch(url, options).then(response => response.text()).then(result => {
+          const arr = JSON.parse(result).suggestions;
+          sugBlock.innerHTML = '';
+
+          for (let i = 0; i < 5; i++) {
+            sugBlock.innerHTML += `
+								<div class="suggestion">${arr[i].value}</div>
+							`;
+          }
+
+          selectSuggestion();
+        }).catch(error => console.log("error", error));
+      }
+
+      function selectSuggestion() {
+        document.querySelectorAll('.meeting_location .suggestion').forEach(item => {
+          item.addEventListener('click', () => {
+            input.value = item.innerHTML;
+            input.focus();
+            sugBlock.innerHTML = '';
+          });
+        });
+      }
+    };
+
     switchTabs();
     closeModal();
     saveEvent();
@@ -697,6 +749,7 @@ class Modal {
 
 				<div class="meeting_location">
 					<label><input type="text" placeholder="Укажите место встречи"></label>
+					<div class="suggestions"></div>
 				</div>
 
 				<div class="meeting_descr">
@@ -749,6 +802,8 @@ class Modal {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LeftSide; });
 /* harmony import */ var _calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calendar/calendar-mini */ "./src/js/modules/calendar/calendar-mini.js");
+/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./localStorage */ "./src/js/modules/localStorage.js");
+
 
 class LeftSide {
   constructor(container, date) {
@@ -756,10 +811,39 @@ class LeftSide {
     this.date = date;
   }
 
-  createOptionsForDisplayStickers() {}
+  createListeners() {
+    const hideAndShowEventTypes = () => {
+      const selectEventTypes = () => {
+        const arrOfTypes = this.checkSelectTypes();
+        document.querySelectorAll('.small_sticker').forEach(sticker => sticker.remove());
+        Object(_localStorage__WEBPACK_IMPORTED_MODULE_1__["default"])('month', this.date, arrOfTypes);
+      };
+
+      document.querySelectorAll('.left_side .option input').forEach(item => {
+        item.addEventListener('change', selectEventTypes);
+      });
+    };
+
+    hideAndShowEventTypes();
+  }
+
+  checkSelectTypes() {
+    const arrOfTypes = [];
+    document.querySelectorAll('.left_side .option input').forEach(item => {
+      if (item.id == 'display_tasks' && item.checked == true) {
+        arrOfTypes.push('task');
+      } else if (item.id == 'display_reminders' && item.checked == true) {
+        arrOfTypes.push('reminder');
+      } else if (item.id == 'display_meetings' && item.checked == true) {
+        arrOfTypes.push('meeting');
+      }
+    });
+    return arrOfTypes;
+  }
 
   init() {
     new _calendar_calendar_mini__WEBPACK_IMPORTED_MODULE_0__["default"]('.calendar_small', this.date).init();
+    this.createListeners();
   }
 
 }
@@ -777,7 +861,7 @@ class LeftSide {
 __webpack_require__.r(__webpack_exports__);
 
 
-const checkLocalStorage = (mode, date) => {
+const checkLocalStorage = (mode, date, arrOfTypes) => {
   const obj = { ...localStorage
   };
   let arr = [];
@@ -792,7 +876,7 @@ const checkLocalStorage = (mode, date) => {
       arr.push(JSON.parse(obj[key]));
     }
 
-    createStickersForMonth(date, arr);
+    createStickersForMonth(date, arr, arrOfTypes);
   }
 };
 
@@ -814,25 +898,28 @@ function createStickersForDay(date, type, obj) {
   }
 
   function createDOM() {
+    let shortName = createShortName(obj.name);
     const node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
-				<div class="event_name">${obj.name}
+				<div class="event_header">
+					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
+						${shortName}
+					</div>
+
 					<div class="event_time">
 						<span>[</span>${obj.time}<span>]</span>
 					</div>
 				</div>
 				
 				<div class="sticker_extend hidden">
-					${createTaskExtend()}
+					${createStickerExtend()}
 				</div>
-	
-				<div class="arrow_dialog"></div>
 			</div>
 		`;
     return node;
   }
 
-  function createTaskExtend() {
+  function createStickerExtend() {
     let ex = '';
 
     if (type == 'task') {
@@ -854,18 +941,42 @@ function createStickersForDay(date, type, obj) {
   pushEvent();
 }
 
-function createStickersForMonth(date, arr) {
-  arr.sort(function (a, b) {
+function createStickersForMonth(date, arr, arrOfTypes) {
+  let arrOfSortedByTypes = [];
+  let arrOfIndexes = [];
+
+  if (arrOfTypes != undefined) {
+    for (let elem of arrOfTypes) {
+      for (let el of arr) {
+        const type = el.id.split('_')[0];
+
+        if (elem == type) {
+          arrOfSortedByTypes.push(el);
+        }
+      }
+    }
+  }
+
+  arrOfSortedByTypes.sort(function (a, b) {
     let x = a.time.replace(/\D+/g, '');
     let y = b.time.replace(/\D+/g, '');
     return x - y;
   });
-  arr.reduce((acc, el) => {
+  arrOfSortedByTypes.reduce((acc, el) => {
     acc[el.date] = (acc[el.date] || 0) + 1;
+
+    if (acc[el.date] > 4) {
+      arrOfIndexes.unshift(arrOfSortedByTypes.indexOf(el));
+    }
+
     return acc;
   }, {}, null, 2);
 
-  for (let obj of arr) {
+  for (let index of arrOfIndexes) {
+    arrOfSortedByTypes.splice(index, 1);
+  }
+
+  for (let obj of arrOfSortedByTypes) {
     const eventType = obj.id.split('_')[0];
     const fullDate = obj.id.split('_')[1];
     const month = fullDate.split('.')[1];
@@ -883,12 +994,19 @@ function createStickersForMonth(date, arr) {
 
   function createStickers(type, obj) {
     const smallSticker = document.createElement('div');
+    let shortName = createShortName(obj.name);
     smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-    smallSticker.setAttribute('data-name', obj.name);
+    smallSticker.setAttribute('data-name', shortName);
     smallSticker.setAttribute('data-time', obj.time);
     smallSticker.innerHTML = `${obj.time}`;
     return smallSticker;
   }
+}
+
+function createShortName(str) {
+  let shortName = '';
+  str.length > 22 ? shortName = `${str.substr(0, 19)}...` : shortName = str;
+  return shortName;
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (checkLocalStorage);

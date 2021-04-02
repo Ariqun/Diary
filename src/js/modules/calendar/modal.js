@@ -41,6 +41,7 @@ export default class Modal {
 					} else {
 						this.eventType = 'meeting';
 						this.createMeeting();
+						showAdressSuggestions();
 					}
 				});
 			});
@@ -93,6 +94,57 @@ export default class Modal {
 				document.querySelector('.modal_wrapper').classList.add('hidden');
 			});
 		};
+
+		const showAdressSuggestions = () => {
+			const sugBlock = document.querySelector('.meeting_location .suggestions');
+			const input = document.querySelector('.meeting_location input');
+			input.addEventListener('input', suggestion);
+
+			function suggestion() {
+				const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+				const token = "f7f2fe36a577281d7b497460fd089ee837097d0b";
+				const query = input.value;
+	
+				const options = {
+					method: "POST",
+					mode: "cors",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "application/json",
+						"Authorization": "Token " + token
+					},
+	
+					body: JSON.stringify({query: query})
+				};
+	
+				fetch(url, options)
+					.then(response => response.text())
+					.then((result) => {
+						const arr = JSON.parse(result).suggestions;
+						sugBlock.innerHTML = '';
+
+						for (let i = 0; i < 5; i++) {
+							sugBlock.innerHTML += `
+								<div class="suggestion">${arr[i].value}</div>
+							`;
+						}
+
+						selectSuggestion();
+					})
+					.catch(error => console.log("error", error));
+			}
+
+			function selectSuggestion() {
+				document.querySelectorAll('.meeting_location .suggestion').forEach((item) => {
+					item.addEventListener('click', () => {
+						input.value = item.innerHTML;
+						input.focus();
+						
+						sugBlock.innerHTML = '';
+					});
+				});
+			}
+		};
 		
 		switchTabs();
 		closeModal();
@@ -124,6 +176,7 @@ export default class Modal {
 
 				<div class="meeting_location">
 					<label><input type="text" placeholder="Укажите место встречи"></label>
+					<div class="suggestions"></div>
 				</div>
 
 				<div class="meeting_descr">

@@ -1,6 +1,6 @@
 'use strict';
 
-const checkLocalStorage = (mode, date) => {
+const checkLocalStorage = (mode, date, arrOfTypes) => {
 	const obj = {...localStorage};
 	let arr = [];
 
@@ -15,9 +15,8 @@ const checkLocalStorage = (mode, date) => {
 			arr.push(JSON.parse(obj[key]));
 		}
 
-		createStickersForMonth(date, arr);
+		createStickersForMonth(date, arr, arrOfTypes);
 	}
-	
 };
 
 function createStickersForDay(date, type, obj) {
@@ -39,26 +38,30 @@ function createStickersForDay(date, type, obj) {
 	}
 	
 	function createDOM() {
+		let shortName = createShortName(obj.name);
+
 		const node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
-				<div class="event_name">${obj.name}
+				<div class="event_header">
+					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
+						${shortName}
+					</div>
+
 					<div class="event_time">
 						<span>[</span>${obj.time}<span>]</span>
 					</div>
 				</div>
 				
 				<div class="sticker_extend hidden">
-					${createTaskExtend()}
+					${createStickerExtend()}
 				</div>
-	
-				<div class="arrow_dialog"></div>
 			</div>
 		`;
 	
 		return node;
 	}
 	
-	function createTaskExtend() {
+	function createStickerExtend() {
 		let ex = '';
 	
 		if (type == 'task') {
@@ -81,21 +84,43 @@ function createStickersForDay(date, type, obj) {
 	pushEvent();
 }
 
-function createStickersForMonth(date, arr) {
-	arr.sort(function(a, b) {
+function createStickersForMonth(date, arr, arrOfTypes) {
+	let arrOfSortedByTypes = [];
+	let arrOfIndexes = [];
+	
+	if (arrOfTypes != undefined) {
+		for (let elem of arrOfTypes) {
+			for (let el of arr) {
+				const type = el.id.split('_')[0];
+
+				if (elem == type) {
+					arrOfSortedByTypes.push(el);
+				}
+			}
+		}
+	}
+
+	arrOfSortedByTypes.sort(function(a, b) {
 		let x = a.time.replace(/\D+/g, '');
 		let y = b.time.replace(/\D+/g, '');
 		return x - y;
 	});
-
-	arr.reduce((acc, el) => {
+	
+	arrOfSortedByTypes.reduce((acc, el) => {
 		acc[el.date] = (acc[el.date] || 0) + 1;
+
+		if (acc[el.date] > 4) {
+			arrOfIndexes.unshift(arrOfSortedByTypes.indexOf(el));
+		}
 
 		return acc;
 	}, {}, null, 2);
-	
 
-	for (let obj of arr) {
+	for (let index of arrOfIndexes) {
+		arrOfSortedByTypes.splice(index, 1);
+	}
+
+	for (let obj of arrOfSortedByTypes) {
 		const eventType = obj.id.split('_')[0];
 		const fullDate = obj.id.split('_')[1];
 		const month = fullDate.split('.')[1];
@@ -114,9 +139,11 @@ function createStickersForMonth(date, arr) {
 
 	function createStickers(type, obj) {
 		const smallSticker = document.createElement('div');
-			  smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-			  smallSticker.setAttribute('data-name', obj.name);
-			  smallSticker.setAttribute('data-time', obj.time);
+		let shortName = createShortName(obj.name);
+
+		smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+		smallSticker.setAttribute('data-name', shortName);
+		smallSticker.setAttribute('data-time', obj.time);
 
 		smallSticker.innerHTML = `${obj.time}`;
 
@@ -124,5 +151,12 @@ function createStickersForMonth(date, arr) {
 	}
 }
 
+function createShortName(str) {
+	let shortName = '';
+
+	str.length > 22 ? shortName = `${str.substr(0, 19)}...` : shortName = str;
+
+	return shortName;
+}
 
 export default checkLocalStorage;

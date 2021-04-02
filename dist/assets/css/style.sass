@@ -1,3 +1,31 @@
+/* -------------- Сброс стилей -------------- */
+
+*, *::before, *::after
+	box-sizing: border-box
+
+ul[class], ol[class]
+	list-style: none
+	padding: 0
+
+body, h1, h2, h3, h4, p, ul[class], ol[class],
+li, figure, figcaption, blockquote, dl, dd
+	margin: 0
+
+body
+	min-height: 100vh
+	scroll-behavior: smooth
+	text-rendering: optimizeSpeed
+
+a:not([class])
+	text-decoration-skip-ink: auto
+
+img
+	max-width: 100%
+	display: block
+
+input, button, textarea, select
+	font: inherit
+
 /* -------------- Main -------------- */
 
 @mixin flex-column
@@ -21,6 +49,7 @@ html
 	min-height: 100%
 	font-family: 'Roboto', sans-serif
 body
+	overflow: hidden
 	margin: 0
 	background: url('/assets/img/bg.jpg')
 
@@ -36,28 +65,27 @@ footer
 	position: relative
 	display: flex
 
+
 /* -------------- Header -------------- */
 
 header
 	display: flex
 	height: 50px
 	border-bottom: 1px solid $color-gray
-	box-sizing: border-box
 	background: white
 	.title
 		display: flex
 		flex-direction: column
 		justify-content: center
-		width: 316px
+		width: 315px
 		cursor: pointer
 		padding: 0 10px
-		box-sizing: border-box
-		border-right: 1px solid $color-gray
 	.current_month
 		display: flex
 		flex-grow: 1
 		align-items: center
 		padding: 0 10px
+		border-left: 1px solid $color-gray
 		.change_month
 			@include flex-row
 			cursor: pointer
@@ -71,9 +99,8 @@ header
 /* -------------- Left Side -------------- */
 
 .left_side
-	width: 315px
+	min-width: 315px
 	padding: 5px 10px
-	box-sizing: border-box
 	border-bottom: 1px solid $color-gray
 	background: white
 	.wrapper_for_small_calendar
@@ -82,15 +109,12 @@ header
 			justify-content: space-between
 			align-items: center
 			width: 100%
-			box-sizing: border-box
 			background: white
 			.prev_month, .next_month
 				@include flex-row
-				font-size: 12px
 				cursor: pointer
 				img
 					width: 15px
-					padding: 10px
 			.month
 				@include flex-column
 				font-size: 20px
@@ -110,7 +134,6 @@ header
 							width: 40px
 							height: 40px
 							padding: 0
-							box-sizing: border-box
 							.item
 								position: relative
 								width: 100%
@@ -229,7 +252,6 @@ header
 							position: relative
 							width: 220px
 							padding: 0
-							box-sizing: border-box
 							border: 1px solid $color-gray
 							.item
 								position: relative
@@ -244,15 +266,16 @@ header
 									display: flex
 									flex-direction: column
 									flex-wrap: wrap
+									max-width: 100%
 									pointer-events: none
 									z-index: 2
 									.small_sticker
 										display: flex
 										align-items: center
 										min-width: 50px
+										max-width: 100%
 										padding: 5px 5px
 										margin: 0 5px 5px 0
-										box-sizing: border-box
 										span
 											font-size: 12px
 											&:first-of-type
@@ -284,7 +307,6 @@ header
 								transition: 0.3s transform
 								box-shadow: 3px 3px 10px 0px
 								border: 1px solid black
-								box-sizing: border-box
 								background: white
 								z-index: 100
 								.small_sticker
@@ -320,7 +342,6 @@ header
 	max-height: 845px
 	overflow: auto
 	border-bottom: 1px solid $color-gray
-	box-sizing: border-box
 	background: white
 	.dateDay
 		position: absolute
@@ -336,6 +357,7 @@ header
 	table
 		width: 100%
 		border-collapse: collapse
+		border-left: 1px solid $color-gray
 		tr
 			&:first-of-type td
 				border-top: none
@@ -348,7 +370,6 @@ header
 				height: 50px
 				border: 1px solid $color-gray
 				border-left: none
-				box-sizing: border-box
 				.inner_wrapper
 					position: relative
 					display: flex
@@ -360,11 +381,14 @@ header
 						padding: 3px 10px
 						margin: 0 10px
 						cursor: pointer
-						box-sizing: border-box
 						border-radius: 5px
-						.event_name
-							@include flex-row
-							text-align: center
+						border: 1px solid rgba(0, 0, 0, 0.2)
+						.event_header
+							display: flex
+							.event_name
+								@include flex-row
+								text-align: center
+								overflow-wrap: anywhere
 							.event_time
 								margin-left: 10px
 								span
@@ -413,7 +437,6 @@ header
 				position: relative
 				width: 50px
 				height: 50px
-				box-sizing: border-box
 				border-right: 1px solid $color-gray
 				&::after
 					content: ''
@@ -441,7 +464,6 @@ header
 		width: 500px
 		padding: 40px 20px 20px
 		border: 1px solid black
-		box-sizing: border-box
 		background: white
 		.user_event_name
 			width: 100%
@@ -456,7 +478,6 @@ header
 				border-top-left-radius: 5px
 				border-top-right-radius: 5px
 				border-bottom: 1px solid $color-gray
-				box-sizing: border-box
 				&:hover
 					background: rgba(218, 220, 224, 0.5)
 				&:focus
@@ -483,7 +504,6 @@ header
 			padding: 10px 0 10px 10px
 			margin-bottom: 40px
 			border-left: 1px solid #dadce0
-			box-sizing: border-box
 			.event_date_and_time
 				display: flex
 				align-items: center
@@ -522,7 +542,6 @@ header
 							padding: 10px
 							border-radius: 10px
 							border: none
-							box-sizing: border-box
 							background: rgb(237, 238, 240)
 							&:focus
 								border-bottom: 2px solid $color-blue
@@ -530,6 +549,20 @@ header
 								border-bottom-right-radius: 0
 				.event_reminder
 				.event_meeting
+					.meeting_location
+						position: relative
+						.suggestions
+							position: absolute
+							width: 100%
+							border-bottom-left-radius: 5px
+							border-bottom-right-radius: 5px
+							background: $color-gray
+							z-index: 1
+							.suggestion
+								cursor: pointer
+								padding: 5px
+								&:hover
+									background: rgb(184, 184, 184)
 					.meeting_people, .meeting_location, .meeting_descr
 						margin-bottom: 10px
 						input
@@ -542,7 +575,6 @@ header
 							border: none
 							border-bottom: 2px solid transparent
 							border-radius: 5px
-							box-sizing: border-box
 							transition: 0.5s all ease
 							&:hover
 								background: rgba(218, 220, 224, 0.5)

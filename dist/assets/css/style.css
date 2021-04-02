@@ -1,3 +1,31 @@
+@charset "UTF-8";
+/* -------------- Сброс стилей -------------- */
+*, *::before, *::after {
+  box-sizing: border-box; }
+
+ul[class], ol[class] {
+  list-style: none;
+  padding: 0; }
+
+body, h1, h2, h3, h4, p, ul[class], ol[class],
+li, figure, figcaption, blockquote, dl, dd {
+  margin: 0; }
+
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed; }
+
+a:not([class]) {
+  text-decoration-skip-ink: auto; }
+
+img {
+  max-width: 100%;
+  display: block; }
+
+input, button, textarea, select {
+  font: inherit; }
+
 /* -------------- Main -------------- */
 html {
   position: relative;
@@ -5,6 +33,7 @@ html {
   font-family: 'Roboto', sans-serif; }
 
 body {
+  overflow: hidden;
   margin: 0;
   background: url("/assets/img/bg.jpg"); }
 
@@ -25,22 +54,20 @@ header {
   display: flex;
   height: 50px;
   border-bottom: 1px solid #dadce0;
-  box-sizing: border-box;
   background: white; }
   header .title {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 316px;
+    width: 315px;
     cursor: pointer;
-    padding: 0 10px;
-    box-sizing: border-box;
-    border-right: 1px solid #dadce0; }
+    padding: 0 10px; }
   header .current_month {
     display: flex;
     flex-grow: 1;
     align-items: center;
-    padding: 0 10px; }
+    padding: 0 10px;
+    border-left: 1px solid #dadce0; }
     header .current_month .change_month {
       display: flex;
       justify-content: center;
@@ -55,9 +82,8 @@ header {
 
 /* -------------- Left Side -------------- */
 .left_side {
-  width: 315px;
+  min-width: 315px;
   padding: 5px 10px;
-  box-sizing: border-box;
   border-bottom: 1px solid #dadce0;
   background: white; }
   .left_side .wrapper_for_small_calendar .current_month {
@@ -65,17 +91,14 @@ header {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    box-sizing: border-box;
     background: white; }
     .left_side .wrapper_for_small_calendar .current_month .prev_month, .left_side .wrapper_for_small_calendar .current_month .next_month {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 12px;
       cursor: pointer; }
       .left_side .wrapper_for_small_calendar .current_month .prev_month img, .left_side .wrapper_for_small_calendar .current_month .next_month img {
-        width: 15px;
-        padding: 10px; }
+        width: 15px; }
     .left_side .wrapper_for_small_calendar .current_month .month {
       display: flex;
       flex-direction: column;
@@ -95,8 +118,7 @@ header {
           position: relative;
           width: 40px;
           height: 40px;
-          padding: 0;
-          box-sizing: border-box; }
+          padding: 0; }
           .left_side .wrapper_for_small_calendar .calendar_small table tbody tr td .item {
             position: relative;
             width: 100%;
@@ -208,7 +230,6 @@ header {
         position: relative;
         width: 220px;
         padding: 0;
-        box-sizing: border-box;
         border: 1px solid #dadce0; }
         .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item {
           position: relative;
@@ -223,15 +244,16 @@ header {
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
+            max-width: 100%;
             pointer-events: none;
             z-index: 2; }
             .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker {
               display: flex;
               align-items: center;
               min-width: 50px;
+              max-width: 100%;
               padding: 5px 5px;
-              margin: 0 5px 5px 0;
-              box-sizing: border-box; }
+              margin: 0 5px 5px 0; }
               .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span {
                 font-size: 12px; }
                 .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .small_sticker span:first-of-type {
@@ -266,7 +288,6 @@ header {
           transition: 0.3s transform;
           box-shadow: 3px 3px 10px 0px;
           border: 1px solid black;
-          box-sizing: border-box;
           background: white;
           z-index: 100; }
           .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .hover .small_sticker {
@@ -296,7 +317,6 @@ header {
   max-height: 845px;
   overflow: auto;
   border-bottom: 1px solid #dadce0;
-  box-sizing: border-box;
   background: white; }
   .day .dateDay {
     position: absolute;
@@ -311,7 +331,8 @@ header {
     pointer-events: none; }
   .day table {
     width: 100%;
-    border-collapse: collapse; }
+    border-collapse: collapse;
+    border-left: 1px solid #dadce0; }
     .day table tr:first-of-type td {
       border-top: none; }
     .day table tr:last-of-type td {
@@ -322,8 +343,7 @@ header {
       width: 100%;
       height: 50px;
       border: 1px solid #dadce0;
-      border-left: none;
-      box-sizing: border-box; }
+      border-left: none; }
       .day table tr td .inner_wrapper {
         position: relative;
         display: flex;
@@ -338,16 +358,19 @@ header {
           padding: 3px 10px;
           margin: 0 10px;
           cursor: pointer;
-          box-sizing: border-box;
-          border-radius: 5px; }
-          .day table tr td .inner_wrapper .sticker .event_name {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center; }
-            .day table tr td .inner_wrapper .sticker .event_name .event_time {
+          border-radius: 5px;
+          border: 1px solid rgba(0, 0, 0, 0.2); }
+          .day table tr td .inner_wrapper .sticker .event_header {
+            display: flex; }
+            .day table tr td .inner_wrapper .sticker .event_header .event_name {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              overflow-wrap: anywhere; }
+            .day table tr td .inner_wrapper .sticker .event_header .event_time {
               margin-left: 10px; }
-              .day table tr td .inner_wrapper .sticker .event_name .event_time span {
+              .day table tr td .inner_wrapper .sticker .event_header .event_time span {
                 font-size: 20px; }
           .day table tr td .inner_wrapper .sticker .sticker_extend {
             margin-top: 5px;
@@ -392,7 +415,6 @@ header {
       position: relative;
       width: 50px;
       height: 50px;
-      box-sizing: border-box;
       border-right: 1px solid #dadce0; }
       .day table tr .time::after {
         content: '';
@@ -419,7 +441,6 @@ header {
     width: 500px;
     padding: 40px 20px 20px;
     border: 1px solid black;
-    box-sizing: border-box;
     background: white; }
     .modal_wrapper .modal_add_event .user_event_name {
       width: 100%; }
@@ -433,8 +454,7 @@ header {
         border: none;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-        border-bottom: 1px solid #dadce0;
-        box-sizing: border-box; }
+        border-bottom: 1px solid #dadce0; }
         .modal_wrapper .modal_add_event .user_event_name input:hover {
           background: rgba(218, 220, 224, 0.5); }
         .modal_wrapper .modal_add_event .user_event_name input:focus {
@@ -462,8 +482,7 @@ header {
     .modal_wrapper .modal_add_event .event_options {
       padding: 10px 0 10px 10px;
       margin-bottom: 40px;
-      border-left: 1px solid #dadce0;
-      box-sizing: border-box; }
+      border-left: 1px solid #dadce0; }
       .modal_wrapper .modal_add_event .event_options .event_date_and_time {
         display: flex;
         align-items: center;
@@ -499,12 +518,25 @@ header {
         padding: 10px;
         border-radius: 10px;
         border: none;
-        box-sizing: border-box;
         background: #edeef0; }
         .modal_wrapper .modal_add_event .event_options .event_preferences .event_task .task_descr textarea:focus {
           border-bottom: 2px solid #1a73e8;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0; }
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location {
+        position: relative; }
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions {
+          position: absolute;
+          width: 100%;
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+          background: #dadce0;
+          z-index: 1; }
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion {
+            cursor: pointer;
+            padding: 5px; }
+            .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion:hover {
+              background: #b8b8b8; }
       .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr {
         margin-bottom: 10px; }
         .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input {
@@ -517,7 +549,6 @@ header {
           border: none;
           border-bottom: 2px solid transparent;
           border-radius: 5px;
-          box-sizing: border-box;
           transition: 0.5s all ease; }
           .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:hover {
             background: rgba(218, 220, 224, 0.5); }

@@ -2,6 +2,7 @@ import Matrix from "./matrix";
 import CalendarDOM from "./calendarDOM";
 import Day from "./day";
 import checkLocalStorage from "../localStorage";
+import LeftSide from "../left_side";
 
 export default class Calendar {
 	constructor(selector, date) {
@@ -63,28 +64,32 @@ export default class Calendar {
 			});
 		};
 
+		const changeMonth = () => {
+			document.querySelectorAll('header .change_month').forEach((arrow) => {
+				arrow.addEventListener('click', () => {
+					const arrOfTypes = new LeftSide().checkSelectTypes();
+
+					let date;
+	
+					if (arrow.classList.contains('prev_month')) {
+						date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
+					} else {
+						date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
+					}
+		
+					this.clear();
+					this.createCalendar(date);
+					checkLocalStorage('month', this.date, arrOfTypes);
+					showAndHideHoverAnimation();
+					displayChosenDay();
+				});
+			});
+		};
+
 		showAndHideHoverAnimation();
 		displayChosenDay();
 		backToMainScreen();
-	}
-
-	changeMonth() {
-		document.querySelectorAll('header .change_month').forEach((arrow) => {
-			arrow.addEventListener('click', () => {
-				let date;
-
-				if (arrow.classList.contains('prev_month')) {
-					date = new Date(this.date.getFullYear(), this.date.getMonth() - 1);
-				} else {
-					date = new Date(this.date.getFullYear(), this.date.getMonth() + 1);
-				}
-	
-				this.clear();
-				this.createCalendar(date);
-				checkLocalStorage('month', this.date);
-				this.createListeners();
-			});
-		});
+		changeMonth();
 	}
 
 	// Анимация каждой ячейки календаря при наведениее мышки
@@ -130,8 +135,7 @@ export default class Calendar {
 
 	init() {
 		this.createCalendar(this.date);
-		checkLocalStorage('month', this.date);
+		checkLocalStorage('month', this.date, ['task', 'reminder', 'meeting']);
 		this.createListeners();
-		this.changeMonth();
 	}
 }
