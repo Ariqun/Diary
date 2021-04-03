@@ -1,4 +1,4 @@
-import showAndHideExtendSticker from "./extend_stickers";
+import Stickers from "./calendar/stickers";
 import checkLocalStorage from "./localStorage";
 
 export default class Modal {
@@ -65,7 +65,7 @@ export default class Modal {
 					// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
 					const dateForLocalStorage = this.createDate('localStorage');
 					const time = document.querySelector('.event_time input').value;
-					const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
+					const id = createID(time);
 
 					const obj = {
 						'id': id,
@@ -96,9 +96,35 @@ export default class Modal {
 					localStorage.setItem(id, JSON.stringify(obj));
 					checkLocalStorage('day', dateForLocalStorage);
 
-					showAndHideExtendSticker();
+					new Stickers().init();
 				}
 			});
+
+			const createID = (time) => {
+				const obj = {...localStorage};
+				let id = '';
+				let objOfTypes = {
+					'task': 0,
+					'reminder': 0,
+					'meeting': 0
+				};
+
+				for (let key in obj) {
+					const str = JSON.parse(obj[key]).id.split('_')[0];
+
+					for (let type in objOfTypes) {
+						str == type ? objOfTypes[type]++ : null;
+					}
+				}
+
+				for (let type in objOfTypes) {
+					if (this.eventType == type) {
+						id = `${this.eventType}_${this.createDate('localStorage')}_${time}_${objOfTypes[type] + 1}`;
+					}
+				}
+
+				return id;
+			};
 		};
 
 		const showAdressSuggestions = () => {
@@ -130,9 +156,11 @@ export default class Modal {
 						sugBlock.innerHTML = '';
 
 						for (let i = 0; i < 5; i++) {
-							sugBlock.innerHTML += `
-								<div class="suggestion">${arr[i].value}</div>
-							`;
+							if (arr[i]) {
+								sugBlock.innerHTML += `
+									<div class="suggestion">${arr[i].value}</div>
+								`;
+							}
 						}
 
 						selectSuggestion();

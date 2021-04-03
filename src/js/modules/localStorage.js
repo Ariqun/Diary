@@ -90,80 +90,94 @@ function createStickersForDay(date, type, obj) {
 }
 
 function createStickersForMonth(date, arr, arrOfTypes) {
-	let arrOfSortedByTypes = [];
 	let arrOfIndexes = [];
-	
-	if (arrOfTypes != undefined) {
-		for (let elem of arrOfTypes) {
-			for (let el of arr) {
-				const type = el.id.split('_')[0];
+	let sortedArr = [];
 
-				if (elem == type) {
-					arrOfSortedByTypes.push(el);
+	function sortArrayBySelectedEventTypes() {
+		if (arrOfTypes != undefined) {
+			for (let elem of arrOfTypes) {
+				for (let el of arr) {
+					const type = el.id.split('_')[0];
+	
+					if (elem == type) {
+						sortedArr.push(el);
+					}
 				}
 			}
 		}
 	}
-
-	arrOfSortedByTypes.sort(function(a, b) {
-		let x = a.time.replace(/\D+/g, '');
-		let y = b.time.replace(/\D+/g, '');
-		return x - y;
-	});
 	
-	let repeat = arrOfSortedByTypes.reduce((acc, el) => {
-		acc[el.date] = (acc[el.date] || 0) + 1;
-
-		if (acc[el.date] > 4) {
-			arrOfIndexes.unshift(arrOfSortedByTypes.indexOf(el));
-		}
-
-		return acc;
-	}, {}, null, 2);
-
-	console.log(repeat);
-
-	for (let index of arrOfIndexes) {
-		arrOfSortedByTypes.splice(index, 1);
+	function sortArrayByEventTime() {
+		sortedArr.sort(function(a, b) {
+			let x = a.time.replace(/\D+/g, '');
+			let y = b.time.replace(/\D+/g, '');
+			return x - y;
+		});
 	}
 
-	for (let obj of arrOfSortedByTypes) {
-		const eventType = obj.id.split('_')[0];
-		const fullDate = obj.id.split('_')[1];
-		const month = fullDate.split('.')[1];
-		const day = fullDate.split('.')[0];
+	function createArrayOfIndexesOfExcessItems() {
+		let repeat = sortedArr.reduce((acc, el) => {
+			acc[el.date] = (acc[el.date] || 0) + 1;
+	
+			if (acc[el.date] > 4) {
+				arrOfIndexes.unshift(sortedArr.indexOf(el));
+			}
+	
+			return acc;
+		}, {}, null, 2);
+	}
 
-		if (date.getMonth() == month) {
-			document.querySelectorAll('.calendar_big .dateDay').forEach((item) => {
-				if (item.innerHTML == day) {
-					const sticker = createStickers(eventType, obj);
+	function deleteExcessItemsFromArray() {
+		for (let index of arrOfIndexes) {
+			sortedArr.splice(index, 1);
+		}
+	}
 
-					item.previousElementSibling.appendChild(sticker);
+	// for (let key in repeat) {
+	// 	if (key.split('.')[0] == day & key.split('.')[1] == month) {
+	// 		if (repeat[key] > 4) {
+	// 			console.log(repeat[key] - 4);
+	// 		}
+	// 	}
+	// }
 
-					for (let key in repeat) {
-						if (key.split('.')[0] == day & key.split('.')[1] == month) {
-							if (repeat[key] > 4) {
-								console.log(repeat[key] - 4);
-							}
-						}
+	function createStickers() {
+		for (let obj of sortedArr) {
+			const eventType = obj.id.split('_')[0];
+			const fullDate = obj.id.split('_')[1];
+			const month = fullDate.split('.')[1];
+			const day = fullDate.split('.')[0];
+	
+			if (date.getMonth() == month) {
+				document.querySelectorAll('.calendar_big .dateDay').forEach((item) => {
+					if (item.innerHTML == day) {
+						const sticker = createStickerDOM(eventType, obj);
+	
+						item.previousElementSibling.appendChild(sticker);
 					}
-				}
-			});
+				});
+			}
+		}
+
+		function createStickerDOM(type, obj) {
+			const smallSticker = document.createElement('div');
+			let shortName = createShortName(obj.name);
+	
+			smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+			smallSticker.setAttribute('data-name', shortName);
+			smallSticker.setAttribute('data-time', obj.time);
+	
+			smallSticker.innerHTML = `${obj.time}`;
+	
+			return smallSticker;
 		}
 	}
 
-	function createStickers(type, obj) {
-		const smallSticker = document.createElement('div');
-		let shortName = createShortName(obj.name);
-
-		smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-		smallSticker.setAttribute('data-name', shortName);
-		smallSticker.setAttribute('data-time', obj.time);
-
-		smallSticker.innerHTML = `${obj.time}`;
-
-		return smallSticker;
-	}
+	sortArrayBySelectedEventTypes();
+	sortArrayByEventTime();
+	createArrayOfIndexesOfExcessItems();
+	deleteExcessItemsFromArray();
+	createStickers();
 }
 
 function createShortName(str) {

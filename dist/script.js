@@ -407,9 +407,9 @@ class CalendarDOM {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Day; });
-/* harmony import */ var _extend_stickers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../extend_stickers */ "./src/js/modules/extend_stickers.js");
-/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
-/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modal */ "./src/js/modules/modal.js");
+/* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../localStorage */ "./src/js/modules/localStorage.js");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modal */ "./src/js/modules/modal.js");
+/* harmony import */ var _stickers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stickers */ "./src/js/modules/calendar/stickers.js");
 
 
 
@@ -467,32 +467,21 @@ class Day {
           if (e.target.classList.contains('inner_wrapper')) {
             const time = row.previousElementSibling.innerHTML;
             const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
-            new _modal__WEBPACK_IMPORTED_MODULE_2__["default"](choiceDate, time, row).init();
+            new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
           }
-        });
-      });
-    };
-
-    const deleteSticker = () => {
-      document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
-        del.addEventListener('click', () => {
-          const sticker = del.closest('.sticker');
-          sticker.remove();
-          localStorage.removeItem(sticker.id);
         });
       });
     };
 
     scrollDateWithScreen();
     displayModal();
-    Object(_extend_stickers__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    deleteSticker();
+    new _stickers__WEBPACK_IMPORTED_MODULE_2__["default"]().init();
   }
 
   init() {
     this.createDay();
     this.createGraph();
-    Object(_localStorage__WEBPACK_IMPORTED_MODULE_1__["default"])('day', this.dateForLocalStorage);
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])('day', this.dateForLocalStorage);
     this.createListeners();
   }
 
@@ -564,48 +553,72 @@ class Matrix {
 
 /***/ }),
 
-/***/ "./src/js/modules/extend_stickers.js":
-/*!*******************************************!*\
-  !*** ./src/js/modules/extend_stickers.js ***!
-  \*******************************************/
+/***/ "./src/js/modules/calendar/stickers.js":
+/*!*********************************************!*\
+  !*** ./src/js/modules/calendar/stickers.js ***!
+  \*********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Stickers; });
+class Stickers {
+  constructor() {}
 
-
-const showAndHideExtendSticker = () => {
-  document.querySelectorAll('.day .sticker').forEach(sticker => {
-    const extend = sticker.querySelector('.sticker_extend');
-    const rules = sticker.querySelector('.sticker_rules');
-    const eventName = sticker.querySelector('.event_name');
-    sticker.addEventListener('mouseover', () => {
-      extend.classList.remove('hidden');
-      rules.classList.remove('hidden');
-      eventName.innerText = eventName.getAttribute('data-fullName');
-      sticker.style.cssText = `
-				position: absolute;
-				min-height: 80px;
-				font-size: 18px;
-				padding: 7px;
-				border: 1px solid rgba(0, 0, 0, 0.5);
-				box-shadow: 0px 2px 10px 0px black;
-				z-index: 1;
-			`;
-      sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
+  showAndHideExtendSticker() {
+    document.querySelectorAll('.day .sticker').forEach(sticker => {
+      const extend = sticker.querySelector('.sticker_extend');
+      const rules = sticker.querySelector('.sticker_rules');
+      const eventName = sticker.querySelector('.event_name');
+      sticker.addEventListener('mouseover', () => {
+        extend.classList.remove('hidden');
+        rules.classList.remove('hidden');
+        eventName.innerText = eventName.getAttribute('data-fullName');
+        sticker.style.cssText = `
+					position: absolute;
+					min-height: 80px;
+					font-size: 18px;
+					padding: 7px;
+					border: 1px solid rgba(0, 0, 0, 0.5);
+					box-shadow: 0px 2px 10px 0px black;
+					z-index: 1;
+				`;
+        sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
+      });
+      sticker.addEventListener('mouseout', () => {
+        extend.classList.add('hidden');
+        rules.classList.add('hidden');
+        eventName.innerText = eventName.getAttribute('data-shortName');
+        sticker.style.cssText = '';
+        sticker.closest('.sticker_wrapper').style.width = '';
+      });
     });
-    sticker.addEventListener('mouseout', () => {
-      extend.classList.add('hidden');
-      rules.classList.add('hidden');
-      eventName.innerText = eventName.getAttribute('data-shortName');
-      sticker.style.cssText = '';
-      sticker.closest('.sticker_wrapper').style.width = '';
-    });
-  });
-};
+  }
 
-/* harmony default export */ __webpack_exports__["default"] = (showAndHideExtendSticker);
+  editSticker() {
+    document.querySelectorAll('.sticker .sticker_edit').forEach(edit => {
+      edit.addEventListener('click', () => {});
+    });
+  }
+
+  deleteSticker() {
+    document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
+      del.addEventListener('click', () => {
+        const sticker = del.closest('.sticker');
+        del.closest('.sticker_wrapper').remove();
+        localStorage.removeItem(sticker.id);
+      });
+    });
+  }
+
+  init() {
+    this.showAndHideExtendSticker();
+    this.editSticker();
+    this.deleteSticker();
+  }
+
+}
 
 /***/ }),
 
@@ -765,74 +778,89 @@ function createStickersForDay(date, type, obj) {
 }
 
 function createStickersForMonth(date, arr, arrOfTypes) {
-  let arrOfSortedByTypes = [];
   let arrOfIndexes = [];
+  let sortedArr = [];
 
-  if (arrOfTypes != undefined) {
-    for (let elem of arrOfTypes) {
-      for (let el of arr) {
-        const type = el.id.split('_')[0];
+  function sortArrayBySelectedEventTypes() {
+    if (arrOfTypes != undefined) {
+      for (let elem of arrOfTypes) {
+        for (let el of arr) {
+          const type = el.id.split('_')[0];
 
-        if (elem == type) {
-          arrOfSortedByTypes.push(el);
+          if (elem == type) {
+            sortedArr.push(el);
+          }
         }
       }
     }
   }
 
-  arrOfSortedByTypes.sort(function (a, b) {
-    let x = a.time.replace(/\D+/g, '');
-    let y = b.time.replace(/\D+/g, '');
-    return x - y;
-  });
-  let repeat = arrOfSortedByTypes.reduce((acc, el) => {
-    acc[el.date] = (acc[el.date] || 0) + 1;
-
-    if (acc[el.date] > 4) {
-      arrOfIndexes.unshift(arrOfSortedByTypes.indexOf(el));
-    }
-
-    return acc;
-  }, {}, null, 2);
-  console.log(repeat);
-
-  for (let index of arrOfIndexes) {
-    arrOfSortedByTypes.splice(index, 1);
+  function sortArrayByEventTime() {
+    sortedArr.sort(function (a, b) {
+      let x = a.time.replace(/\D+/g, '');
+      let y = b.time.replace(/\D+/g, '');
+      return x - y;
+    });
   }
 
-  for (let obj of arrOfSortedByTypes) {
-    const eventType = obj.id.split('_')[0];
-    const fullDate = obj.id.split('_')[1];
-    const month = fullDate.split('.')[1];
-    const day = fullDate.split('.')[0];
+  function createArrayOfIndexesOfExcessItems() {
+    let repeat = sortedArr.reduce((acc, el) => {
+      acc[el.date] = (acc[el.date] || 0) + 1;
 
-    if (date.getMonth() == month) {
-      document.querySelectorAll('.calendar_big .dateDay').forEach(item => {
-        if (item.innerHTML == day) {
-          const sticker = createStickers(eventType, obj);
-          item.previousElementSibling.appendChild(sticker);
+      if (acc[el.date] > 4) {
+        arrOfIndexes.unshift(sortedArr.indexOf(el));
+      }
 
-          for (let key in repeat) {
-            if (key.split('.')[0] == day & key.split('.')[1] == month) {
-              if (repeat[key] > 4) {
-                console.log(repeat[key] - 4);
-              }
-            }
+      return acc;
+    }, {}, null, 2);
+  }
+
+  function deleteExcessItemsFromArray() {
+    for (let index of arrOfIndexes) {
+      sortedArr.splice(index, 1);
+    }
+  } // for (let key in repeat) {
+  // 	if (key.split('.')[0] == day & key.split('.')[1] == month) {
+  // 		if (repeat[key] > 4) {
+  // 			console.log(repeat[key] - 4);
+  // 		}
+  // 	}
+  // }
+
+
+  function createStickers() {
+    for (let obj of sortedArr) {
+      const eventType = obj.id.split('_')[0];
+      const fullDate = obj.id.split('_')[1];
+      const month = fullDate.split('.')[1];
+      const day = fullDate.split('.')[0];
+
+      if (date.getMonth() == month) {
+        document.querySelectorAll('.calendar_big .dateDay').forEach(item => {
+          if (item.innerHTML == day) {
+            const sticker = createStickerDOM(eventType, obj);
+            item.previousElementSibling.appendChild(sticker);
           }
-        }
-      });
+        });
+      }
+    }
+
+    function createStickerDOM(type, obj) {
+      const smallSticker = document.createElement('div');
+      let shortName = createShortName(obj.name);
+      smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
+      smallSticker.setAttribute('data-name', shortName);
+      smallSticker.setAttribute('data-time', obj.time);
+      smallSticker.innerHTML = `${obj.time}`;
+      return smallSticker;
     }
   }
 
-  function createStickers(type, obj) {
-    const smallSticker = document.createElement('div');
-    let shortName = createShortName(obj.name);
-    smallSticker.classList.add(`${type}_small_sticker`, 'small_sticker');
-    smallSticker.setAttribute('data-name', shortName);
-    smallSticker.setAttribute('data-time', obj.time);
-    smallSticker.innerHTML = `${obj.time}`;
-    return smallSticker;
-  }
+  sortArrayBySelectedEventTypes();
+  sortArrayByEventTime();
+  createArrayOfIndexesOfExcessItems();
+  deleteExcessItemsFromArray();
+  createStickers();
 }
 
 function createShortName(str) {
@@ -855,7 +883,7 @@ function createShortName(str) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Modal; });
-/* harmony import */ var _extend_stickers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./extend_stickers */ "./src/js/modules/extend_stickers.js");
+/* harmony import */ var _calendar_stickers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calendar/stickers */ "./src/js/modules/calendar/stickers.js");
 /* harmony import */ var _localStorage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./localStorage */ "./src/js/modules/localStorage.js");
 
 
@@ -921,7 +949,7 @@ class Modal {
           // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
           const dateForLocalStorage = this.createDate('localStorage');
           const time = document.querySelector('.event_time input').value;
-          const id = `${this.eventType}_${this.createDate('localStorage')}_${time}`;
+          const id = createID(time);
           const obj = {
             'id': id,
             'name': name.value,
@@ -947,9 +975,36 @@ class Modal {
           document.querySelector('.modal_wrapper').classList.add('hidden');
           localStorage.setItem(id, JSON.stringify(obj));
           Object(_localStorage__WEBPACK_IMPORTED_MODULE_1__["default"])('day', dateForLocalStorage);
-          Object(_extend_stickers__WEBPACK_IMPORTED_MODULE_0__["default"])();
+          new _calendar_stickers__WEBPACK_IMPORTED_MODULE_0__["default"]().init();
         }
       });
+
+      const createID = time => {
+        const obj = { ...localStorage
+        };
+        let id = '';
+        let objOfTypes = {
+          'task': 0,
+          'reminder': 0,
+          'meeting': 0
+        };
+
+        for (let key in obj) {
+          const str = JSON.parse(obj[key]).id.split('_')[0];
+
+          for (let type in objOfTypes) {
+            str == type ? objOfTypes[type]++ : null;
+          }
+        }
+
+        for (let type in objOfTypes) {
+          if (this.eventType == type) {
+            id = `${this.eventType}_${this.createDate('localStorage')}_${time}_${objOfTypes[type] + 1}`;
+          }
+        }
+
+        return id;
+      };
     };
 
     const showAdressSuggestions = () => {
@@ -978,9 +1033,11 @@ class Modal {
           sugBlock.innerHTML = '';
 
           for (let i = 0; i < 5; i++) {
-            sugBlock.innerHTML += `
-								<div class="suggestion">${arr[i].value}</div>
-							`;
+            if (arr[i]) {
+              sugBlock.innerHTML += `
+									<div class="suggestion">${arr[i].value}</div>
+								`;
+            }
           }
 
           selectSuggestion();

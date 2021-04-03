@@ -1,6 +1,6 @@
-import showAndHideExtendSticker from "../extend_stickers";
 import checkLocalStorage from "../localStorage";
 import Modal from "../modal";
+import Stickers from "./stickers";
 
 export default class Day {
 	constructor(date, day) {
@@ -67,22 +67,11 @@ export default class Day {
 			});
 		};
 
-		const deleteSticker = () => {
-			document.querySelectorAll('.sticker .sticker_delete').forEach((del) => {
-				del.addEventListener('click', () => {
-					const sticker = del.closest('.sticker');
-
-					sticker.remove();
-					localStorage.removeItem(sticker.id);
-				});
-			});
-		};
-
 		scrollDateWithScreen();
 		displayModal();
-		showAndHideExtendSticker();
-		deleteSticker();
+		new Stickers().init();
 	}
+
 
 	init() {
 		this.createDay();
