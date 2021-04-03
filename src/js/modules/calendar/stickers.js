@@ -8,10 +8,12 @@ export default class Stickers {
 			const extend = sticker.querySelector('.sticker_extend');
 			const rules = sticker.querySelector('.sticker_rules');
 			const eventName = sticker.querySelector('.event_name');
+			const eventTime = sticker.querySelector('.event_time');
 	
 			function show() {
 				extend.classList.remove('hidden');
 				rules.classList.remove('hidden');
+				eventTime.classList.add('hidden');
 				eventName.innerText = eventName.getAttribute('data-fullName');
 	
 				sticker.style.cssText = `
@@ -24,13 +26,18 @@ export default class Stickers {
 					background: white;
 					z-index: 1;
 				`;
-	
+				
+				if (sticker.getBoundingClientRect().bottom > 885) {
+					sticker.scrollIntoView({behavior: 'smooth',	block: 'end'});
+				}
+
 				sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
 			}
 
 			function hide() {
 				extend.classList.add('hidden');
 				rules.classList.add('hidden');
+				eventTime.classList.remove('hidden');
 				eventName.innerText = eventName.getAttribute('data-shortName');
 	
 				sticker.style.cssText = '';
@@ -42,13 +49,13 @@ export default class Stickers {
 		});
 	}
 
-	editSticker() {
-		document.querySelectorAll('.sticker .sticker_edit').forEach((edit) => {
-			edit.addEventListener('click', () => {
+	// editSticker() {
+	// 	document.querySelectorAll('.sticker .sticker_edit').forEach((edit) => {
+	// 		edit.addEventListener('click', () => {
 
-			});
-		});
-	}
+	// 		});
+	// 	});
+	// }
 
 	deleteSticker() {
 		document.querySelectorAll('.sticker .sticker_delete').forEach((del) => {
@@ -63,7 +70,7 @@ export default class Stickers {
 
 	init() {
 		this.showAndHideExtendSticker();
-		this.editSticker();
+		// this.editSticker();
 		this.deleteSticker();
 	}
 }

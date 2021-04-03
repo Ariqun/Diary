@@ -25,7 +25,7 @@ function createStickersForDay(date, type, obj) {
 			const hourRow = time.innerHTML.substr(0, 2);
 			const hourInDB = obj.time.substr(0, 2);
 	
-			if (date == obj.date) {
+			if (date == obj.id.split('_')[1]) {
 				if (hourRow == hourInDB) {
 					const item = document.createElement('div');
 						  item.classList.add('sticker_wrapper');
@@ -63,32 +63,46 @@ function createStickersForDay(date, type, obj) {
 				</div>
 			</div>
 		`;
-	
+
 		return node;
 	}
 	
 	function createStickerExtend() {
-		let ex = '';
-	
-		if (type == 'task') {
-			ex = `
-			<div class="descr">
-				<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
-				<div class="sticker_extend_inner_wrapper">
-					<div class="title">Что:</div>
-					<div class="value">${obj.descr}</div>
+		let extendBLock = '';
+
+		function createDateBlock() {
+			const block = `
+				<div class="date">
+					<div class="icon icon_date"><img src="/assets/icons/date.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Когда:</div>
+						<div class="value">${obj.date} ${obj.time}</div>
+					</div>
 				</div>
-			</div>
 			`;
-		} else if (type == 'meeting') {
-			const people = obj.people.join(', ');
-	
-			ex = `
+			return block;
+		}
+
+		function createDescrBlock() {
+			const block = `
+				<div class="descr">
+					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Что:</div>
+						<div class="value">${obj.descr}</div>
+					</div>
+				</div>
+			`;
+			return block;
+		}
+
+		function createPeopleAndLocationBlocks() {
+			const block = `
 				<div class="people">
 					<div class="icon icon_people"><img src="/assets/icons/people.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
-						<div class="value">${people}</div>
+						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
@@ -98,19 +112,28 @@ function createStickersForDay(date, type, obj) {
 						<div class="value">${obj.location}</div>
 					</div>
 				</div>
-				<div class="descr">
-					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
-					<div class="sticker_extend_inner_wrapper">
-						<div class="title">Что:</div>
-						<div class="value">${obj.descr}</div>
-					</div>
-				</div>
+			`;
+			return block;
+		}
+
+		if (type == 'task') {
+			extendBLock = `
+				${createDateBlock()}
+				${createDescrBlock()}
+			`;
+		} else if (type == 'meeting') {
+			extendBLock = `
+				${createDateBlock()}
+				${createPeopleAndLocationBlocks()}
+				${createDescrBlock()}
 			`;
 		} else if (type == 'reminder') {
-			ex = '';
+			extendBLock = `
+				${createDateBlock()}
+			`;
 		}
 	
-		return ex;
+		return extendBLock;
 	}
 
 	pushEvent();

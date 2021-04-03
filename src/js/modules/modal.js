@@ -71,7 +71,7 @@ export default class Modal {
 						'id': id,
 						'name': name.value,
 						'time': time,
-						'date': dateForLocalStorage
+						'date': this.createDate()
 					};
 
 					if (this.eventType == 'task') {

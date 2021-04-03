@@ -571,10 +571,12 @@ class Stickers {
       const extend = sticker.querySelector('.sticker_extend');
       const rules = sticker.querySelector('.sticker_rules');
       const eventName = sticker.querySelector('.event_name');
+      const eventTime = sticker.querySelector('.event_time');
 
       function show() {
         extend.classList.remove('hidden');
         rules.classList.remove('hidden');
+        eventTime.classList.add('hidden');
         eventName.innerText = eventName.getAttribute('data-fullName');
         sticker.style.cssText = `
 					position: absolute;
@@ -586,12 +588,21 @@ class Stickers {
 					background: white;
 					z-index: 1;
 				`;
+
+        if (sticker.getBoundingClientRect().bottom > 885) {
+          sticker.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        }
+
         sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
       }
 
       function hide() {
         extend.classList.add('hidden');
         rules.classList.add('hidden');
+        eventTime.classList.remove('hidden');
         eventName.innerText = eventName.getAttribute('data-shortName');
         sticker.style.cssText = '';
         sticker.closest('.sticker_wrapper').style.width = '';
@@ -600,13 +611,13 @@ class Stickers {
       sticker.addEventListener('mouseover', show);
       sticker.addEventListener('mouseout', hide);
     });
-  }
+  } // editSticker() {
+  // 	document.querySelectorAll('.sticker .sticker_edit').forEach((edit) => {
+  // 		edit.addEventListener('click', () => {
+  // 		});
+  // 	});
+  // }
 
-  editSticker() {
-    document.querySelectorAll('.sticker .sticker_edit').forEach(edit => {
-      edit.addEventListener('click', () => {});
-    });
-  }
 
   deleteSticker() {
     document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
@@ -619,8 +630,8 @@ class Stickers {
   }
 
   init() {
-    this.showAndHideExtendSticker();
-    this.editSticker();
+    this.showAndHideExtendSticker(); // this.editSticker();
+
     this.deleteSticker();
   }
 
@@ -723,7 +734,7 @@ function createStickersForDay(date, type, obj) {
       const hourRow = time.innerHTML.substr(0, 2);
       const hourInDB = obj.time.substr(0, 2);
 
-      if (date == obj.date) {
+      if (date == obj.id.split('_')[1]) {
         if (hourRow == hourInDB) {
           const item = document.createElement('div');
           item.classList.add('sticker_wrapper');
@@ -763,26 +774,41 @@ function createStickersForDay(date, type, obj) {
   }
 
   function createStickerExtend() {
-    let ex = '';
+    let extendBLock = '';
 
-    if (type == 'task') {
-      ex = `
-			<div class="descr">
-				<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
-				<div class="sticker_extend_inner_wrapper">
-					<div class="title">Что:</div>
-					<div class="value">${obj.descr}</div>
+    function createDateBlock() {
+      const block = `
+				<div class="date">
+					<div class="icon icon_date"><img src="/assets/icons/date.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Когда:</div>
+						<div class="value">${obj.date} ${obj.time}</div>
+					</div>
 				</div>
-			</div>
 			`;
-    } else if (type == 'meeting') {
-      const people = obj.people.join(', ');
-      ex = `
+      return block;
+    }
+
+    function createDescrBlock() {
+      const block = `
+				<div class="descr">
+					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Что:</div>
+						<div class="value">${obj.descr}</div>
+					</div>
+				</div>
+			`;
+      return block;
+    }
+
+    function createPeopleAndLocationBlocks() {
+      const block = `
 				<div class="people">
 					<div class="icon icon_people"><img src="/assets/icons/people.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
-						<div class="value">${people}</div>
+						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
@@ -792,19 +818,28 @@ function createStickersForDay(date, type, obj) {
 						<div class="value">${obj.location}</div>
 					</div>
 				</div>
-				<div class="descr">
-					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
-					<div class="sticker_extend_inner_wrapper">
-						<div class="title">Что:</div>
-						<div class="value">${obj.descr}</div>
-					</div>
-				</div>
 			`;
-    } else if (type == 'reminder') {
-      ex = '';
+      return block;
     }
 
-    return ex;
+    if (type == 'task') {
+      extendBLock = `
+				${createDateBlock()}
+				${createDescrBlock()}
+			`;
+    } else if (type == 'meeting') {
+      extendBLock = `
+				${createDateBlock()}
+				${createPeopleAndLocationBlocks()}
+				${createDescrBlock()}
+			`;
+    } else if (type == 'reminder') {
+      extendBLock = `
+				${createDateBlock()}
+			`;
+    }
+
+    return extendBLock;
   }
 
   pushEvent();
@@ -987,7 +1022,7 @@ class Modal {
             'id': id,
             'name': name.value,
             'time': time,
-            'date': dateForLocalStorage
+            'date': this.createDate()
           };
 
           if (this.eventType == 'task') {

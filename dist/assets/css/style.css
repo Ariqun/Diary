@@ -395,23 +395,23 @@ header {
             width: 100%;
             padding: 7px;
             border-top: 1px solid #1a73e8; }
-            .day table tr td .inner_wrapper .sticker .sticker_extend .people, .day table tr td .inner_wrapper .sticker .sticker_extend .location, .day table tr td .inner_wrapper .sticker .sticker_extend .descr {
+            .day table tr td .inner_wrapper .sticker .sticker_extend .date, .day table tr td .inner_wrapper .sticker .sticker_extend .people, .day table tr td .inner_wrapper .sticker .sticker_extend .location, .day table tr td .inner_wrapper .sticker .sticker_extend .descr {
               display: flex;
               align-items: center;
               min-height: 50px;
               padding: 10px 0; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .people .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .location .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .icon {
+              .day table tr td .inner_wrapper .sticker .sticker_extend .date .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .people .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .location .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .icon {
                 min-width: 40px; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper {
+              .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper {
                 display: flex;
                 flex-direction: column;
                 justify-content: center; }
-                .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title {
+                .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title {
                   position: relative;
                   font-size: 13px; }
-                .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value {
+                .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value {
                   font-size: 15px; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .people:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .location:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .descr:hover {
+              .day table tr td .inner_wrapper .sticker .sticker_extend .date:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .people:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .location:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .descr:hover {
                 background: rgba(218, 220, 224, 0.5); }
         .day table tr td .inner_wrapper .task_sticker {
           background: skyblue; }
