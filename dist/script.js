@@ -571,28 +571,34 @@ class Stickers {
       const extend = sticker.querySelector('.sticker_extend');
       const rules = sticker.querySelector('.sticker_rules');
       const eventName = sticker.querySelector('.event_name');
-      sticker.addEventListener('mouseover', () => {
+
+      function show() {
         extend.classList.remove('hidden');
         rules.classList.remove('hidden');
         eventName.innerText = eventName.getAttribute('data-fullName');
         sticker.style.cssText = `
 					position: absolute;
 					min-height: 80px;
+					height: auto;
 					font-size: 18px;
-					padding: 7px;
 					border: 1px solid rgba(0, 0, 0, 0.5);
 					box-shadow: 0px 2px 10px 0px black;
+					background: white;
 					z-index: 1;
 				`;
         sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
-      });
-      sticker.addEventListener('mouseout', () => {
+      }
+
+      function hide() {
         extend.classList.add('hidden');
         rules.classList.add('hidden');
         eventName.innerText = eventName.getAttribute('data-shortName');
         sticker.style.cssText = '';
         sticker.closest('.sticker_wrapper').style.width = '';
-      });
+      }
+
+      sticker.addEventListener('mouseover', show);
+      sticker.addEventListener('mouseout', hide);
     });
   }
 
@@ -732,18 +738,19 @@ function createStickersForDay(date, type, obj) {
     let shortName = createShortName(obj.name);
     const node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
-				<div class="sticker_rules hidden">
-					<div class="sticker_edit"><img src="/assets/icons/sticker_edit.png"></div>
-					<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
-				</div>
-
 				<div class="event_header">
-					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
-						${shortName}
-					</div>
+					<div class="name_and_time">
+						<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
+							${shortName}
+						</div>
 
-					<div class="event_time">
-						<span>[</span>${obj.time}<span>]</span>
+						<div class="event_time">
+							<span>[</span>${obj.time}<span>]</span>
+						</div>
+					</div>
+					
+					<div class="sticker_rules hidden">
+						<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
 					</div>
 				</div>
 				
@@ -759,13 +766,39 @@ function createStickersForDay(date, type, obj) {
     let ex = '';
 
     if (type == 'task') {
-      ex = `<div class="descr">${obj.descr}</div>`;
+      ex = `
+			<div class="descr">
+				<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+				<div class="sticker_extend_inner_wrapper">
+					<div class="title">Что:</div>
+					<div class="value">${obj.descr}</div>
+				</div>
+			</div>
+			`;
     } else if (type == 'meeting') {
       const people = obj.people.join(', ');
       ex = `
-				<div class="people"><span>Кто:</span>${people}</div>
-				<div class="location"><span>Где:</span>${obj.location}</div>
-				<div class="descr"><span>Что:</span>${obj.descr}</div>
+				<div class="people">
+					<div class="icon icon_people"><img src="/assets/icons/people.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Кто:</div>
+						<div class="value">${people}</div>
+					</div>
+				</div>
+				<div class="location">
+					<div class="icon icon_loc"><img src="/assets/icons/location.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Где:</div>
+						<div class="value">${obj.location}</div>
+					</div>
+				</div>
+				<div class="descr">
+					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Что:</div>
+						<div class="value">${obj.descr}</div>
+					</div>
+				</div>
 			`;
     } else if (type == 'reminder') {
       ex = '';

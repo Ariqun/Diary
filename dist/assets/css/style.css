@@ -354,57 +354,82 @@ header {
           justify-content: center;
           align-items: center;
           position: relative;
-          max-width: 300px;
-          min-height: 100%;
-          padding: 3px 10px;
+          max-width: 400px;
+          height: 100%;
           margin: 0 10px;
           cursor: pointer;
           border-radius: 5px;
           border: 1px solid rgba(0, 0, 0, 0.2); }
-          .day table tr td .inner_wrapper .sticker .sticker_rules {
-            display: flex;
-            justify-content: flex-end;
-            width: 100%;
-            margin-bottom: 10px; }
-            .day table tr td .inner_wrapper .sticker .sticker_rules .sticker_edit {
-              margin: 0 10px; }
           .day table tr td .inner_wrapper .sticker .event_header {
-            display: flex; }
-            .day table tr td .inner_wrapper .sticker .event_header .event_name {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            min-height: 45px;
+            padding: 7px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px; }
+            .day table tr td .inner_wrapper .sticker .event_header .name_and_time {
               display: flex;
-              justify-content: center;
               align-items: center;
-              text-align: center;
-              overflow-wrap: anywhere; }
-            .day table tr td .inner_wrapper .sticker .event_header .event_time {
-              margin-left: 10px; }
-              .day table tr td .inner_wrapper .sticker .event_header .event_time span {
-                font-size: 20px; }
+              width: 100%; }
+              .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_name {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                overflow-wrap: anywhere; }
+              .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_time {
+                margin-left: 10px; }
+                .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_time span {
+                  font-size: 20px; }
+            .day table tr td .inner_wrapper .sticker .event_header .sticker_rules {
+              display: flex;
+              align-items: center;
+              margin-left: 50px; }
+              .day table tr td .inner_wrapper .sticker .event_header .sticker_rules .sticker_edit, .day table tr td .inner_wrapper .sticker .event_header .sticker_rules .sticker_delete {
+                width: 25px;
+                height: 25px; }
           .day table tr td .inner_wrapper .sticker .sticker_extend {
-            margin-top: 5px;
-            padding-top: 5px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 7px;
             border-top: 1px solid #1a73e8; }
             .day table tr td .inner_wrapper .sticker .sticker_extend .people, .day table tr td .inner_wrapper .sticker .sticker_extend .location, .day table tr td .inner_wrapper .sticker .sticker_extend .descr {
-              padding: 5px 0; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .people span, .day table tr td .inner_wrapper .sticker .sticker_extend .location span, .day table tr td .inner_wrapper .sticker .sticker_extend .descr span {
-                margin-right: 5px; }
+              display: flex;
+              align-items: center;
+              min-height: 50px;
+              padding: 10px 0; }
+              .day table tr td .inner_wrapper .sticker .sticker_extend .people .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .location .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .icon {
+                min-width: 40px; }
+              .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper {
+                display: flex;
+                flex-direction: column;
+                justify-content: center; }
+                .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title {
+                  position: relative;
+                  font-size: 13px; }
+                .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value {
+                  font-size: 15px; }
+              .day table tr td .inner_wrapper .sticker .sticker_extend .people:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .location:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .descr:hover {
+                background: rgba(218, 220, 224, 0.5); }
         .day table tr td .inner_wrapper .task_sticker {
           background: skyblue; }
+          .day table tr td .inner_wrapper .task_sticker .event_header {
+            background: skyblue; }
           .day table tr td .inner_wrapper .task_sticker .task_descr {
             color: rgba(0, 0, 0, 0.6);
             text-align: center;
             margin-top: 5px;
             padding-top: 5px;
             border-top: 1px solid #1a73e8; }
-          .day table tr td .inner_wrapper .task_sticker .arrow_dialog::before {
-            background: skyblue; }
         .day table tr td .inner_wrapper .reminder_sticker {
           background: pink; }
-          .day table tr td .inner_wrapper .reminder_sticker .arrow_dialog::before {
+          .day table tr td .inner_wrapper .reminder_sticker .event_header {
             background: pink; }
         .day table tr td .inner_wrapper .meeting_sticker {
           background: lightgreen; }
-          .day table tr td .inner_wrapper .meeting_sticker .arrow_dialog::before {
+          .day table tr td .inner_wrapper .meeting_sticker .event_header {
             background: lightgreen; }
     .day table tr .time {
       display: flex;

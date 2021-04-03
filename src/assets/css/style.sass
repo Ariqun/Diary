@@ -377,59 +377,81 @@ header
 					.sticker
 						@include flex-column
 						position: relative
-						max-width: 300px
-						min-height: 100%
-						padding: 3px 10px
+						max-width: 400px
+						height: 100%
 						margin: 0 10px
 						cursor: pointer
 						border-radius: 5px
 						border: 1px solid rgba(0, 0, 0, 0.2)
-						.sticker_rules
-							display: flex
-							justify-content: flex-end
-							width: 100%
-							margin-bottom: 10px
-							.sticker_edit
-								margin: 0 10px
 						.event_header
 							display: flex
-							.event_name
-								@include flex-row
-								text-align: center
-								overflow-wrap: anywhere
-							.event_time
-								margin-left: 10px
-								span
-									font-size: 20px
+							width: 100%
+							height: 100%
+							min-height: 45px
+							padding: 7px
+							border-top-left-radius: 5px
+							border-top-right-radius: 5px
+							.name_and_time
+								display: flex
+								align-items: center
+								width: 100%
+								.event_name
+									@include flex-row
+									text-align: center
+									overflow-wrap: anywhere
+								.event_time
+									margin-left: 10px
+									span
+										font-size: 20px
+							.sticker_rules
+								display: flex
+								align-items: center
+								margin-left: 50px
+								.sticker_edit, .sticker_delete
+									width: 25px
+									height: 25px
 						.sticker_extend
-							margin-top: 5px
-							padding-top: 5px
+							display: flex
+							flex-direction: column
+							width: 100%
+							padding: 7px
 							border-top: 1px solid $color-blue
 							.people, .location, .descr
-								padding: 5px 0
-								span
-									margin-right: 5px
+								display: flex
+								align-items: center
+								min-height: 50px
+								padding: 10px 0
+								.icon
+									min-width: 40px
+								.sticker_extend_inner_wrapper
+									display: flex
+									flex-direction: column
+									justify-content: center
+									.title
+										position: relative
+										font-size: 13px
+									.value
+										font-size: 15px
+								&:hover
+									background: rgba(218, 220, 224, 0.5)
 					.task_sticker
 						background: $color-for-tasks
+						.event_header
+							background: $color-for-tasks
 						.task_descr
 							color: rgba(0, 0, 0, 0.6)
 							text-align: center
 							margin-top: 5px
 							padding-top: 5px
 							border-top: 1px solid $color-blue
-						.arrow_dialog
-							&::before
-								background: $color-for-tasks
 					.reminder_sticker
 						background: $color_for_reminders
-						.arrow_dialog
-							&::before
-								background: $color-for-reminders
+						.event_header
+							background: $color_for_reminders
 					.meeting_sticker
 						background: $color_for_meetings
-						.arrow_dialog
-							&::before
-								background: $color-for-meetings
+						.event_header
+							background: $color_for_meetings
 			.time
 				@include flex-column
 				position: relative
