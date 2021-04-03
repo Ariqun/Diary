@@ -111,7 +111,7 @@ function createStickersForMonth(date, arr, arrOfTypes) {
 		return x - y;
 	});
 	
-	arrOfSortedByTypes.reduce((acc, el) => {
+	let repeat = arrOfSortedByTypes.reduce((acc, el) => {
 		acc[el.date] = (acc[el.date] || 0) + 1;
 
 		if (acc[el.date] > 4) {
@@ -120,6 +120,8 @@ function createStickersForMonth(date, arr, arrOfTypes) {
 
 		return acc;
 	}, {}, null, 2);
+
+	console.log(repeat);
 
 	for (let index of arrOfIndexes) {
 		arrOfSortedByTypes.splice(index, 1);
@@ -137,6 +139,14 @@ function createStickersForMonth(date, arr, arrOfTypes) {
 					const sticker = createStickers(eventType, obj);
 
 					item.previousElementSibling.appendChild(sticker);
+
+					for (let key in repeat) {
+						if (key.split('.')[0] == day & key.split('.')[1] == month) {
+							if (repeat[key] > 4) {
+								console.log(repeat[key] - 4);
+							}
+						}
+					}
 				}
 			});
 		}

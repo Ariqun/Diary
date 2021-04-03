@@ -1,5 +1,5 @@
-import checkLocalStorage from '../localStorage';
-import Day from './day';
+import showAndHideExtendSticker from "./extend_stickers";
+import checkLocalStorage from "./localStorage";
 
 export default class Modal {
 	constructor(date, time, row) {
@@ -90,9 +90,13 @@ export default class Modal {
 					}
 
 					document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
+					document.querySelectorAll('.modal_wrapper input').forEach(input => input.value = '');
+					document.querySelector('.modal_wrapper').classList.add('hidden');
+
 					localStorage.setItem(id, JSON.stringify(obj));
 					checkLocalStorage('day', dateForLocalStorage);
-					document.querySelector('.modal_wrapper').classList.add('hidden');
+
+					showAndHideExtendSticker();
 				}
 			});
 		};
