@@ -47,7 +47,7 @@ export default class Calendar {
 			this.container.querySelectorAll('.dateDay').forEach((day) => {
 				day.addEventListener('click', () => {
 					const clone = day.cloneNode(true);
-	
+
 					this.clear();
 					new Day(this.date, clone).init();
 					document.querySelector('.diary').style.flexGrow = '1';

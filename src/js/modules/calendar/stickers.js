@@ -18,6 +18,7 @@ export default class Stickers {
 	
 				sticker.style.cssText = `
 					position: absolute;
+					min-width: 300px;
 					min-height: 80px;
 					height: auto;
 					font-size: 18px;

@@ -6,16 +6,32 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
 
 	if (mode == 'day') {
 		for (let key in obj) {
-			const eventType = key.split('_')[0];
-	
-			createStickersForDay(date, eventType, JSON.parse(obj[key]));
+			if (identification(obj[key])) {
+				const eventType = key.split('_')[0];
+
+				createStickersForDay(date, eventType, JSON.parse(obj[key]));
+			}
 		}
 	} else if (mode == 'month') {
 		for (let key in obj) {
-			arr.push(JSON.parse(obj[key]));
+			if (identification(obj[key])) {
+				arr.push(JSON.parse(obj[key]));
+			}
 		}
 
 		createStickersForMonth(date, arr, arrOfTypes);
+	}
+
+	function identification(item) {
+		try {
+			const substr = JSON.parse(item).id.split('_')[0];
+		
+			if (substr == 'task' || substr == 'reminder' || substr == 'meeting') {
+				return true;
+			} else {
+				return false;
+			}
+		} catch {}
 	}
 };
 
@@ -54,7 +70,7 @@ function createStickersForDay(date, type, obj) {
 					</div>
 					
 					<div class="sticker_rules hidden">
-						<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
+						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png"></div>
 					</div>
 				</div>
 				
@@ -73,7 +89,7 @@ function createStickersForDay(date, type, obj) {
 		function createDateBlock() {
 			const block = `
 				<div class="date">
-					<div class="icon icon_date"><img src="/assets/icons/date.png"></div>
+					<div class="icon icon_date"><img src="assets/icons/date.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Когда:</div>
 						<div class="value">${obj.date} ${obj.time}</div>
@@ -86,7 +102,7 @@ function createStickersForDay(date, type, obj) {
 		function createDescrBlock() {
 			const block = `
 				<div class="descr">
-					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+					<div class="icon icon_descr"><img src="assets/icons/descr.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Что:</div>
 						<div class="value">${obj.descr}</div>
@@ -99,14 +115,14 @@ function createStickersForDay(date, type, obj) {
 		function createPeopleAndLocationBlocks() {
 			const block = `
 				<div class="people">
-					<div class="icon icon_people"><img src="/assets/icons/people.png"></div>
+					<div class="icon icon_people"><img src="assets/icons/people.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
 						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
-					<div class="icon icon_loc"><img src="/assets/icons/location.png"></div>
+					<div class="icon icon_loc"><img src="assets/icons/location.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Где:</div>
 						<div class="value">${obj.location}</div>
@@ -191,18 +207,20 @@ function createStickersForMonth(date, arr, arrOfTypes) {
 	// 	}
 	// }
 
+	
+
 	function createStickers() {
 		for (let obj of sortedArr) {
 			const eventType = obj.id.split('_')[0];
 			const fullDate = obj.id.split('_')[1];
 			const month = fullDate.split('.')[1];
 			const day = fullDate.split('.')[0];
-	
+
 			if (date.getMonth() == month) {
 				document.querySelectorAll('.calendar_big .dateDay').forEach((item) => {
 					if (item.innerHTML == day) {
 						const sticker = createStickerDOM(eventType, obj);
-	
+
 						item.previousElementSibling.appendChild(sticker);
 					}
 				});

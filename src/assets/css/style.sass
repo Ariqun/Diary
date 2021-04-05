@@ -51,7 +51,6 @@ html
 body
 	overflow: hidden
 	margin: 0
-	background: url('/assets/img/bg.jpg')
 
 footer
 	position: absolute
@@ -60,6 +59,13 @@ footer
 	width: 100%
 	height: 52px
 	background: white
+	&::after
+		content: ''
+		position: absolute
+		top: -1px
+		right: 0
+		width: 64px
+		border-top: 1px solid $color-gray
 
 .main_container
 	position: relative
@@ -109,6 +115,7 @@ header
 			justify-content: space-between
 			align-items: center
 			width: 100%
+			margin-bottom: 5px
 			background: white
 			.prev_month, .next_month
 				@include flex-row
@@ -220,13 +227,14 @@ header
 
 /* -------------- Right Side -------------- */
 
-// .right_side
-// 	position: absolute
-// 	top: 0
-// 	right: 0
-// 	width: 50px
-// 	height: 100%
-// 	background: white
+.right_side
+	position: absolute
+	top: 0
+	right: 0
+	width: 64px
+	height: 100%
+	background: white
+
 
 /* -------------- Diary -------------- */
 
@@ -296,8 +304,6 @@ header
 									font-size: 6em
 									opacity: 0.1
 									z-index: 1
-								.weekend
-									color: red
 								.today
 									opacity: 0.7
 							.hover
@@ -312,27 +318,6 @@ header
 								.small_sticker
 									font-size: 10px
 									padding: 3px
-
-/* -------------- Week -------------- */
-
-.week
-	background: white
-	table
-		thead
-			th
-				border-bottom: 1px solid black
-		tbody
-			tr
-				td
-					width: 200px
-					height: 53em
-					.item
-						display: flex
-						justify-content: center
-						height: 100%
-						.dateDay
-							font-size: 6em
-							opacity: 0.1
 
 /* -------------- Day -------------- */
 
@@ -503,7 +488,7 @@ header
 				&:focus
 					cursor: auto
 					border-bottom: 2px solid $color-blue
-		.events_name
+		.event_types
 			display: flex
 			justify-content: space-around
 			margin-top: 20px
@@ -630,7 +615,13 @@ header
 			font-size: 40px
 			cursor: pointer
 
-/* -------------- High Prioriti -------------- */
+/* -------------- Highest priority -------------- */
 
 .hidden
 	display: none !important
+.red_border_bottom 
+	border-bottom-left-radius: 0 !important
+	border-bottom-right-radius: 0 !important
+	border-bottom: 2px solid red !important
+.weekend
+	color: red !important

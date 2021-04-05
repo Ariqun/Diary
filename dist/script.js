@@ -580,6 +580,7 @@ class Stickers {
         eventName.innerText = eventName.getAttribute('data-fullName');
         sticker.style.cssText = `
 					position: absolute;
+					min-width: 300px;
 					min-height: 80px;
 					height: auto;
 					font-size: 18px;
@@ -716,15 +717,31 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
 
   if (mode == 'day') {
     for (let key in obj) {
-      const eventType = key.split('_')[0];
-      createStickersForDay(date, eventType, JSON.parse(obj[key]));
+      if (identification(obj[key])) {
+        const eventType = key.split('_')[0];
+        createStickersForDay(date, eventType, JSON.parse(obj[key]));
+      }
     }
   } else if (mode == 'month') {
     for (let key in obj) {
-      arr.push(JSON.parse(obj[key]));
+      if (identification(obj[key])) {
+        arr.push(JSON.parse(obj[key]));
+      }
     }
 
     createStickersForMonth(date, arr, arrOfTypes);
+  }
+
+  function identification(item) {
+    try {
+      const substr = JSON.parse(item).id.split('_')[0];
+
+      if (substr == 'task' || substr == 'reminder' || substr == 'meeting') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch {}
   }
 };
 
@@ -761,7 +778,7 @@ function createStickersForDay(date, type, obj) {
 					</div>
 					
 					<div class="sticker_rules hidden">
-						<div class="sticker_delete"><img src="/assets/icons/sticker_delete.png"></div>
+						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png"></div>
 					</div>
 				</div>
 				
@@ -779,7 +796,7 @@ function createStickersForDay(date, type, obj) {
     function createDateBlock() {
       const block = `
 				<div class="date">
-					<div class="icon icon_date"><img src="/assets/icons/date.png"></div>
+					<div class="icon icon_date"><img src="assets/icons/date.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Когда:</div>
 						<div class="value">${obj.date} ${obj.time}</div>
@@ -792,7 +809,7 @@ function createStickersForDay(date, type, obj) {
     function createDescrBlock() {
       const block = `
 				<div class="descr">
-					<div class="icon icon_descr"><img src="/assets/icons/descr.png"></div>
+					<div class="icon icon_descr"><img src="assets/icons/descr.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Что:</div>
 						<div class="value">${obj.descr}</div>
@@ -805,14 +822,14 @@ function createStickersForDay(date, type, obj) {
     function createPeopleAndLocationBlocks() {
       const block = `
 				<div class="people">
-					<div class="icon icon_people"><img src="/assets/icons/people.png"></div>
+					<div class="icon icon_people"><img src="assets/icons/people.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
 						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
-					<div class="icon icon_loc"><img src="/assets/icons/location.png"></div>
+					<div class="icon icon_loc"><img src="assets/icons/location.png"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Где:</div>
 						<div class="value">${obj.location}</div>
@@ -992,7 +1009,7 @@ class Modal {
           } else {
             this.eventType = 'meeting';
             this.createMeeting();
-            showAdressSuggestions();
+            this.showAdressSuggestions();
           }
         });
       });
@@ -1007,17 +1024,30 @@ class Modal {
     const saveEvent = () => {
       document.querySelector('.event_save').addEventListener('click', () => {
         const name = document.querySelector('.user_event_name input');
+        const taskDescr = document.querySelector('.task_descr textarea');
+        const people = document.querySelector('.meeting_people input');
+        const loc = document.querySelector('.meeting_location input');
+        const meetingDescr = document.querySelector('.meeting_descr input');
+        let type = '';
+        document.querySelectorAll('.modal_add_event .event').forEach(item => {
+          if (item.classList.contains('active')) {
+            type = item.id.split('_')[1];
+          }
+        });
 
         if (name.value == '') {
-          name.style.borderBottom = '2px solid red';
-          setTimeout(() => {
-            name.style.cssText = '';
-          }, 2000);
+          name.value == '' ? displayRedBorder(name) : null;
+        } else if (type == 'task' && taskDescr.value == '') {
+          taskDescr.value == '' ? displayRedBorder(taskDescr) : null;
+        } else if (type == 'meeting' && (people.value == '' || loc.value == '' || meetingDescr.value == '')) {
+          people.value == '' ? displayRedBorder(people) : null;
+          loc.value == '' ? displayRedBorder(loc) : null;
+          meetingDescr.value == '' ? displayRedBorder(meetingDescr) : null;
         } else {
           // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
           const dateForLocalStorage = this.createDate('localStorage');
           const time = document.querySelector('.event_time input').value;
-          const id = createID(time);
+          const id = this.createID(time);
           const obj = {
             'id': id,
             'name': name.value,
@@ -1026,16 +1056,11 @@ class Modal {
           };
 
           if (this.eventType == 'task') {
-            const descr = document.querySelector('.task_descr textarea').value;
-            obj.descr = descr;
+            obj.descr = taskDescr.value;
           } else if (this.eventType == 'meeting') {
-            const location = document.querySelector('.meeting_location input').value;
-            const descr = document.querySelector('.meeting_descr input').value;
-            const peopleStr = document.querySelector('.meeting_people input').value;
-            const people = peopleStr.split(',');
-            obj.location = location;
-            obj.descr = descr;
-            obj.people = people;
+            obj.people = people.value.split(',');
+            obj.location = loc.value;
+            obj.descr = meetingDescr.value;
           }
 
           document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
@@ -1047,79 +1072,11 @@ class Modal {
         }
       });
 
-      const createID = time => {
-        const obj = { ...localStorage
-        };
-        let id = '';
-        let objOfTypes = {
-          'task': 0,
-          'reminder': 0,
-          'meeting': 0
-        };
-
-        for (let key in obj) {
-          const str = JSON.parse(obj[key]).id.split('_')[0];
-
-          for (let type in objOfTypes) {
-            str == type ? objOfTypes[type]++ : null;
-          }
-        }
-
-        for (let type in objOfTypes) {
-          if (this.eventType == type) {
-            id = `${this.eventType}_${this.createDate('localStorage')}_${time}_${objOfTypes[type] + 1}`;
-          }
-        }
-
-        return id;
-      };
-    };
-
-    const showAdressSuggestions = () => {
-      const sugBlock = document.querySelector('.meeting_location .suggestions');
-      const input = document.querySelector('.meeting_location input');
-      input.addEventListener('input', suggestion);
-
-      function suggestion() {
-        const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-        const token = "f7f2fe36a577281d7b497460fd089ee837097d0b";
-        const query = input.value;
-        const options = {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Token " + token
-          },
-          body: JSON.stringify({
-            query: query
-          })
-        };
-        fetch(url, options).then(response => response.text()).then(result => {
-          const arr = JSON.parse(result).suggestions;
-          sugBlock.innerHTML = '';
-
-          for (let i = 0; i < 5; i++) {
-            if (arr[i]) {
-              sugBlock.innerHTML += `
-									<div class="suggestion">${arr[i].value}</div>
-								`;
-            }
-          }
-
-          selectSuggestion();
-        }).catch(error => console.log("error", error));
-      }
-
-      function selectSuggestion() {
-        document.querySelectorAll('.meeting_location .suggestion').forEach(item => {
-          item.addEventListener('click', () => {
-            input.value = item.innerHTML;
-            input.focus();
-            sugBlock.innerHTML = '';
-          });
-        });
+      function displayRedBorder(elem) {
+        elem.classList.add('red_border_bottom');
+        setTimeout(() => {
+          elem.classList.remove('red_border_bottom');
+        }, 2000);
       }
     };
 
@@ -1179,16 +1136,108 @@ class Modal {
     }
 
     return date;
-  } // checkTimeInInput() {
-  // 	document.querySelector('.modal_time input').addEventListener('change', () => {
-  // 		const str = document.querySelector('.modal_time input').value;
-  // 	});
-  // }
+  }
 
+  showAdressSuggestions() {
+    const sugBlock = document.querySelector('.meeting_location .suggestions');
+    const input = document.querySelector('.meeting_location input');
+    input.addEventListener('input', suggestion);
+
+    function suggestion() {
+      const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+      const token = "f7f2fe36a577281d7b497460fd089ee837097d0b";
+      const query = input.value;
+      const options = {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "Token " + token
+        },
+        body: JSON.stringify({
+          query: query
+        })
+      };
+      fetch(url, options).then(response => response.text()).then(result => {
+        const arr = JSON.parse(result).suggestions;
+        sugBlock.innerHTML = '';
+
+        for (let i = 0; i < 5; i++) {
+          if (arr[i]) {
+            sugBlock.innerHTML += `
+								<div class="suggestion">${arr[i].value}</div>
+							`;
+          }
+        }
+
+        selectSuggestion();
+      }).catch(error => console.log("error", error));
+    }
+
+    function selectSuggestion() {
+      document.querySelectorAll('.meeting_location .suggestion').forEach(item => {
+        item.addEventListener('click', () => {
+          input.value = item.innerHTML;
+          input.focus();
+          sugBlock.innerHTML = '';
+        });
+      });
+    }
+  }
+
+  createID(time) {
+    const obj = { ...localStorage
+    };
+    let id = '';
+    let objOfTypes = {
+      'task': 0,
+      'reminder': 0,
+      'meeting': 0
+    };
+
+    try {
+      for (let key in obj) {
+        const str = JSON.parse(obj[key]).id.split('_')[0];
+
+        for (let type in objOfTypes) {
+          str == type ? objOfTypes[type]++ : null;
+        }
+      }
+    } catch {}
+
+    for (let type in objOfTypes) {
+      if (this.eventType == type) {
+        id = `${this.eventType}_${this.createDate('localStorage')}_${time}_${objOfTypes[type] + 1}`;
+      }
+    }
+
+    return id;
+  }
+
+  checkTimeInInput() {
+    const timeInput = document.querySelector('.event_time input');
+    const defaultTime = timeInput.value;
+    timeInput.addEventListener('blur', () => {
+      const changedTime = timeInput.value;
+
+      if (changedTime == defaultTime || changedTime.length < 5) {
+        timeInput.value = defaultTime;
+      } else {
+        const strOnlyNumbs = changedTime.replace(/\D+/g, '');
+        const strFourNumbs = strOnlyNumbs.substr(0, 4);
+        const result = strFourNumbs.replace(/(\d{2})(\d{2})/, (match, m1, m2) => {
+          return `${m1}:${m2}`;
+        });
+        timeInput.value = result;
+      }
+    });
+  }
 
   init() {
     this.createModal();
-    this.createListeners(); // this.checkTimeInInput();
+    this.createListeners();
+    this.checkTimeInInput();
   }
 
 }
