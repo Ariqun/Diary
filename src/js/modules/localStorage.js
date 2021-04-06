@@ -3,7 +3,7 @@
 const checkLocalStorage = (mode, date, arrOfTypes) => {
 	const obj = {...localStorage};
 	let arr = [];
-
+	console.log(date)
 	if (mode == 'day') {
 		for (let key in obj) {
 			if (identification(obj[key])) {
@@ -15,7 +15,15 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
 	} else if (mode == 'month') {
 		for (let key in obj) {
 			if (identification(obj[key])) {
-				arr.push(JSON.parse(obj[key]));
+				if (JSON.parse(obj[key]).id.split('_')[0] != 'birthday') {
+					const yearFromId = JSON.parse(obj[key]).id.split('_')[1].split('.')[2];
+
+					if (date.getFullYear() == yearFromId) {
+						arr.push(JSON.parse(obj[key]));
+					}
+				} else {
+					arr.push(JSON.parse(obj[key]));
+				}
 			}
 		}
 
@@ -26,7 +34,7 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
 		try {
 			const substr = JSON.parse(item).id.split('_')[0];
 		
-			if (substr == 'task' || substr == 'reminder' || substr == 'meeting') {
+			if (substr == 'task' || substr == 'reminder' || substr == 'meeting' || substr == 'birthday') {
 				return true;
 			} else {
 				return false;
@@ -40,37 +48,44 @@ function createStickersForDay(date, type, obj) {
 		document.querySelectorAll('.time').forEach((time) => {
 			const hourRow = time.innerHTML.substr(0, 2);
 			const hourInDB = obj.time.substr(0, 2);
-	
-			if (date == obj.id.split('_')[1]) {
-				if (hourRow == hourInDB) {
+				
+			if (type != 'birthday') {
+				if (date == obj.id.split('_')[1]) {
+					if (hourRow == hourInDB) {
+						const item = document.createElement('div');
+						item.classList.add('sticker_wrapper');
+						item.innerHTML = createDOM();
+						
+						time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+					}
+				}
+			} else {
+				const day = date.split('.')[0];
+				const dayFromId = obj.id.split('_')[1].split('.')[0];
+				const month = date.split('.')[1];
+				const monthFromId = obj.id.split('_')[1].split('.')[1]
+
+				if (day == dayFromId && month == monthFromId && hourRow == hourInDB) {
 					const item = document.createElement('div');
-						  item.classList.add('sticker_wrapper');
-						   item.innerHTML = createDOM();
-	
-					time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+					item.classList.add('birthday_row');
+					item.innerHTML = createDOM();
+					
+					document.querySelector('.day').prepend(item);
 				}
 			}
 		});
 	}
 	
 	function createDOM() {
-		let shortName = createShortName(obj.name);
-
-		const node = `
+		let node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
 				<div class="event_header">
 					<div class="name_and_time">
-						<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
-							${shortName}
-						</div>
-
-						<div class="event_time">
-							<span>[</span>${obj.time}<span>]</span>
-						</div>
+						${createEventNameAndTimeBlock()}
 					</div>
 					
 					<div class="sticker_rules hidden">
-						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png"></div>
+						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png" alt="delete"></div>
 					</div>
 				</div>
 				
@@ -79,6 +94,30 @@ function createStickersForDay(date, type, obj) {
 				</div>
 			</div>
 		`;
+
+		function createEventNameAndTimeBlock() {
+			let shortName = createShortName(obj.name);
+			let block = '';
+
+			if (type != 'birthday') {
+				block = `
+					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
+						${shortName}
+					</div>
+
+					<div class="event_time">
+						<span>[</span>${obj.time}<span>]</span>
+					</div>
+				`;
+			} else {
+				block = `
+					<div class="event_name" data-shortName="${obj.name}" data-fullName="${obj.name}">
+						${obj.name}
+					</div>
+				`;
+			}
+			return block;
+		}
 
 		return node;
 	}
@@ -89,7 +128,7 @@ function createStickersForDay(date, type, obj) {
 		function createDateBlock() {
 			const block = `
 				<div class="date">
-					<div class="icon icon_date"><img src="assets/icons/date.png"></div>
+					<div class="icon icon_date"><img src="assets/icons/date.png" alt="date"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Когда:</div>
 						<div class="value">${obj.date} ${obj.time}</div>
@@ -102,7 +141,7 @@ function createStickersForDay(date, type, obj) {
 		function createDescrBlock() {
 			const block = `
 				<div class="descr">
-					<div class="icon icon_descr"><img src="assets/icons/descr.png"></div>
+					<div class="icon icon_descr"><img src="assets/icons/descr.png" alt="descr"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Что:</div>
 						<div class="value">${obj.descr}</div>
@@ -115,17 +154,66 @@ function createStickersForDay(date, type, obj) {
 		function createPeopleAndLocationBlocks() {
 			const block = `
 				<div class="people">
-					<div class="icon icon_people"><img src="assets/icons/people.png"></div>
+					<div class="icon icon_people"><img src="assets/icons/people.png" alt="people"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
 						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
-					<div class="icon icon_loc"><img src="assets/icons/location.png"></div>
+					<div class="icon icon_loc"><img src="assets/icons/location.png" alt="location"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Где:</div>
 						<div class="value">${obj.location}</div>
+					</div>
+				</div>
+			`;
+			return block;
+		}
+
+		function createBirthdayBlocks() {
+			// Наркомания с датами нужна, чтобы выводить корректную дату и возраст в любой год, а не только в год добавления стикера дня рождения в базу данных.
+			const dateEventFromDBWithoutYear = obj.date.replace(/\d{4}/, '');
+			const yearFromCalendar = date.split('.')[2];
+			const fullDate = `${dateEventFromDBWithoutYear}${yearFromCalendar}`;
+			
+			const yearOfBirth = obj.birthDate.split('-')[2];
+			const age = yearFromCalendar - yearOfBirth;
+
+			const block = `
+				<div class="date">
+					<div class="icon icon_date"><img src="assets/icons/date.png" alt="date"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Когда:</div>
+						<div class="value">${fullDate}</div>
+					</div>
+				</div>
+				<div class="person">
+					<div class="icon icon_person"><img src="assets/icons/person.png" alt="person"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Кто:</div>
+						<div class="value">${obj.person}</div>
+					</div>
+				</div>
+				<div class="birthday_date">
+					<div class="icon icon_birthday"><img src="assets/icons/birthday.png" alt="birthday"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Дата рождения:</div>
+						<div class="value">${obj.birthDate}</div>
+					</div>
+				</div>
+				<div class="age">
+					<div class="icon icon_age"><img src="assets/icons/age.png" alt="age"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Возраст:</div>
+						<div class="value">${age}</div>
+					</div>
+				</div>
+				<div class="present">
+					<div class="icon icon_present"><img src="assets/icons/present.png" alt="present"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Подарок:</div>
+						<div class="value">${obj.present}</div>
 					</div>
 				</div>
 			`;
@@ -146,6 +234,10 @@ function createStickersForDay(date, type, obj) {
 		} else if (type == 'reminder') {
 			extendBLock = `
 				${createDateBlock()}
+			`;
+		} else if (type == 'birthday') {
+			extendBLock = `
+				${createBirthdayBlocks()}
 			`;
 		}
 	
@@ -206,8 +298,6 @@ function createStickersForMonth(date, arr, arrOfTypes) {
 	// 		}
 	// 	}
 	// }
-
-	
 
 	function createStickers() {
 		for (let obj of sortedArr) {

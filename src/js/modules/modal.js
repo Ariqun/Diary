@@ -39,10 +39,13 @@ export default class Modal {
 					} else if (btn.id == 'event_reminder') {
 						this.eventType = 'reminder';
 						this.createReminder();
-					} else {
+					} else if (btn.id == 'event_meeting') {
 						this.eventType = 'meeting';
 						this.createMeeting();
 						this.showAdressSuggestions();
+					} else if (btn.id == 'event_birthday') {
+						this.eventType = 'birthday';
+						this.createBirthday();
 					}
 				});
 			});
@@ -60,9 +63,15 @@ export default class Modal {
 			document.querySelector('.event_save').addEventListener('click', () => {
 				const name = document.querySelector('.user_event_name input');
 				const taskDescr = document.querySelector('.task_descr textarea');
+
 				const people = document.querySelector('.meeting_people input');
 				const loc = document.querySelector('.meeting_location input');
 				const meetingDescr = document.querySelector('.meeting_descr input');
+
+				const person = document.querySelector('.birthday_person input');
+				const birthdayDate = document.querySelector('.birthday_date input');
+				const present = document.querySelector('.birthday_present input');
+
 				let type = '';
 
 				document.querySelectorAll('.modal_add_event .event').forEach((item) => {
@@ -70,6 +79,11 @@ export default class Modal {
 						type = item.id.split('_')[1];
 					}
 				});
+
+				if (present && present.value == '') {
+					present.value = 'Подарок не выбран';
+				}
+
 
 				if (name.value == '') {
 					name.value == '' ? displayRedBorder(name) : null;
@@ -79,6 +93,9 @@ export default class Modal {
 					people.value == '' ? displayRedBorder(people) : null;
 					loc.value == '' ? displayRedBorder(loc): null;
 					meetingDescr.value == '' ? displayRedBorder(meetingDescr) : null;
+				} else if (type == 'birthday' && (person.value == '' || birthdayDate.value == '')) {
+					person.value  == '' ? displayRedBorder(person) : null;
+					birthdayDate.value == '' ? displayRedBorder(birthdayDate) : null;
 				} else {
 					// Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
 					const dateForLocalStorage = this.createDate('localStorage');
@@ -98,6 +115,10 @@ export default class Modal {
 						obj.people = people.value.split(',');
 						obj.location = loc.value;
 						obj.descr = meetingDescr.value;
+					} else if (this.eventType == 'birthday') {
+						obj.person = person.value;
+						obj.birthDate = birthdayDate.value.split('-').reverse().join('-');
+						obj.present = present.value;
 					}
 
 					document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
@@ -152,6 +173,24 @@ export default class Modal {
 
 				<div class="meeting_descr">
 					<label><input type="text" placeholder="Добавьте описание"></label>
+				</div>
+			</div>
+		`;
+	}
+
+	createBirthday() {
+		this.block.innerHTML = `
+			<div class="event_birthday">
+				<div class="birthday_person">
+					<label><input type="text" placeholder="Укажите имя именинника или именинницы"></label>
+				</div>
+
+				<div class="birthday_date">
+					<label>Укажите дату рождения <input type="date"></label>
+				</div>
+
+				<div class="birthday_present">
+					<label><input type="text" placeholder="Уже выбрали подарок?"></label>
 				</div>
 			</div>
 		`;
@@ -234,7 +273,8 @@ export default class Modal {
 		let objOfTypes = {
 			'task': 0,
 			'reminder': 0,
-			'meeting': 0
+			'meeting': 0,
+			'birthday': 0
 		};
 
 		try {

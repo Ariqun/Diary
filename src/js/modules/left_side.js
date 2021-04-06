@@ -35,6 +35,8 @@ export default class LeftSide {
 				arrOfTypes.push('reminder');
 			} else if (item.id == 'display_meetings' && item.checked == true) {
 				arrOfTypes.push('meeting');
+			} else if (item.id == 'display_birthday' && item.checked == true) {
+				arrOfTypes.push('birthday');
 			}
 		});
 

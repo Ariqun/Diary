@@ -185,6 +185,8 @@ header {
         background: pink; }
       .left_side .options .option input:checked ~ label#dm {
         background: lightgreen; }
+      .left_side .options .option input:checked ~ label#db {
+        background: orange; }
       .left_side .options .option input:checked ~ .option__icon:before {
         transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1); }
       .left_side .options .option input:checked ~ .option__icon:after {
@@ -279,6 +281,8 @@ header {
               background: pink; }
             .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .meeting_small_sticker {
               background: lightgreen; }
+            .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .stickers .birthday_small_sticker {
+              background: orange; }
           .diary .wrapper_for_big_calendar .calendar_big table tbody tr td .item .dateDay {
             display: flex;
             flex-direction: column;
@@ -315,6 +319,25 @@ header {
   overflow: auto;
   border-bottom: 1px solid #dadce0;
   background: white; }
+  .day .birthday_row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    background: orange; }
+    .day .birthday_row .birthday_sticker {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 100%;
+      height: auto;
+      margin: 0;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none; }
+    .day .birthday_row .name_and_time {
+      display: flex; }
   .day .dateDay {
     position: absolute;
     top: calc(50% - 200px);
@@ -345,106 +368,116 @@ header {
         position: relative;
         display: flex;
         height: 100%; }
-        .day table tr td .inner_wrapper .sticker {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-          max-width: 400px;
-          height: 100%;
-          margin: 0 10px;
-          cursor: pointer;
-          border-radius: 5px;
-          border: 1px solid rgba(0, 0, 0, 0.2); }
-          .day table tr td .inner_wrapper .sticker .event_header {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            min-height: 45px;
-            padding: 7px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px; }
-            .day table tr td .inner_wrapper .sticker .event_header .name_and_time {
-              display: flex;
-              align-items: center;
-              width: 100%; }
-              .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_name {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                overflow-wrap: anywhere; }
-              .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_time {
-                margin-left: 10px; }
-                .day table tr td .inner_wrapper .sticker .event_header .name_and_time .event_time span {
-                  font-size: 20px; }
-            .day table tr td .inner_wrapper .sticker .event_header .sticker_rules {
-              display: flex;
-              align-items: center;
-              margin-left: 50px; }
-              .day table tr td .inner_wrapper .sticker .event_header .sticker_rules .sticker_edit, .day table tr td .inner_wrapper .sticker .event_header .sticker_rules .sticker_delete {
-                width: 25px;
-                height: 25px; }
-          .day table tr td .inner_wrapper .sticker .sticker_extend {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            padding: 7px;
-            border-top: 1px solid #1a73e8; }
-            .day table tr td .inner_wrapper .sticker .sticker_extend .date, .day table tr td .inner_wrapper .sticker .sticker_extend .people, .day table tr td .inner_wrapper .sticker .sticker_extend .location, .day table tr td .inner_wrapper .sticker .sticker_extend .descr {
-              display: flex;
-              align-items: center;
-              min-height: 50px;
-              padding: 10px 0; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .date .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .people .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .location .icon, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .icon {
-                min-width: 40px; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper {
-                display: flex;
-                flex-direction: column;
-                justify-content: center; }
-                .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title {
-                  position: relative;
-                  font-size: 13px; }
-                .day table tr td .inner_wrapper .sticker .sticker_extend .date .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .day table tr td .inner_wrapper .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value {
-                  font-size: 15px; }
-              .day table tr td .inner_wrapper .sticker .sticker_extend .date:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .people:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .location:hover, .day table tr td .inner_wrapper .sticker .sticker_extend .descr:hover {
-                background: rgba(218, 220, 224, 0.5); }
-        .day table tr td .inner_wrapper .task_sticker {
-          background: skyblue; }
-          .day table tr td .inner_wrapper .task_sticker .event_header {
-            background: skyblue; }
-          .day table tr td .inner_wrapper .task_sticker .task_descr {
-            color: rgba(0, 0, 0, 0.6);
-            text-align: center;
-            margin-top: 5px;
-            padding-top: 5px;
-            border-top: 1px solid #1a73e8; }
-        .day table tr td .inner_wrapper .reminder_sticker {
-          background: pink; }
-          .day table tr td .inner_wrapper .reminder_sticker .event_header {
-            background: pink; }
-        .day table tr td .inner_wrapper .meeting_sticker {
-          background: lightgreen; }
-          .day table tr td .inner_wrapper .meeting_sticker .event_header {
-            background: lightgreen; }
-    .day table tr .time {
+
+.sticker {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  max-width: 400px;
+  height: 100%;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2); }
+  .sticker .event_header {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 45px;
+    padding: 7px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px; }
+    .sticker .event_header .name_and_time {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      position: relative;
-      width: 50px;
-      height: 50px;
-      border-right: 1px solid #dadce0; }
-      .day table tr .time::after {
-        content: '';
-        position: absolute;
-        bottom: -1px;
-        right: 0;
+      width: 100%; }
+      .sticker .event_header .name_and_time .event_name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow-wrap: anywhere; }
+      .sticker .event_header .name_and_time .event_time {
+        margin-left: 10px; }
+        .sticker .event_header .name_and_time .event_time span {
+          font-size: 20px; }
+    .sticker .event_header .sticker_rules {
+      display: flex;
+      align-items: center;
+      margin-left: 50px; }
+      .sticker .event_header .sticker_rules .sticker_edit, .sticker .event_header .sticker_rules .sticker_delete {
         width: 25px;
-        height: 1px;
-        background: #dadce0; }
+        height: 25px; }
+  .sticker .sticker_extend {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 7px;
+    border-top: 1px solid #1a73e8; }
+    .sticker .sticker_extend .date, .sticker .sticker_extend .people, .sticker .sticker_extend .location, .sticker .sticker_extend .descr, .sticker .sticker_extend .person, .sticker .sticker_extend .birthday_date, .sticker .sticker_extend .present, .sticker .sticker_extend .age {
+      display: flex;
+      align-items: center;
+      min-height: 50px;
+      padding: 10px 0; }
+      .sticker .sticker_extend .date .icon, .sticker .sticker_extend .people .icon, .sticker .sticker_extend .location .icon, .sticker .sticker_extend .descr .icon, .sticker .sticker_extend .person .icon, .sticker .sticker_extend .birthday_date .icon, .sticker .sticker_extend .present .icon, .sticker .sticker_extend .age .icon {
+        min-width: 40px; }
+      .sticker .sticker_extend .date .sticker_extend_inner_wrapper, .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper, .sticker .sticker_extend .person .sticker_extend_inner_wrapper, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper, .sticker .sticker_extend .present .sticker_extend_inner_wrapper, .sticker .sticker_extend .age .sticker_extend_inner_wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; }
+        .sticker .sticker_extend .date .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .person .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .present .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .age .sticker_extend_inner_wrapper .title {
+          position: relative;
+          font-size: 13px; }
+        .sticker .sticker_extend .date .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .person .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .present .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .age .sticker_extend_inner_wrapper .value {
+          font-size: 15px; }
+      .sticker .sticker_extend .date:hover, .sticker .sticker_extend .people:hover, .sticker .sticker_extend .location:hover, .sticker .sticker_extend .descr:hover, .sticker .sticker_extend .person:hover, .sticker .sticker_extend .birthday_date:hover, .sticker .sticker_extend .present:hover, .sticker .sticker_extend .age:hover {
+        background: rgba(218, 220, 224, 0.5); }
+
+.task_sticker {
+  background: skyblue; }
+  .task_sticker .event_header {
+    background: skyblue; }
+  .task_sticker .task_descr {
+    color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #1a73e8; }
+
+.reminder_sticker {
+  background: pink; }
+  .reminder_sticker .event_header {
+    background: pink; }
+
+.meeting_sticker {
+  background: lightgreen; }
+  .meeting_sticker .event_header {
+    background: lightgreen; }
+
+.birthday_sticker {
+  background: orange; }
+  .birthday_sticker .event_header {
+    background: orange; }
+
+.time {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-right: 1px solid #dadce0; }
+  .time::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 25px;
+    height: 1px;
+    background: #dadce0; }
 
 /* -------------- Modal -------------- */
 .modal_wrapper {
@@ -459,7 +492,7 @@ header {
   .modal_wrapper .modal_add_event {
     position: absolute;
     top: calc(50% - 290px);
-    width: 500px;
+    width: 550px;
     padding: 40px 20px 20px;
     border: 1px solid black;
     background: white; }
@@ -544,23 +577,27 @@ header {
           border-bottom: 2px solid #1a73e8;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0; }
-      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location {
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location {
         position: relative; }
-        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions {
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location .suggestions {
           position: absolute;
           width: 100%;
           border-bottom-left-radius: 5px;
           border-bottom-right-radius: 5px;
           background: #dadce0;
           z-index: 1; }
-          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion {
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location .suggestions .suggestion {
             cursor: pointer;
             padding: 5px; }
-            .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion:hover {
+            .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location .suggestions .suggestion:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location .suggestions .suggestion:hover {
               background: #b8b8b8; }
-      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr {
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr,
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_person, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_date, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_present, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_people, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_descr,
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_person, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_present {
         margin-bottom: 10px; }
-        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input {
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input,
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_person input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_date input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_present input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_people input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_descr input,
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_person input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date input, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_present input {
           width: 100%;
           height: 40px;
           font-size: 16px;
@@ -571,14 +608,28 @@ header {
           border-bottom: 2px solid transparent;
           border-radius: 5px;
           transition: 0.5s all ease; }
-          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:hover {
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:hover,
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_person input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_date input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_present input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_people input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_descr input:hover,
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_person input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date input:hover, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_present input:hover {
             background: rgba(218, 220, 224, 0.5); }
-          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:focus {
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_people input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_location input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .meeting_descr input:focus,
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_person input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_date input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_meeting .birthday_present input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_people input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_location input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .meeting_descr input:focus,
+          .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_person input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date input:focus, .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_present input:focus {
             cursor: auto;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             border-bottom: 2px solid #1a73e8;
             background: rgba(218, 220, 224, 0.5); }
+      .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        cursor: pointer;
+        color: gray;
+        padding: 0 5px; }
+        .modal_wrapper .modal_add_event .event_options .event_preferences .event_birthday .birthday_date label input[type="date"] {
+          width: auto; }
     .modal_wrapper .modal_add_event .event_save {
       position: absolute;
       bottom: 20px;
@@ -618,3 +669,113 @@ header {
 
 .weekend {
   color: red !important; }
+
+.sticker {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  max-width: 400px;
+  height: 100%;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.2); }
+  .sticker .event_header {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 45px;
+    padding: 7px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px; }
+    .sticker .event_header .name_and_time {
+      display: flex;
+      align-items: center;
+      width: 100%; }
+      .sticker .event_header .name_and_time .event_name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow-wrap: anywhere; }
+      .sticker .event_header .name_and_time .event_time {
+        margin-left: 10px; }
+        .sticker .event_header .name_and_time .event_time span {
+          font-size: 20px; }
+    .sticker .event_header .sticker_rules {
+      display: flex;
+      align-items: center;
+      margin-left: 50px; }
+      .sticker .event_header .sticker_rules .sticker_edit, .sticker .event_header .sticker_rules .sticker_delete {
+        width: 25px;
+        height: 25px; }
+  .sticker .sticker_extend {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 7px;
+    border-top: 1px solid #1a73e8; }
+    .sticker .sticker_extend .date, .sticker .sticker_extend .people, .sticker .sticker_extend .location, .sticker .sticker_extend .descr, .sticker .sticker_extend .person, .sticker .sticker_extend .birthday_date, .sticker .sticker_extend .present, .sticker .sticker_extend .age {
+      display: flex;
+      align-items: center;
+      min-height: 50px;
+      padding: 10px 0; }
+      .sticker .sticker_extend .date .icon, .sticker .sticker_extend .people .icon, .sticker .sticker_extend .location .icon, .sticker .sticker_extend .descr .icon, .sticker .sticker_extend .person .icon, .sticker .sticker_extend .birthday_date .icon, .sticker .sticker_extend .present .icon, .sticker .sticker_extend .age .icon {
+        min-width: 40px; }
+      .sticker .sticker_extend .date .sticker_extend_inner_wrapper, .sticker .sticker_extend .people .sticker_extend_inner_wrapper, .sticker .sticker_extend .location .sticker_extend_inner_wrapper, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper, .sticker .sticker_extend .person .sticker_extend_inner_wrapper, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper, .sticker .sticker_extend .present .sticker_extend_inner_wrapper, .sticker .sticker_extend .age .sticker_extend_inner_wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; }
+        .sticker .sticker_extend .date .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .people .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .location .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .person .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .present .sticker_extend_inner_wrapper .title, .sticker .sticker_extend .age .sticker_extend_inner_wrapper .title {
+          position: relative;
+          font-size: 13px; }
+        .sticker .sticker_extend .date .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .people .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .location .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .descr .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .person .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .birthday_date .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .present .sticker_extend_inner_wrapper .value, .sticker .sticker_extend .age .sticker_extend_inner_wrapper .value {
+          font-size: 15px; }
+      .sticker .sticker_extend .date:hover, .sticker .sticker_extend .people:hover, .sticker .sticker_extend .location:hover, .sticker .sticker_extend .descr:hover, .sticker .sticker_extend .person:hover, .sticker .sticker_extend .birthday_date:hover, .sticker .sticker_extend .present:hover, .sticker .sticker_extend .age:hover {
+        background: rgba(218, 220, 224, 0.5); }
+
+.task_sticker {
+  background: skyblue; }
+  .task_sticker .event_header {
+    background: skyblue; }
+  .task_sticker .task_descr {
+    color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #1a73e8; }
+
+.reminder_sticker {
+  background: pink; }
+  .reminder_sticker .event_header {
+    background: pink; }
+
+.meeting_sticker {
+  background: lightgreen; }
+  .meeting_sticker .event_header {
+    background: lightgreen; }
+
+.birthday_sticker {
+  background: orange; }
+  .birthday_sticker .event_header {
+    background: orange; }
+
+.time {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-right: 1px solid #dadce0; }
+  .time::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 25px;
+    height: 1px;
+    background: #dadce0; }

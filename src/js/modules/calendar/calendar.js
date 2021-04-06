@@ -51,6 +51,7 @@ export default class Calendar {
 					this.clear();
 					new Day(this.date, clone).init();
 					document.querySelector('.diary').style.flexGrow = '1';
+					document.querySelector('.right_side').style.width = '0px';
 				});
 			});
 		};
@@ -61,6 +62,7 @@ export default class Calendar {
 		
 				this.clear();
 				new Calendar(this.selector, date).init();
+				document.querySelector('.right_side').style.width = '64px';
 			});
 		};
 
@@ -135,7 +137,7 @@ export default class Calendar {
 
 	init() {
 		this.createCalendar(this.date);
-		checkLocalStorage('month', this.date, ['task', 'reminder', 'meeting']);
+		checkLocalStorage('month', this.date, ['task', 'reminder', 'meeting', 'birthday']);
 		this.createListeners();
 	}
 }

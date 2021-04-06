@@ -229,6 +229,7 @@ class Calendar {
           this.clear();
           new _day__WEBPACK_IMPORTED_MODULE_2__["default"](this.date, clone).init();
           document.querySelector('.diary').style.flexGrow = '1';
+          document.querySelector('.right_side').style.width = '0px';
         });
       });
     };
@@ -238,6 +239,7 @@ class Calendar {
         const date = new Date();
         this.clear();
         new Calendar(this.selector, date).init();
+        document.querySelector('.right_side').style.width = '64px';
       });
     };
 
@@ -311,7 +313,7 @@ class Calendar {
 
   init() {
     this.createCalendar(this.date);
-    Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date, ['task', 'reminder', 'meeting']);
+    Object(_localStorage__WEBPACK_IMPORTED_MODULE_3__["default"])('month', this.date, ['task', 'reminder', 'meeting', 'birthday']);
     this.createListeners();
   }
 
@@ -576,37 +578,55 @@ class Stickers {
       function show() {
         extend.classList.remove('hidden');
         rules.classList.remove('hidden');
-        eventTime.classList.add('hidden');
         eventName.innerText = eventName.getAttribute('data-fullName');
-        sticker.style.cssText = `
-					position: absolute;
-					min-width: 300px;
-					min-height: 80px;
-					height: auto;
-					font-size: 18px;
-					border: 1px solid rgba(0, 0, 0, 0.5);
-					box-shadow: 0px 2px 10px 0px black;
-					background: white;
-					z-index: 1;
-				`;
 
-        if (sticker.getBoundingClientRect().bottom > 885) {
-          sticker.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end'
-          });
+        if (sticker.classList.contains('birthday_sticker')) {
+          sticker.style.cssText = `
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
+						font-size: 18px;
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						box-shadow: 0px 2px 10px 0px black;
+						background: white;
+						z-index: 1;
+					`;
+        } else {
+          sticker.style.cssText = `
+						position: absolute;
+						min-width: 300px;
+						min-height: 80px;
+						height: auto;
+						font-size: 18px;
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						box-shadow: 0px 2px 10px 0px black;
+						background: white;
+						z-index: 1;
+					`;
+          eventTime.classList.add('hidden');
+
+          if (sticker.getBoundingClientRect().bottom > 885) {
+            sticker.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end'
+            });
+          }
+
+          sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
         }
-
-        sticker.closest('.sticker_wrapper').style.width = `${sticker.getBoundingClientRect().width + 25}px`;
       }
 
       function hide() {
         extend.classList.add('hidden');
         rules.classList.add('hidden');
-        eventTime.classList.remove('hidden');
         eventName.innerText = eventName.getAttribute('data-shortName');
         sticker.style.cssText = '';
-        sticker.closest('.sticker_wrapper').style.width = '';
+
+        if (!sticker.classList.contains('birthday_sticker')) {
+          eventTime.classList.remove('hidden');
+          sticker.closest('.sticker_wrapper').style.width = '';
+        }
       }
 
       sticker.addEventListener('mouseover', show);
@@ -685,6 +705,8 @@ class LeftSide {
         arrOfTypes.push('reminder');
       } else if (item.id == 'display_meetings' && item.checked == true) {
         arrOfTypes.push('meeting');
+      } else if (item.id == 'display_birthday' && item.checked == true) {
+        arrOfTypes.push('birthday');
       }
     });
     return arrOfTypes;
@@ -714,6 +736,7 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
   const obj = { ...localStorage
   };
   let arr = [];
+  console.log(date);
 
   if (mode == 'day') {
     for (let key in obj) {
@@ -725,7 +748,15 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
   } else if (mode == 'month') {
     for (let key in obj) {
       if (identification(obj[key])) {
-        arr.push(JSON.parse(obj[key]));
+        if (JSON.parse(obj[key]).id.split('_')[0] != 'birthday') {
+          const yearFromId = JSON.parse(obj[key]).id.split('_')[1].split('.')[2];
+
+          if (date.getFullYear() == yearFromId) {
+            arr.push(JSON.parse(obj[key]));
+          }
+        } else {
+          arr.push(JSON.parse(obj[key]));
+        }
       }
     }
 
@@ -736,7 +767,7 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
     try {
       const substr = JSON.parse(item).id.split('_')[0];
 
-      if (substr == 'task' || substr == 'reminder' || substr == 'meeting') {
+      if (substr == 'task' || substr == 'reminder' || substr == 'meeting' || substr == 'birthday') {
         return true;
       } else {
         return false;
@@ -751,34 +782,41 @@ function createStickersForDay(date, type, obj) {
       const hourRow = time.innerHTML.substr(0, 2);
       const hourInDB = obj.time.substr(0, 2);
 
-      if (date == obj.id.split('_')[1]) {
-        if (hourRow == hourInDB) {
+      if (type != 'birthday') {
+        if (date == obj.id.split('_')[1]) {
+          if (hourRow == hourInDB) {
+            const item = document.createElement('div');
+            item.classList.add('sticker_wrapper');
+            item.innerHTML = createDOM();
+            time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+          }
+        }
+      } else {
+        const day = date.split('.')[0];
+        const dayFromId = obj.id.split('_')[1].split('.')[0];
+        const month = date.split('.')[1];
+        const monthFromId = obj.id.split('_')[1].split('.')[1];
+
+        if (day == dayFromId && month == monthFromId && hourRow == hourInDB) {
           const item = document.createElement('div');
-          item.classList.add('sticker_wrapper');
+          item.classList.add('birthday_row');
           item.innerHTML = createDOM();
-          time.nextElementSibling.querySelector('.inner_wrapper').appendChild(item);
+          document.querySelector('.day').prepend(item);
         }
       }
     });
   }
 
   function createDOM() {
-    let shortName = createShortName(obj.name);
-    const node = `
+    let node = `
 			<div id="${obj.id}" class="sticker ${type}_sticker">
 				<div class="event_header">
 					<div class="name_and_time">
-						<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
-							${shortName}
-						</div>
-
-						<div class="event_time">
-							<span>[</span>${obj.time}<span>]</span>
-						</div>
+						${createEventNameAndTimeBlock()}
 					</div>
 					
 					<div class="sticker_rules hidden">
-						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png"></div>
+						<div class="sticker_delete"><img src="assets/icons/sticker_delete.png" alt="delete"></div>
 					</div>
 				</div>
 				
@@ -787,6 +825,32 @@ function createStickersForDay(date, type, obj) {
 				</div>
 			</div>
 		`;
+
+    function createEventNameAndTimeBlock() {
+      let shortName = createShortName(obj.name);
+      let block = '';
+
+      if (type != 'birthday') {
+        block = `
+					<div class="event_name" data-shortName="${shortName}" data-fullName="${obj.name}">
+						${shortName}
+					</div>
+
+					<div class="event_time">
+						<span>[</span>${obj.time}<span>]</span>
+					</div>
+				`;
+      } else {
+        block = `
+					<div class="event_name" data-shortName="${obj.name}" data-fullName="${obj.name}">
+						${obj.name}
+					</div>
+				`;
+      }
+
+      return block;
+    }
+
     return node;
   }
 
@@ -796,7 +860,7 @@ function createStickersForDay(date, type, obj) {
     function createDateBlock() {
       const block = `
 				<div class="date">
-					<div class="icon icon_date"><img src="assets/icons/date.png"></div>
+					<div class="icon icon_date"><img src="assets/icons/date.png" alt="date"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Когда:</div>
 						<div class="value">${obj.date} ${obj.time}</div>
@@ -809,7 +873,7 @@ function createStickersForDay(date, type, obj) {
     function createDescrBlock() {
       const block = `
 				<div class="descr">
-					<div class="icon icon_descr"><img src="assets/icons/descr.png"></div>
+					<div class="icon icon_descr"><img src="assets/icons/descr.png" alt="descr"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Что:</div>
 						<div class="value">${obj.descr}</div>
@@ -822,17 +886,64 @@ function createStickersForDay(date, type, obj) {
     function createPeopleAndLocationBlocks() {
       const block = `
 				<div class="people">
-					<div class="icon icon_people"><img src="assets/icons/people.png"></div>
+					<div class="icon icon_people"><img src="assets/icons/people.png" alt="people"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Кто:</div>
 						<div class="value">${obj.people.join(', ')}</div>
 					</div>
 				</div>
 				<div class="location">
-					<div class="icon icon_loc"><img src="assets/icons/location.png"></div>
+					<div class="icon icon_loc"><img src="assets/icons/location.png" alt="location"></div>
 					<div class="sticker_extend_inner_wrapper">
 						<div class="title">Где:</div>
 						<div class="value">${obj.location}</div>
+					</div>
+				</div>
+			`;
+      return block;
+    }
+
+    function createBirthdayBlocks() {
+      // Наркомания с датами нужна, чтобы выводить корректную дату и возраст в любой год, а не только в год добавления стикера дня рождения в базу данных.
+      const dateEventFromDBWithoutYear = obj.date.replace(/\d{4}/, '');
+      const yearFromCalendar = date.split('.')[2];
+      const fullDate = `${dateEventFromDBWithoutYear}${yearFromCalendar}`;
+      const yearOfBirth = obj.birthDate.split('-')[2];
+      const age = yearFromCalendar - yearOfBirth;
+      const block = `
+				<div class="date">
+					<div class="icon icon_date"><img src="assets/icons/date.png" alt="date"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Когда:</div>
+						<div class="value">${fullDate}</div>
+					</div>
+				</div>
+				<div class="person">
+					<div class="icon icon_person"><img src="assets/icons/person.png" alt="person"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Кто:</div>
+						<div class="value">${obj.person}</div>
+					</div>
+				</div>
+				<div class="birthday_date">
+					<div class="icon icon_birthday"><img src="assets/icons/birthday.png" alt="birthday"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Дата рождения:</div>
+						<div class="value">${obj.birthDate}</div>
+					</div>
+				</div>
+				<div class="age">
+					<div class="icon icon_age"><img src="assets/icons/age.png" alt="age"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Возраст:</div>
+						<div class="value">${age}</div>
+					</div>
+				</div>
+				<div class="present">
+					<div class="icon icon_present"><img src="assets/icons/present.png" alt="present"></div>
+					<div class="sticker_extend_inner_wrapper">
+						<div class="title">Подарок:</div>
+						<div class="value">${obj.present}</div>
 					</div>
 				</div>
 			`;
@@ -853,6 +964,10 @@ function createStickersForDay(date, type, obj) {
     } else if (type == 'reminder') {
       extendBLock = `
 				${createDateBlock()}
+			`;
+    } else if (type == 'birthday') {
+      extendBLock = `
+				${createBirthdayBlocks()}
 			`;
     }
 
@@ -1006,10 +1121,13 @@ class Modal {
           } else if (btn.id == 'event_reminder') {
             this.eventType = 'reminder';
             this.createReminder();
-          } else {
+          } else if (btn.id == 'event_meeting') {
             this.eventType = 'meeting';
             this.createMeeting();
             this.showAdressSuggestions();
+          } else if (btn.id == 'event_birthday') {
+            this.eventType = 'birthday';
+            this.createBirthday();
           }
         });
       });
@@ -1028,12 +1146,19 @@ class Modal {
         const people = document.querySelector('.meeting_people input');
         const loc = document.querySelector('.meeting_location input');
         const meetingDescr = document.querySelector('.meeting_descr input');
+        const person = document.querySelector('.birthday_person input');
+        const birthdayDate = document.querySelector('.birthday_date input');
+        const present = document.querySelector('.birthday_present input');
         let type = '';
         document.querySelectorAll('.modal_add_event .event').forEach(item => {
           if (item.classList.contains('active')) {
             type = item.id.split('_')[1];
           }
         });
+
+        if (present && present.value == '') {
+          present.value = 'Подарок не выбран';
+        }
 
         if (name.value == '') {
           name.value == '' ? displayRedBorder(name) : null;
@@ -1043,6 +1168,9 @@ class Modal {
           people.value == '' ? displayRedBorder(people) : null;
           loc.value == '' ? displayRedBorder(loc) : null;
           meetingDescr.value == '' ? displayRedBorder(meetingDescr) : null;
+        } else if (type == 'birthday' && (person.value == '' || birthdayDate.value == '')) {
+          person.value == '' ? displayRedBorder(person) : null;
+          birthdayDate.value == '' ? displayRedBorder(birthdayDate) : null;
         } else {
           // Такой тип даты нужен для сравнения и вывода нужных элементов из localStorage
           const dateForLocalStorage = this.createDate('localStorage');
@@ -1061,6 +1189,10 @@ class Modal {
             obj.people = people.value.split(',');
             obj.location = loc.value;
             obj.descr = meetingDescr.value;
+          } else if (this.eventType == 'birthday') {
+            obj.person = person.value;
+            obj.birthDate = birthdayDate.value.split('-').reverse().join('-');
+            obj.present = present.value;
           }
 
           document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
@@ -1115,6 +1247,24 @@ class Modal {
 
 				<div class="meeting_descr">
 					<label><input type="text" placeholder="Добавьте описание"></label>
+				</div>
+			</div>
+		`;
+  }
+
+  createBirthday() {
+    this.block.innerHTML = `
+			<div class="event_birthday">
+				<div class="birthday_person">
+					<label><input type="text" placeholder="Укажите имя именинника или именинницы"></label>
+				</div>
+
+				<div class="birthday_date">
+					<label>Укажите дату рождения <input type="date"></label>
+				</div>
+
+				<div class="birthday_present">
+					<label><input type="text" placeholder="Уже выбрали подарок?"></label>
 				</div>
 			</div>
 		`;
@@ -1193,7 +1343,8 @@ class Modal {
     let objOfTypes = {
       'task': 0,
       'reminder': 0,
-      'meeting': 0
+      'meeting': 0,
+      'birthday': 0
     };
 
     try {
