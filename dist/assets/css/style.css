@@ -55,6 +55,23 @@ footer {
   position: relative;
   display: flex; }
 
+.def_input {
+  width: 100%;
+  height: 35px;
+  font-size: 23px;
+  cursor: pointer;
+  outline: none;
+  padding: 0 5px;
+  border: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid #dadce0; }
+  .def_input:hover {
+    background: rgba(218, 220, 224, 0.5); }
+  .def_input:focus {
+    cursor: auto;
+    border-bottom: 2px solid #1a73e8; }
+
 /* -------------- Header -------------- */
 header {
   display: flex;
@@ -435,6 +452,11 @@ header {
           font-size: 15px; }
       .sticker .sticker_extend .date:hover, .sticker .sticker_extend .people:hover, .sticker .sticker_extend .location:hover, .sticker .sticker_extend .descr:hover, .sticker .sticker_extend .person:hover, .sticker .sticker_extend .birthday_date:hover, .sticker .sticker_extend .present:hover, .sticker .sticker_extend .age:hover {
         background: rgba(218, 220, 224, 0.5); }
+  .sticker .sticker_edit {
+    display: flex;
+    width: 100%; }
+    .sticker .sticker_edit button {
+      margin-left: 10px; }
 
 .task_sticker {
   background: skyblue; }
@@ -499,22 +521,6 @@ header {
     background: white; }
     .modal_wrapper .modal_add_event .user_event_name {
       width: 100%; }
-      .modal_wrapper .modal_add_event .user_event_name input {
-        width: 100%;
-        height: 35px;
-        font-size: 23px;
-        cursor: pointer;
-        outline: none;
-        padding: 0 5px;
-        border: none;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom: 1px solid #dadce0; }
-        .modal_wrapper .modal_add_event .user_event_name input:hover {
-          background: rgba(218, 220, 224, 0.5); }
-        .modal_wrapper .modal_add_event .user_event_name input:focus {
-          cursor: auto;
-          border-bottom: 2px solid #1a73e8; }
     .modal_wrapper .modal_add_event .event_types {
       display: flex;
       justify-content: space-around;

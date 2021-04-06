@@ -71,7 +71,22 @@ footer
 .main_container
 	position: relative
 	display: flex
-
+.def_input
+	width: 100%
+	height: 35px
+	font-size: 23px
+	cursor: pointer
+	outline: none
+	padding: 0 5px
+	border: none
+	border-top-left-radius: 5px
+	border-top-right-radius: 5px
+	border-bottom: 1px solid $color-gray
+	&:hover
+		background: rgba(218, 220, 224, 0.5)
+	&:focus
+		cursor: auto
+		border-bottom: 2px solid $color-blue
 
 /* -------------- Header -------------- */
 
@@ -441,6 +456,11 @@ header
 					font-size: 15px
 			&:hover
 				background: rgba(218, 220, 224, 0.5)
+	.sticker_edit
+		display: flex
+		width: 100%
+		button
+			margin-left: 10px
 .task_sticker
 	background: $color-for-tasks
 	.event_header
@@ -498,22 +518,6 @@ header
 		background: white
 		.user_event_name
 			width: 100%
-			input
-				width: 100%
-				height: 35px
-				font-size: 23px
-				cursor: pointer
-				outline: none
-				padding: 0 5px
-				border: none
-				border-top-left-radius: 5px
-				border-top-right-radius: 5px
-				border-bottom: 1px solid $color-gray
-				&:hover
-					background: rgba(218, 220, 224, 0.5)
-				&:focus
-					cursor: auto
-					border-bottom: 2px solid $color-blue
 		.event_types
 			display: flex
 			justify-content: space-around

@@ -164,16 +164,16 @@ export default class Modal {
 		this.block.innerHTML = `
 			<div class="event_meeting">
 				<div class="meeting_people">
-					<label><input type="text" placeholder="Укажите имена через запятую"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите имена через запятую"></label>
 				</div>
 
 				<div class="meeting_location">
-					<label><input type="text" placeholder="Укажите место встречи"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите место встречи"></label>
 					<div class="suggestions"></div>
 				</div>
 
 				<div class="meeting_descr">
-					<label><input type="text" placeholder="Добавьте описание"></label>
+					<label><input class="def_input" type="text" placeholder="Добавьте описание"></label>
 				</div>
 			</div>
 		`;
@@ -183,15 +183,15 @@ export default class Modal {
 		this.block.innerHTML = `
 			<div class="event_birthday">
 				<div class="birthday_person">
-					<label><input type="text" placeholder="Укажите имя именинника или именинницы"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите имя именинника или именинницы"></label>
 				</div>
 
 				<div class="birthday_date">
-					<label>Укажите дату рождения <input type="date"></label>
+					<label>Укажите дату рождения <input class="def_input" type="date"></label>
 				</div>
 
 				<div class="birthday_present">
-					<label><input type="text" placeholder="Уже выбрали подарок?"></label>
+					<label><input class="def_input" type="text" placeholder="Уже выбрали подарок?"></label>
 				</div>
 			</div>
 		`;

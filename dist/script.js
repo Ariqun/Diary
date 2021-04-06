@@ -633,16 +633,53 @@ class Stickers {
         }
       }
 
-      sticker.addEventListener('mouseover', show);
-      sticker.addEventListener('mouseout', hide);
+      sticker.addEventListener('mouseover', show); // sticker.addEventListener('mouseout', hide);
     });
-  } // editSticker() {
-  // 	document.querySelectorAll('.sticker .sticker_edit').forEach((edit) => {
-  // 		edit.addEventListener('click', () => {
-  // 		});
-  // 	});
-  // }
+  }
 
+  editPresent() {
+    try {
+      const presentBlock = document.querySelector('.sticker .present');
+
+      const addInputForEdit = () => {
+        const div = document.createElement('div');
+        div.classList.add('sticker_edit');
+        div.innerHTML = `
+					<input class="def_input" type="text">
+					<button class="save_changes">Сохранить</button>
+				`;
+        presentBlock.querySelector('.sticker_extend_inner_wrapper').classList.add('hidden');
+        presentBlock.appendChild(div);
+        presentBlock.querySelector('input').focus();
+        saveChanges();
+        presentBlock.removeEventListener('click', addInputForEdit);
+      };
+
+      const saveChanges = () => {
+        const btn = document.querySelector('.save_changes');
+        btn.addEventListener('click', () => {
+          const id = btn.closest('.sticker').id;
+          const changedStr = btn.closest('.sticker_edit').querySelector('.def_input').value;
+          const item = JSON.parse(localStorage.getItem(id));
+          const obj = {
+            birthDate: item.birthDate,
+            date: item.date,
+            id: item.id,
+            name: item.name,
+            person: item.person,
+            time: item.time,
+            present: changedStr
+          };
+          localStorage.setItem(id, JSON.stringify(obj));
+          presentBlock.querySelector('.sticker_extend_inner_wrapper').classList.remove('hidden');
+          presentBlock.querySelector('.value').innerHTML = changedStr;
+          btn.closest('.sticker_edit').remove();
+        });
+      };
+
+      presentBlock.addEventListener('click', addInputForEdit);
+    } catch {}
+  }
 
   deleteSticker() {
     document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
@@ -661,8 +698,8 @@ class Stickers {
   }
 
   init() {
-    this.showAndHideExtendSticker(); // this.editSticker();
-
+    this.showAndHideExtendSticker();
+    this.editPresent();
     this.deleteSticker();
   }
 
@@ -1247,16 +1284,16 @@ class Modal {
     this.block.innerHTML = `
 			<div class="event_meeting">
 				<div class="meeting_people">
-					<label><input type="text" placeholder="Укажите имена через запятую"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите имена через запятую"></label>
 				</div>
 
 				<div class="meeting_location">
-					<label><input type="text" placeholder="Укажите место встречи"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите место встречи"></label>
 					<div class="suggestions"></div>
 				</div>
 
 				<div class="meeting_descr">
-					<label><input type="text" placeholder="Добавьте описание"></label>
+					<label><input class="def_input" type="text" placeholder="Добавьте описание"></label>
 				</div>
 			</div>
 		`;
@@ -1266,15 +1303,15 @@ class Modal {
     this.block.innerHTML = `
 			<div class="event_birthday">
 				<div class="birthday_person">
-					<label><input type="text" placeholder="Укажите имя именинника или именинницы"></label>
+					<label><input class="def_input" type="text" placeholder="Укажите имя именинника или именинницы"></label>
 				</div>
 
 				<div class="birthday_date">
-					<label>Укажите дату рождения <input type="date"></label>
+					<label>Укажите дату рождения <input class="def_input" type="date"></label>
 				</div>
 
 				<div class="birthday_present">
-					<label><input type="text" placeholder="Уже выбрали подарок?"></label>
+					<label><input class="def_input" type="text" placeholder="Уже выбрали подарок?"></label>
 				</div>
 			</div>
 		`;
