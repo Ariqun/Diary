@@ -80,8 +80,12 @@ export default class Stickers {
 		document.querySelectorAll('.sticker .sticker_delete').forEach((del) => {
 			del.addEventListener('click', () => {
 				const sticker = del.closest('.sticker');
-
-				del.closest('.sticker_wrapper').remove();
+				
+				if (del.closest('.birthday_row')) {
+					del.closest('.birthday_row').remove();
+				} else {
+					del.closest('.sticker_wrapper').remove();
+				}
 				localStorage.removeItem(sticker.id);
 			});
 		});

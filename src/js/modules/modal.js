@@ -122,6 +122,7 @@ export default class Modal {
 					}
 
 					document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
+					document.querySelectorAll('.day .birthday_row').forEach(item => item.remove());
 					document.querySelectorAll('.modal_wrapper input').forEach(input => input.value = '');
 					document.querySelector('.modal_wrapper').classList.add('hidden');
 

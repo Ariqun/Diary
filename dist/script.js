@@ -469,6 +469,10 @@ class Day {
           if (e.target.classList.contains('inner_wrapper')) {
             const time = row.previousElementSibling.innerHTML;
             const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+            document.querySelectorAll('.event_types .event').forEach(item => {
+              item.classList.remove('active');
+              item.id == 'event_task' ? item.classList.add('active') : null;
+            });
             new _modal__WEBPACK_IMPORTED_MODULE_1__["default"](choiceDate, time, row).init();
           }
         });
@@ -644,7 +648,13 @@ class Stickers {
     document.querySelectorAll('.sticker .sticker_delete').forEach(del => {
       del.addEventListener('click', () => {
         const sticker = del.closest('.sticker');
-        del.closest('.sticker_wrapper').remove();
+
+        if (del.closest('.birthday_row')) {
+          del.closest('.birthday_row').remove();
+        } else {
+          del.closest('.sticker_wrapper').remove();
+        }
+
         localStorage.removeItem(sticker.id);
       });
     });
@@ -736,7 +746,6 @@ const checkLocalStorage = (mode, date, arrOfTypes) => {
   const obj = { ...localStorage
   };
   let arr = [];
-  console.log(date);
 
   if (mode == 'day') {
     for (let key in obj) {
@@ -1196,6 +1205,7 @@ class Modal {
           }
 
           document.querySelectorAll('.day .sticker_wrapper').forEach(item => item.remove());
+          document.querySelectorAll('.day .birthday_row').forEach(item => item.remove());
           document.querySelectorAll('.modal_wrapper input').forEach(input => input.value = '');
           document.querySelector('.modal_wrapper').classList.add('hidden');
           localStorage.setItem(id, JSON.stringify(obj));

@@ -58,8 +58,13 @@ export default class Day {
 				row.addEventListener('click', (e) => {
 					if (e.target.classList.contains('inner_wrapper')) {
 						const time = row.previousElementSibling.innerHTML;
-	
 						const choiceDate = new Date(this.date.getFullYear(), this.date.getMonth(), this.day.innerHTML);
+
+						document.querySelectorAll('.event_types .event').forEach((item) => {
+							item.classList.remove('active');
+
+							item.id == 'event_task' ? item.classList.add('active') : null;
+						});
 		
 						new Modal(choiceDate, time, row).init();
 					}
@@ -71,7 +76,6 @@ export default class Day {
 		displayModal();
 		new Stickers().init();
 	}
-
 
 	init() {
 		this.createDay();

@@ -3,7 +3,7 @@
 const checkLocalStorage = (mode, date, arrOfTypes) => {
 	const obj = {...localStorage};
 	let arr = [];
-	console.log(date)
+	
 	if (mode == 'day') {
 		for (let key in obj) {
 			if (identification(obj[key])) {
