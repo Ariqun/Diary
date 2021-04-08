@@ -281,7 +281,6 @@ class Calendar {
         degX += 0.1;
         degY += 0.1;
       } else {
-        // degX -= 0.05;
         degY -= 0.1;
       }
 
@@ -633,14 +632,13 @@ class Stickers {
         }
       }
 
-      sticker.addEventListener('mouseover', show); // sticker.addEventListener('mouseout', hide);
+      sticker.addEventListener('mouseover', show);
+      sticker.addEventListener('mouseout', hide);
     });
   }
 
   editPresent() {
-    try {
-      const presentBlock = document.querySelector('.sticker .present');
-
+    document.querySelectorAll('.sticker .present').forEach(item => {
       const addInputForEdit = () => {
         const div = document.createElement('div');
         div.classList.add('sticker_edit');
@@ -648,11 +646,11 @@ class Stickers {
 					<input class="def_input" type="text">
 					<button class="save_changes">Сохранить</button>
 				`;
-        presentBlock.querySelector('.sticker_extend_inner_wrapper').classList.add('hidden');
-        presentBlock.appendChild(div);
-        presentBlock.querySelector('input').focus();
+        item.querySelector('.sticker_extend_inner_wrapper').classList.add('hidden');
+        item.appendChild(div);
+        item.querySelector('input').focus();
         saveChanges();
-        presentBlock.removeEventListener('click', addInputForEdit);
+        item.removeEventListener('click', addInputForEdit);
       };
 
       const saveChanges = () => {
@@ -660,25 +658,25 @@ class Stickers {
         btn.addEventListener('click', () => {
           const id = btn.closest('.sticker').id;
           const changedStr = btn.closest('.sticker_edit').querySelector('.def_input').value;
-          const item = JSON.parse(localStorage.getItem(id));
+          const itemFromBD = JSON.parse(localStorage.getItem(id));
           const obj = {
-            birthDate: item.birthDate,
-            date: item.date,
-            id: item.id,
-            name: item.name,
-            person: item.person,
-            time: item.time,
+            birthDate: itemFromBD.birthDate,
+            date: itemFromBD.date,
+            id: itemFromBD.id,
+            name: itemFromBD.name,
+            person: itemFromBD.person,
+            time: itemFromBD.time,
             present: changedStr
           };
           localStorage.setItem(id, JSON.stringify(obj));
-          presentBlock.querySelector('.sticker_extend_inner_wrapper').classList.remove('hidden');
-          presentBlock.querySelector('.value').innerHTML = changedStr;
+          item.querySelector('.sticker_extend_inner_wrapper').classList.remove('hidden');
+          item.querySelector('.value').innerHTML = changedStr;
           btn.closest('.sticker_edit').remove();
         });
       };
 
-      presentBlock.addEventListener('click', addInputForEdit);
-    } catch {}
+      item.addEventListener('click', addInputForEdit);
+    });
   }
 
   deleteSticker() {

@@ -105,7 +105,6 @@ export default class Calendar {
 				degX += 0.1;
 				degY += 0.1;
 			} else {
-				// degX -= 0.05;
 				degY -= 0.1;
 			}
 
