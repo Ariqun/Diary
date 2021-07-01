@@ -1,0 +1,35 @@
+@import '../ui'
+	
+.header
+	display: flex
+	height: 50px
+	border-bottom: 1px solid $color-lightgray
+	background: white
+	.title
+		display: flex
+		flex-direction: column
+		justify-content: center
+		width: 315px
+		cursor: pointer
+		padding: 0 10px
+		a
+			color: black
+			&:hover
+				color: $color-deepskyblue
+	.current_month
+		display: flex
+		flex-grow: 1
+		align-items: center
+		padding: 0 10px
+		border-left: 1px solid $color-lightgray
+		.change_month
+			display: flex
+			justify-content: center
+			align-items: center
+			cursor: pointer
+			padding: 0 15px
+			img
+				width: 15px
+		.month
+			width: 185px
+			font-size: 24px

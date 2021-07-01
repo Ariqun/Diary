@@ -1,0 +1,96 @@
+@import '../../components/ui'
+
+.main_page
+	display: flex
+	.calendar
+		table
+			position: relative
+			height: 845px
+			border-collapse: collapse
+			thead
+				border-right: 1px solid $color-lightgray
+				border-left: 1px solid $color-lightgray
+				background: white
+				th
+					height: 28px
+			tbody
+				background: white
+				tr
+					td
+						position: relative
+						width: 220px
+						padding: 0
+						border: 1px solid $color-lightgray
+						.item
+							position: relative
+							width: 100%
+							height: 100%
+							cursor: pointer
+							transition: 0.5s all
+							a
+								color: $color-gray
+							.stickers
+								position: absolute
+								top: 0
+								left: 0
+								display: flex
+								flex-direction: column
+								flex-wrap: wrap
+								max-width: 100%
+								height: 100%
+								pointer-events: none
+								z-index: 2
+								.small_sticker
+									display: flex
+									justify-content: space-between
+									align-items: center
+									min-width: 50px
+									max-width: 100%
+									color: black
+									padding: 5px 5px
+									margin: 0 5px 5px 0
+									span
+										font-size: 12px
+										&:first-of-type
+											margin-left: 5px
+								.small_sticker.task
+									background: $color-deepskyblue
+								.small_sticker.reminder
+									background: $color-tomato
+								.small_sticker.meeting
+									background: $color-limegreen
+								.small_sticker.birthday
+									background: $color-orange
+							.date_day
+								display: flex
+								flex-direction: column
+								justify-content: center
+								align-items: center
+								position: absolute
+								top: 0
+								left: 0
+								width: 100%
+								height: 100%
+								font-size: 6em
+								opacity: 0.1
+								z-index: 1
+							.today
+								opacity: 0.7
+							.weekend
+								color: $color-tomato
+							&:hover
+								position: absolute
+								top: 0
+								transform: scale(1.5)
+								transition: 0.3s transform
+								box-shadow: 3px 3px 10px 0px
+								border: 1px solid black
+								background: white
+								z-index: 100
+								.small_sticker
+									font-size: 10px
+									padding: 3px
+									.event_name
+										display: block !important
+									.bracket
+										display: inline-block !important

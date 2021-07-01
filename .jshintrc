@@ -5,10 +5,10 @@
     "quotmark" : false,
     "trailing" : true,
     "curly" : true,
-    "strict" : true,
+    "strict" : false,
     "browser" : true,
     "devel" : true,
     "jquery" : true,
-    "esversion" : 10,
+    "esversion" : 9,
 	"node" : true
 }      

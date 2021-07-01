@@ -1,0 +1,123 @@
+@import '../ui'
+
+.left_side
+	min-width: 315px
+	padding: 5px 10px
+	border-bottom: 1px solid $color-lightgray
+	background: white
+	.wrapper_for_small_calendar
+		.current_month
+			display: flex
+			justify-content: center
+			align-items: center
+			width: 100%
+			margin-bottom: 5px
+			background: white
+			.month
+				@include flex-column
+				font-size: 20px
+		.calendar_mini
+			height: 275px
+			table
+				margin: 0 auto
+				border-collapse: collapse
+				thead
+					th
+						height: 30px
+				tbody
+					background: white
+					tr
+						td
+							position: relative
+							width: 40px
+							height: 40px
+							padding: 0
+							.item
+								a
+									color: $color-gray
+								position: relative
+								width: 100%
+								height: 100%
+								cursor: pointer
+								transition: 0.5s all
+								.date_day
+									@include flex-column
+									position: absolute
+									width: 100%
+									height: 100%
+									font-size: 1em
+									&:hover
+										color: $color-deepskyblue
+								.weekend
+									color: $color-tomato
+								.today
+									color: white
+									border-radius: 50%
+									background: $color-blue
+	.options
+		margin-top: 50px
+		.option
+			position: relative
+			display: flex
+			align-items: center
+			color: #fff
+			margin: 10px 20px
+			label:first-of-type
+				display: inline-block
+				width: 25px
+				height: 25px
+				cursor: pointer
+				transition: all 0.2s
+				border-radius: 2rem
+				background: #FF5335
+				&:before, &:after
+					position: absolute
+					right: 1rem
+					transition: all 0.2s .1s ease-out
+				&:before
+					opacity: 0
+					transform: translate(0, 20px)
+				&:after
+					opacity: 1
+					transform: translate(0, 0)
+			label:last-of-type
+				color: black
+				cursor: pointer
+				margin-left: 10px
+			input
+				display: none
+			input:checked ~ label#tasks
+				background: $color-deepskyblue
+			input:checked ~ label#reminders
+				background: $color-tomato
+			input:checked ~ label#meetings
+				background: $color-limegreen
+			input:checked ~ label#birthdays
+				background: $color-orange
+			input:checked ~ .option__icon:before
+				transform: translate(-30%, 100%) rotate(45deg) scale(0.6, 1)
+			input:checked ~ .option__icon:after
+				transform: translate(20%) rotate(-45deg)
+			&__icon
+				position: absolute
+				height: 25px
+				width: 25px
+				top: 0
+				left: 0
+				cursor: pointer
+				pointer-events: none
+				&:before, &:after
+					content: ""
+					position: absolute
+					top: 45%
+					left: 32%
+					width: 13px
+					height: 2px
+					margin-left: -10%
+					transition: 0.2s ease-out
+					box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1)
+					background: #fff
+				&:before
+					transform: rotate(45deg)
+				&:after
+					transform: rotate(-45deg)	
