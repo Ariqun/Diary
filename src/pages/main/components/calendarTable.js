@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 
 import matrix from './matrix';
@@ -48,7 +48,7 @@ const CalendarTable = ({date, mini = false, showTasks, showReminders, showMeetin
 			
 			if (events && !mini) stickers = events.map(event => createSmallSticker(event));
 
-			if (day === now.getDate() && date.getFullYear() === now.getUTCFullYear() && date.getMonth() === now.getMonth()) className += ' today';
+			if (day === now.getDate() && year === now.getUTCFullYear() && month === now.getMonth()) className += ' today';
 			if (i === week.length - 1 || i === week.length - 2) className += ' weekend';
 
 			return(

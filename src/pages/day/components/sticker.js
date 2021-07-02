@@ -33,13 +33,23 @@ const Sticker = ({event, deleteSticker}) => {
 
 	const createStickerBody = () => {
 		if (eventType === 'task') {
-			const blocks = [{type: 'descr',	title: 'Что:', value: event.taskDescr}];
+			const blocks = [
+				{type: 'date', title: 'Когда:', value: `${eventDate} ${eventTime}`},
+				{type: 'descr',	title: 'Что:', value: event.taskDescr}
+			];
 			
 			return blocks.map(block => createBlock(block));
 		}
 
 		if (eventType === 'meeting') {
+			const blocks = [{type: 'date', title: 'Когда:', value: `${eventDate} ${eventTime}`}];
+
+			return blocks.map(block => createBlock(block));
+		}
+
+		if (eventType === 'meeting') {
 			const blocks = [
+				{type: 'date', title: 'Когда:', value: `${eventDate} ${eventTime}`},
 				{type: 'people', title: 'Кто:', value: event.meetNames},
 				{type: 'location', title: 'Где:', value: event.meetLoc},
 				{type: 'descr', title: 'Что:', value: event.meetDescr}
@@ -88,7 +98,6 @@ const Sticker = ({event, deleteSticker}) => {
 
 			
 				<div className={showExtend ? "sticker_extend" : "sticker_extend hidden"}>
-					{createBlock({type: 'date', title: 'Когда:', value: `${eventDate} ${eventTime}`})}
 					{createStickerBody()}
 				</div>
 			</div>

@@ -1,28 +1,27 @@
-const pushEventInLS = (info, eventDate) => {
+import getDayAndMonth from "../manipulationsWithDate/getDayAndMonth";
+
+const pushEventInLS = (event, eventDate) => {
 	const dataBase = JSON.parse(localStorage.getItem('diary'));
+	const {eventType} = event;
 	let diary = {};
 
-	info.dateId = eventDate;
+	if (eventType !== 'birthday') event.dateId = eventDate;
+	else event.dateId = getDayAndMonth(eventDate);
 
 	if (!dataBase) {
-		diary = {
-			[eventDate]: [info]
-		}
+		if (eventType === 'birthday') diary['birthdays'] = [event];
+		else diary[eventDate] = [event];
 	}
 
 	if (dataBase) {
-		if (!dataBase[eventDate]) {
-			diary = {
-				...dataBase,
-				[eventDate]: [info]
-			}
-		}
+		diary = dataBase;
 
-		if (dataBase[eventDate] && dataBase[eventDate]) {
-			diary = {
-				...dataBase,
-				[eventDate]: [...dataBase[eventDate], info]
-			}
+		if (eventType === 'birthday') {
+			if (diary['birthdays']) diary['birthdays'].push(event);
+			else diary['birthdays'] = [event];
+		} else {
+			if (diary[eventDate]) diary[eventDate].push(event);
+			else diary[eventDate] = [event];
 		}
 	}
 
