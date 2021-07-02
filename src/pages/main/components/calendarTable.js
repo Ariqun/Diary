@@ -41,11 +41,13 @@ const CalendarTable = ({date, mini = false, showTasks, showReminders, showMeetin
 	
 	const content = monthMatrix.map(week => {
 		const row = week.map((day, i) => {
+			if (!day) return <td key={day + i} />;
+
 			const now = new Date();
 			const events = checkEvents(new Date(year, month, day));
 			let className = 'date_day';
 			let stickers = null;
-			
+
 			if (events && !mini) stickers = events.map(event => createSmallSticker(event));
 
 			if (day === now.getDate() && year === now.getUTCFullYear() && month === now.getMonth()) className += ' today';

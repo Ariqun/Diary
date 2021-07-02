@@ -1,6 +1,8 @@
 @import '../ui'
 
 .left_side
+	position: relative
+	left: 0
 	min-width: 315px
 	padding: 5px 10px
 	border-bottom: 1px solid $color-lightgray
@@ -120,4 +122,23 @@
 				&:before
 					transform: rotate(45deg)
 				&:after
-					transform: rotate(-45deg)	
+					transform: rotate(-45deg)
+	.switch
+		position: absolute
+		bottom: 5px
+		right: 0px
+		cursor: pointer
+		z-index: 100
+		&:hover
+			right: 5px
+.left_side.hide 
+	width: 60px
+	min-width: 0
+	padding: 0
+	left: -315px
+	.switch
+		right: -310px
+		transform: rotate(180deg)
+		z-index: 1
+		&:hover
+			right: -315px
