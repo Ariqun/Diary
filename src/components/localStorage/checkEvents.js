@@ -23,6 +23,8 @@ const checkEvents = (date) => {
 const checkBirthdays = (diary, date) => {
 	const dayAndMonth = getDayAndMonth(date);
 
+	if (!diary['birthdays']) return [];
+
 	const birthdays = diary['birthdays'].filter(birthday => birthday.dateId === dayAndMonth);
 
 	return birthdays;

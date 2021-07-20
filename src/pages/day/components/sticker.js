@@ -41,7 +41,7 @@ const Sticker = ({event, deleteSticker}) => {
 			return blocks.map(block => createBlock(block));
 		}
 
-		if (eventType === 'meeting') {
+		if (eventType === 'remember') {
 			const blocks = [{type: 'date', title: 'Когда:', value: `${eventDate} ${eventTime}`}];
 
 			return blocks.map(block => createBlock(block));

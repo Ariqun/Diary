@@ -59,7 +59,7 @@ const Modal = ({date, hour, toggleModal}) => {
 					/>
 				</div>
 
-				<Tabs setTab={setTab} />
+				<Tabs tab={tab} setTab={setTab} />
 
 				<div className="event_options">
 					<div className="event_date_and_time">
